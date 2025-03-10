@@ -28,6 +28,41 @@ namespace Chess
             Squares = BuildStartingBoard();
         }
 
+        public string BuildFen()
+        {
+            // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+            string fenString = "";
+            for (int i = 0; i < 8; i++)
+            {
+                int consecutiveEmptySquares = 0;
+
+                for (int j = 0; j < 8; j++)
+                {
+                    int index = i * 8 + j;
+                    Square square = Squares[index];
+
+                    if (square.Piece != null)
+                    {
+                        if (consecutiveEmptySquares != 0)
+                        {
+                            fenString += consecutiveEmptySquares;
+                            consecutiveEmptySquares = 0;
+                        }
+                        fenString += Piece.ConvertPieceTypeToChar(square.Piece.PieceType, square.Piece.Color == Color.WHITE);
+                    }
+                    else
+                    {
+                        consecutiveEmptySquares += 1;
+                    }
+                }
+                if (consecutiveEmptySquares != 0) fenString += consecutiveEmptySquares;
+                if (i != 7) fenString += '/';
+            }
+
+            return fenString;
+
+        }
+
         private Square[] BuildBoardFromFEN(string fen)
         {
             Square[] board = new Square[64];
@@ -104,81 +139,81 @@ namespace Chess
             Square[] squares = new Square[64];
 
             // Rank 8
-            Squares[0] = new Square(new Piece(PieceType.ROOK, Color.BLACK, false), BoardFile.A, BoardRank.EIGHT);
-            Squares[1] = new Square(new Piece(PieceType.KNIGHT, Color.BLACK, false), BoardFile.B, BoardRank.EIGHT);
-            Squares[2] = new Square(new Piece(PieceType.BISHOP, Color.BLACK, false), BoardFile.C, BoardRank.EIGHT);
-            Squares[3] = new Square(new Piece(PieceType.QUEEN, Color.BLACK, false), BoardFile.D, BoardRank.EIGHT);
-            Squares[4] = new Square(new Piece(PieceType.KING, Color.BLACK, false), BoardFile.E, BoardRank.EIGHT);
-            Squares[5] = new Square(new Piece(PieceType.BISHOP, Color.BLACK, false), BoardFile.F, BoardRank.EIGHT);
-            Squares[6] = new Square(new Piece(PieceType.KNIGHT, Color.BLACK, false), BoardFile.G, BoardRank.EIGHT);
-            Squares[7] = new Square(new Piece(PieceType.ROOK, Color.BLACK, false), BoardFile.H, BoardRank.EIGHT);
+            squares[0] = new Square(new Piece(PieceType.ROOK, Color.BLACK, false), BoardFile.A, BoardRank.EIGHT);
+            squares[1] = new Square(new Piece(PieceType.KNIGHT, Color.BLACK, false), BoardFile.B, BoardRank.EIGHT);
+            squares[2] = new Square(new Piece(PieceType.BISHOP, Color.BLACK, false), BoardFile.C, BoardRank.EIGHT);
+            squares[3] = new Square(new Piece(PieceType.QUEEN, Color.BLACK, false), BoardFile.D, BoardRank.EIGHT);
+            squares[4] = new Square(new Piece(PieceType.KING, Color.BLACK, false), BoardFile.E, BoardRank.EIGHT);
+            squares[5] = new Square(new Piece(PieceType.BISHOP, Color.BLACK, false), BoardFile.F, BoardRank.EIGHT);
+            squares[6] = new Square(new Piece(PieceType.KNIGHT, Color.BLACK, false), BoardFile.G, BoardRank.EIGHT);
+            squares[7] = new Square(new Piece(PieceType.ROOK, Color.BLACK, false), BoardFile.H, BoardRank.EIGHT);
 
             // Rank 7
-            Squares[8] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.A, BoardRank.SEVEN);
-            Squares[9] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.B, BoardRank.SEVEN);
-            Squares[10] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.C, BoardRank.SEVEN);
-            Squares[11] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.D, BoardRank.SEVEN);
-            Squares[12] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.E, BoardRank.SEVEN);
-            Squares[13] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.F, BoardRank.SEVEN);
-            Squares[14] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.G, BoardRank.SEVEN);
-            Squares[15] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.H, BoardRank.SEVEN);
+            squares[8] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.A, BoardRank.SEVEN);
+            squares[9] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.B, BoardRank.SEVEN);
+            squares[10] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.C, BoardRank.SEVEN);
+            squares[11] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.D, BoardRank.SEVEN);
+            squares[12] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.E, BoardRank.SEVEN);
+            squares[13] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.F, BoardRank.SEVEN);
+            squares[14] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.G, BoardRank.SEVEN);
+            squares[15] = new Square(new Piece(PieceType.PAWN, Color.BLACK, false), BoardFile.H, BoardRank.SEVEN);
 
             // Ranks 6-3: Empty
-            Squares[16] = new Square(BoardFile.A, BoardRank.SIX);
-            Squares[17] = new Square(BoardFile.B, BoardRank.SIX);
-            Squares[18] = new Square(BoardFile.C, BoardRank.SIX);
-            Squares[19] = new Square(BoardFile.D, BoardRank.SIX);
-            Squares[20] = new Square(BoardFile.E, BoardRank.SIX);
-            Squares[21] = new Square(BoardFile.F, BoardRank.SIX);
-            Squares[22] = new Square(BoardFile.G, BoardRank.SIX);
-            Squares[23] = new Square(BoardFile.H, BoardRank.SIX);
+            squares[16] = new Square(BoardFile.A, BoardRank.SIX);
+            squares[17] = new Square(BoardFile.B, BoardRank.SIX);
+            squares[18] = new Square(BoardFile.C, BoardRank.SIX);
+            squares[19] = new Square(BoardFile.D, BoardRank.SIX);
+            squares[20] = new Square(BoardFile.E, BoardRank.SIX);
+            squares[21] = new Square(BoardFile.F, BoardRank.SIX);
+            squares[22] = new Square(BoardFile.G, BoardRank.SIX);
+            squares[23] = new Square(BoardFile.H, BoardRank.SIX);
 
-            Squares[24] = new Square(BoardFile.A, BoardRank.FIVE);
-            Squares[25] = new Square(BoardFile.B, BoardRank.FIVE);
-            Squares[26] = new Square(BoardFile.C, BoardRank.FIVE);
-            Squares[27] = new Square(BoardFile.D, BoardRank.FIVE);
-            Squares[28] = new Square(BoardFile.E, BoardRank.FIVE);
-            Squares[29] = new Square(BoardFile.F, BoardRank.FIVE);
-            Squares[30] = new Square(BoardFile.G, BoardRank.FIVE);
-            Squares[31] = new Square(BoardFile.H, BoardRank.FIVE);
+            squares[24] = new Square(BoardFile.A, BoardRank.FIVE);
+            squares[25] = new Square(BoardFile.B, BoardRank.FIVE);
+            squares[26] = new Square(BoardFile.C, BoardRank.FIVE);
+            squares[27] = new Square(BoardFile.D, BoardRank.FIVE);
+            squares[28] = new Square(BoardFile.E, BoardRank.FIVE);
+            squares[29] = new Square(BoardFile.F, BoardRank.FIVE);
+            squares[30] = new Square(BoardFile.G, BoardRank.FIVE);
+            squares[31] = new Square(BoardFile.H, BoardRank.FIVE);
 
-            Squares[32] = new Square(BoardFile.A, BoardRank.FOUR);
-            Squares[33] = new Square(BoardFile.B, BoardRank.FOUR);
-            Squares[34] = new Square(BoardFile.C, BoardRank.FOUR);
-            Squares[35] = new Square(BoardFile.D, BoardRank.FOUR);
-            Squares[36] = new Square(BoardFile.E, BoardRank.FOUR);
-            Squares[37] = new Square(BoardFile.F, BoardRank.FOUR);
-            Squares[38] = new Square(BoardFile.G, BoardRank.FOUR);
-            Squares[39] = new Square(BoardFile.H, BoardRank.FOUR);
+            squares[32] = new Square(BoardFile.A, BoardRank.FOUR);
+            squares[33] = new Square(BoardFile.B, BoardRank.FOUR);
+            squares[34] = new Square(BoardFile.C, BoardRank.FOUR);
+            squares[35] = new Square(BoardFile.D, BoardRank.FOUR);
+            squares[36] = new Square(BoardFile.E, BoardRank.FOUR);
+            squares[37] = new Square(BoardFile.F, BoardRank.FOUR);
+            squares[38] = new Square(BoardFile.G, BoardRank.FOUR);
+            squares[39] = new Square(BoardFile.H, BoardRank.FOUR);
 
-            Squares[40] = new Square(BoardFile.A, BoardRank.THREE);
-            Squares[41] = new Square(BoardFile.B, BoardRank.THREE);
-            Squares[42] = new Square(BoardFile.C, BoardRank.THREE);
-            Squares[43] = new Square(BoardFile.D, BoardRank.THREE);
-            Squares[44] = new Square(BoardFile.E, BoardRank.THREE);
-            Squares[45] = new Square(BoardFile.F, BoardRank.THREE);
-            Squares[46] = new Square(BoardFile.G, BoardRank.THREE);
-            Squares[47] = new Square(BoardFile.H, BoardRank.THREE);
+            squares[40] = new Square(BoardFile.A, BoardRank.THREE);
+            squares[41] = new Square(BoardFile.B, BoardRank.THREE);
+            squares[42] = new Square(BoardFile.C, BoardRank.THREE);
+            squares[43] = new Square(BoardFile.D, BoardRank.THREE);
+            squares[44] = new Square(BoardFile.E, BoardRank.THREE);
+            squares[45] = new Square(BoardFile.F, BoardRank.THREE);
+            squares[46] = new Square(BoardFile.G, BoardRank.THREE);
+            squares[47] = new Square(BoardFile.H, BoardRank.THREE);
 
             // Rank 2
-            Squares[48] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.A, BoardRank.TWO);
-            Squares[49] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.B, BoardRank.TWO);
-            Squares[50] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.C, BoardRank.TWO);
-            Squares[51] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.D, BoardRank.TWO);
-            Squares[52] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.E, BoardRank.TWO);
-            Squares[53] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.F, BoardRank.TWO);
-            Squares[54] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.G, BoardRank.TWO);
-            Squares[55] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.H, BoardRank.TWO);
+            squares[48] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.A, BoardRank.TWO);
+            squares[49] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.B, BoardRank.TWO);
+            squares[50] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.C, BoardRank.TWO);
+            squares[51] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.D, BoardRank.TWO);
+            squares[52] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.E, BoardRank.TWO);
+            squares[53] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.F, BoardRank.TWO);
+            squares[54] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.G, BoardRank.TWO);
+            squares[55] = new Square(new Piece(PieceType.PAWN, Color.WHITE, false), BoardFile.H, BoardRank.TWO);
 
             // Rank 1
-            Squares[56] = new Square(new Piece(PieceType.ROOK, Color.WHITE, false), BoardFile.A, BoardRank.ONE);
-            Squares[57] = new Square(new Piece(PieceType.KNIGHT, Color.WHITE, false), BoardFile.B, BoardRank.ONE);
-            Squares[58] = new Square(new Piece(PieceType.BISHOP, Color.WHITE, false), BoardFile.C, BoardRank.ONE);
-            Squares[59] = new Square(new Piece(PieceType.QUEEN, Color.WHITE, false), BoardFile.D, BoardRank.ONE);
-            Squares[60] = new Square(new Piece(PieceType.KING, Color.WHITE, false), BoardFile.E, BoardRank.ONE);
-            Squares[61] = new Square(new Piece(PieceType.BISHOP, Color.WHITE, false), BoardFile.F, BoardRank.ONE);
-            Squares[62] = new Square(new Piece(PieceType.KNIGHT, Color.WHITE, false), BoardFile.G, BoardRank.ONE);
-            Squares[63] = new Square(new Piece(PieceType.ROOK, Color.WHITE, false), BoardFile.H, BoardRank.ONE);
+            squares[56] = new Square(new Piece(PieceType.ROOK, Color.WHITE, false), BoardFile.A, BoardRank.ONE);
+            squares[57] = new Square(new Piece(PieceType.KNIGHT, Color.WHITE, false), BoardFile.B, BoardRank.ONE);
+            squares[58] = new Square(new Piece(PieceType.BISHOP, Color.WHITE, false), BoardFile.C, BoardRank.ONE);
+            squares[59] = new Square(new Piece(PieceType.QUEEN, Color.WHITE, false), BoardFile.D, BoardRank.ONE);
+            squares[60] = new Square(new Piece(PieceType.KING, Color.WHITE, false), BoardFile.E, BoardRank.ONE);
+            squares[61] = new Square(new Piece(PieceType.BISHOP, Color.WHITE, false), BoardFile.F, BoardRank.ONE);
+            squares[62] = new Square(new Piece(PieceType.KNIGHT, Color.WHITE, false), BoardFile.G, BoardRank.ONE);
+            squares[63] = new Square(new Piece(PieceType.ROOK, Color.WHITE, false), BoardFile.H, BoardRank.ONE);
 
             return squares;
         }

@@ -22,7 +22,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-
 app.UseCors(MyAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
@@ -34,9 +33,50 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/chess-api/build-board", () =>
+// Custom below
+
+List<Game> activeGames = new List<Game>();
+
+app.MapPost("/chess-api/start-new-game", () =>
 {
-    var board = new Board("rnbqkbnr/ppp2ppp/8/3Pp3/8/8/PPPP1PPP/RNBQKBNR");
+    //TODO: Make an option to send in a fen string and start the game in that state
+    Game game = new Game();
+    var board = new Board();
+
+    game.FenHistory.Add(board.BuildFen());
+    activeGames.Add(game);
+
+    return game.Id;
+})
+.WithName("Start New Game")
+.WithOpenApi();
+
+
+app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
+{
+    var payload = await httpContext.Request.ReadFromJsonAsync<ExecuteMoveApiPayload>();
+    if (payload == null)
+    {
+        return Results.BadRequest("Invalid request payload.");
+    }
+
+    var game = Game.FindActiveGame(activeGames, payload.GameId);
+    if (game == null)
+    {
+        return Results.NotFound("Game is not currently active.");
+    }
+
+    bool doesMatch = game.DoesMatchLatestFen(payload.Fen);
+
+    return Results.Ok(doesMatch);
+})
+.WithName("Execute Move")
+.WithOpenApi();
+
+app.MapPost("/chess-api/build-board", (BuildBoardApiPayload payload) =>
+{
+    Console.WriteLine(payload);
+    var board = new Board(payload.Fen);
     board.Print();
     return board;
 })
