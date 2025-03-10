@@ -5,10 +5,11 @@ namespace Chess
         public string Id { get; set; }
 
         public Color ActiveColor { get; set; }
-        public CastleRights CastleRights { get; set; }
+        public CastleRights WhiteCastleRights { get; set; }
+        public CastleRights BlackCastleRights { get; set; }
         public string EnPassantSquare { get; set; }
-        public int HalfTurns { get; set; }
-        public int FullTurns { get; set; }
+        public int HalfMoves { get; set; }
+        public int FullMoves { get; set; }
 
         public List<string> FenHistory { get; set; }
 
@@ -16,12 +17,14 @@ namespace Chess
         {
             Id = Guid.NewGuid().ToString();
             ActiveColor = Color.WHITE;
-            HalfTurns = 0;
-            FullTurns = 0;
+            HalfMoves = 0;
+            FullMoves = 1;
             EnPassantSquare = "-";
-            CastleRights = new CastleRights();
+            WhiteCastleRights = new CastleRights();
+            BlackCastleRights = new CastleRights();
             FenHistory = new List<string>();
         }
+
 
         public bool DoesMatchLatestFen(string fen)
         {

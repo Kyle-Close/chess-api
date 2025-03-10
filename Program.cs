@@ -43,14 +43,16 @@ app.MapPost("/chess-api/start-new-game", () =>
     Game game = new Game();
     var board = new Board();
 
-    game.FenHistory.Add(board.BuildFen());
+    string fen = FenHelper.BuildFen(game, board);
+    game.FenHistory.Add(fen);
     activeGames.Add(game);
 
-    return game.Id;
+    System.Console.WriteLine(game.Id);
+
+    return fen;
 })
 .WithName("Start New Game")
 .WithOpenApi();
-
 
 app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
 {
@@ -67,10 +69,37 @@ app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
     }
 
     bool doesMatch = game.DoesMatchLatestFen(payload.Fen);
+    if (!doesMatch)
+    {
+        return Results.BadRequest("Fen string does not match the last game move.");
+    }
+
+    // Check if the move is valid. If it is then update the board and return.
 
     return Results.Ok(doesMatch);
 })
 .WithName("Execute Move")
+.WithOpenApi();
+
+app.MapPost("/chess-api/get-valid-moves", async (HttpContext httpContext) =>
+{
+    var payload = await httpContext.Request.ReadFromJsonAsync<GetValidMovesApiPayload>();
+    if (payload == null)
+    {
+        return Results.BadRequest("Invalid request payload.");
+    }
+
+    var game = Game.FindActiveGame(activeGames, payload.GameId);
+    if (game == null)
+    {
+        return Results.NotFound("Game is not currently active.");
+    }
+
+    // Generate a list of valid moves in chess notation based on board and turn
+
+    return Results.Ok(payload.MoveNotation);
+})
+.WithName("Get Valid Moves")
 .WithOpenApi();
 
 app.MapPost("/chess-api/build-board", (BuildBoardApiPayload payload) =>
