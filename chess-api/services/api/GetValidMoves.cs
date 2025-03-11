@@ -53,21 +53,21 @@ namespace Chess
                 var piece = game.Board.Squares[targetSquareIndex].Piece;
                 if (piece == null)
                 {
-                    return Results.BadRequest(new GetValidMovesResponse(game, []));
+                    return Results.BadRequest();
                 }
 
                 // Check if it's the correct players turn.
                 if (piece.Color != game.ActiveColor)
                 {
-                    GetValidMovesResponse response = new GetValidMovesResponse(game, [], "Whoops! Looks like it's not your turn.");
-                    return Results.BadRequest(response);
+                    //GetValidMovesResponse response = new GetValidMovesResponse(game, [], "Whoops! Looks like it's not your turn.");
+                    return Results.BadRequest();
                 }
 
                 // Generate possible moves
                 MoveMetaData moveMetaData = new MoveMetaData(game, targetSquareIndex);
-                GetValidMovesResponse res = new GetValidMovesResponse(game, [moveResponse]);
+                //GetValidMovesResponse res = new GetValidMovesResponse(game, [moveResponse]);
 
-                return Results.Ok(res);
+                return Results.Ok();
             })
             .WithName("Get Valid Moves")
             .Accepts<GetValidMovesApi>("application/json")

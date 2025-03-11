@@ -10,6 +10,7 @@ namespace Chess
         public static List<int> GetUnfilteredMoveIndexes(Game game, int index)
         {
             var moveIndexList = new List<int>();
+            return moveIndexList;
         }
 
         public static bool IsInStartPosition(int index, bool isWhite)

@@ -33,16 +33,16 @@ namespace Chess
             ValidMoves = validMoves;
         }
 
-        public MoveMetaData(Game game, int start, int end) // Execute the move.
-        {
-            StartIndex = start;
-            EndIndex = end;
-
-            // 1.
-
-
-            Notation = ""; // TODO: build the notation string of the move
-        }
+        /*public MoveMetaData(Game game, int start, int end) // Execute the move.*/
+        /*{*/
+        /*    StartIndex = start;*/
+        /*    EndIndex = end;*/
+        /**/
+        /*    // 1.*/
+        /**/
+        /**/
+        /*    Notation = ""; // TODO: build the notation string of the move*/
+        /*}*/
     }
 
     public class Move
