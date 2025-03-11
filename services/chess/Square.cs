@@ -19,6 +19,40 @@ namespace Chess
             Rank = rank;
         }
 
+        public static int GetSquareIndex(BoardFile file, BoardRank rank)
+        {
+            int fileIndex = (int)file - 1;
+            int rankIndex = ConvertRankToIndex(rank);
+
+            return fileIndex + rankIndex;
+        }
+
+        private static int ConvertRankToIndex(BoardRank rank)
+        {
+            // Converts a rank into the value we need to index a square in the board array
+            switch (rank)
+            {
+                case BoardRank.ONE:
+                    return 56;
+                case BoardRank.TWO:
+                    return 48;
+                case BoardRank.THREE:
+                    return 40;
+                case BoardRank.FOUR:
+                    return 32;
+                case BoardRank.FIVE:
+                    return 24;
+                case BoardRank.SIX:
+                    return 16;
+                case BoardRank.SEVEN:
+                    return 8;
+                case BoardRank.EIGHT:
+                    return 0;
+                default:
+                    throw new Exception("Invalid rank cannot convert.");
+            }
+        }
+
         public static BoardFile GetFile(int index)
         {
             if (index % 8 == 0 || index == 0) return BoardFile.A;
@@ -32,7 +66,6 @@ namespace Chess
 
             throw new Exception("Invalid file index. Cannot determine BoardFile.");
         }
-
 
         public static BoardRank GetRank(int index)
         {

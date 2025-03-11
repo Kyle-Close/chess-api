@@ -7,6 +7,11 @@ namespace Chess
         {
         }
 
+        public static List<int> GetUnfilteredMoveIndexes(Game game, int index)
+        {
+            var moveIndexList = new List<int>();
+        }
+
         public static bool IsInStartPosition(int index, bool isWhite)
         {
             // Assume we are sending the index of a pawn. No check here.

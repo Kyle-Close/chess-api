@@ -81,26 +81,7 @@ app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
 .WithName("Execute Move")
 .WithOpenApi();
 
-app.MapPost("/chess-api/get-valid-moves", async (HttpContext httpContext) =>
-{
-    var payload = await httpContext.Request.ReadFromJsonAsync<GetValidMovesApiPayload>();
-    if (payload == null)
-    {
-        return Results.BadRequest("Invalid request payload.");
-    }
-
-    var game = Game.FindActiveGame(activeGames, payload.GameId);
-    if (game == null)
-    {
-        return Results.NotFound("Game is not currently active.");
-    }
-
-    // Generate a list of valid moves in chess notation based on board and turn
-
-    return Results.Ok(payload.MoveNotation);
-})
-.WithName("Get Valid Moves")
-.WithOpenApi();
+GetValidMovesApi.EnableEndpoint(app, activeGames);
 
 app.MapPost("/chess-api/build-board", (BuildBoardApiPayload payload) =>
 {

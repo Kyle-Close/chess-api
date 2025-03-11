@@ -12,6 +12,7 @@ namespace Chess
         public int FullMoves { get; set; }
 
         public List<string> FenHistory { get; set; }
+        public Board Board { get; set; }
 
         public Game()
         {
@@ -23,8 +24,8 @@ namespace Chess
             WhiteCastleRights = new CastleRights();
             BlackCastleRights = new CastleRights();
             FenHistory = new List<string>();
+            Board = new Board();
         }
-
 
         public bool DoesMatchLatestFen(string fen)
         {
