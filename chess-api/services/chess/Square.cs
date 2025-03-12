@@ -19,6 +19,7 @@ namespace Chess
             Rank = rank;
         }
 
+
         public static int GetSquareIndex(BoardFile file, BoardRank rank)
         {
             int fileIndex = (int)file - 1;

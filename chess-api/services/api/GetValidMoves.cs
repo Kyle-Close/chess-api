@@ -19,6 +19,7 @@ namespace Chess
             Message = message;
         }
     }
+
     public class GetValidMovesApi
     {
         public string GameId { get; set; }

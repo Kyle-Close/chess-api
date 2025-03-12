@@ -15,11 +15,11 @@ namespace Chess
     public class MoveMetaData
     {
         public int StartIndex { get; set; }
-        public bool IsCapture { get; set; }
         public List<ValidMove> ValidMoves { get; set; } // List of squares the piece can move to. The index
 
-        public int? EndIndex { get; set; }
-        public string? Notation { get; set; }
+        public bool? IsCapture { get; set; }
+        public int? EndIndex { get; set; } // If this is sent that indicates a move was executed
+        public string? Notation { get; set; } // Also only gets sent when move is executed. "e4" for ex.
 
         public MoveMetaData(Game game, int start) // Generate a list of moves.
         {
@@ -31,6 +31,34 @@ namespace Chess
             //a
 
             ValidMoves = validMoves;
+        }
+
+        // Based on the piece being targeted, this fn returns a list of valid indexes
+        //  the piece can move to. A standard move is either a move that the piece can go to
+        //  (like a bishop moving diagonally) or any special attacking moves (pawn diagonal)
+        //  This also accounts for if a piece is blocked or off the side of the board.
+        public List<ValidMove> GetStandardMoves(Game game, int index)
+        {
+            if (!Board.IsValidSquareIndex(index))
+            {
+                throw new Exception("Cannot get standard moves. Index given is off the board.");
+            }
+
+            var piece = game.Board.Squares[index].Piece;
+            if (piece == null)
+            {
+                throw new Exception("Cannot get standard moves. Square does not have a piece on it.");
+            }
+
+            var result = new List<ValidMove>();
+
+            switch (piece.PieceType)
+            {
+                case PieceType.PAWN:
+                    return Pawn.GetStandardMoveIndexes(game, index);
+                default:
+                    throw new NotImplementedException("");
+            }
         }
 
         /*public MoveMetaData(Game game, int start, int end) // Execute the move.*/

@@ -28,6 +28,28 @@ namespace Chess
             Squares = BuildStartingBoard();
         }
 
+        public static bool IsValidSquareIndex(int index)
+        {
+            return index >= 0 && index < 64;
+        }
+
+        public static Piece ValidatePieceOnSquare(Board board, int index, PieceType expectedPieceType)
+        {
+            if (!Board.IsValidSquareIndex(index))
+            {
+                throw new Exception("Index provided is not in range.");
+            }
+
+            var piece = board.Squares[index].Piece;
+            if (piece == null || piece.PieceType != expectedPieceType)
+            {
+                var pieceType = piece == null ? "none" : piece.PieceType.ToString();
+                throw new Exception($"Expected piece type: {expectedPieceType}. But got {pieceType}");
+            }
+
+            return piece;
+        }
+
         public string BuildFen()
         {
             // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR

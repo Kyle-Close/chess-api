@@ -27,6 +27,28 @@ namespace Chess
             Board = new Board();
         }
 
+        public bool IsEnemySquare(int index, Color enemyColor)
+        {
+            if (!Board.IsValidSquareIndex(index))
+            {
+                throw new Exception("You sent an invalid square index");
+            }
+
+            var piece = Board.Squares[index].Piece;
+
+            if (piece == null)
+            {
+                return false;
+            }
+
+            if (enemyColor == piece.Color)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public bool DoesMatchLatestFen(string fen)
         {
             var latest = FenHistory.Last();
