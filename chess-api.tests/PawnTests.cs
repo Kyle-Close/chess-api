@@ -8,7 +8,8 @@ public class PawnTests
     {
         var game = new Game();
         var board = new Board("rnbqkbnr/p1pp1ppp/1p2p3/4P3/8/8/PPPP1PPP/RNBQKBNR");
-        var res = Pawn.IsBlocked(board, 28);
+        Pawn pawn = new Pawn(Color.WHITE, 28);
+        var res = pawn.IsBlocked(board);
 
         Assert.True(res == PawnBlockStatus.BLOCKED_ONE_RANK_AHEAD);
     }
@@ -17,7 +18,8 @@ public class PawnTests
     {
         var game = new Game();
         var board = new Board("rnbqkbnr/p1pppppp/1p6/4P3/8/8/PPPP1PPP/RNBQKBNR");
-        var res = Pawn.IsBlocked(board, 12);
+        Pawn pawn = new Pawn(Color.BLACK, 12);
+        var res = pawn.IsBlocked(board);
 
         Assert.True(res == PawnBlockStatus.BLOCKED_TWO_RANKS_AHEAD);
     }
@@ -26,7 +28,8 @@ public class PawnTests
     {
         var game = new Game();
         var board = new Board("rnbqkbnr/p1pp1ppp/1p2p3/4P3/8/3B4/PPPP1PPP/RNBQK1NR");
-        var res = Pawn.IsBlocked(board, 51);
+        Pawn pawn = new Pawn(Color.WHITE, 51);
+        var res = pawn.IsBlocked(board);
 
         Assert.True(res == PawnBlockStatus.BLOCKED_ONE_RANK_AHEAD);
     }
@@ -35,7 +38,8 @@ public class PawnTests
     {
         var game = new Game();
         var board = new Board("rnbqkbnr/p1pp1ppp/1p2p3/4P3/2B5/8/PPPP1PPP/RNBQK1NR");
-        var res = Pawn.IsBlocked(board, 50);
+        Pawn pawn = new Pawn(Color.WHITE, 50);
+        var res = pawn.IsBlocked(board);
 
         Assert.True(res == PawnBlockStatus.BLOCKED_TWO_RANKS_AHEAD);
     }
@@ -44,7 +48,8 @@ public class PawnTests
     {
         var game = new Game();
         var board = game.Board;
-        var res = Pawn.IsBlocked(board, 52);
+        Pawn pawn = new Pawn(Color.WHITE, 52);
+        var res = pawn.IsBlocked(board);
 
         Assert.True(res == PawnBlockStatus.NOT_BLOCKED);
     }
@@ -53,7 +58,8 @@ public class PawnTests
     {
         var game = new Game();
         var board = game.Board;
-        var res = Pawn.IsBlocked(board, 12);
+        Pawn pawn = new Pawn(Color.BLACK, 12);
+        var res = pawn.IsBlocked(board);
 
         Assert.True(res == PawnBlockStatus.NOT_BLOCKED);
     }
@@ -62,15 +68,17 @@ public class PawnTests
     {
         var game = new Game();
         var board = game.Board;
+        Pawn pawn = new Pawn(Color.WHITE, -1);
 
-        Assert.Throws<Exception>(() => Pawn.IsBlocked(board, -1)); // Example: Invalid index
+        Assert.Throws<Exception>(() => pawn.IsBlocked(board)); // Example: Invalid index
     }
     [Fact]
     public void IsBlocked_WhitePawnOn2ndLastRank_ExpectNoOutOfBoundsError()
     {
         var game = new Game();
         var board = new Board("rn1qk1nr/p1pb2P1/1p2p2p/3pPp2/1bBP4/2N2P2/PPP3P1/R1BQK1NR");
-        var res = Pawn.IsBlocked(board, 14);
+        Pawn pawn = new Pawn(Color.WHITE, 14);
+        var res = pawn.IsBlocked(board);
 
         Assert.True(res == PawnBlockStatus.BLOCKED_ONE_RANK_AHEAD);
     }
@@ -79,7 +87,8 @@ public class PawnTests
     {
         var game = new Game();
         var board = new Board("rn1qk1nr/p1pb2P1/4p2p/3pPp2/1bBP4/2N2P2/PpP3P1/R1BQK1NR");
-        var res = Pawn.IsBlocked(board, 49);
+        Pawn pawn = new Pawn(Color.BLACK, 49);
+        var res = pawn.IsBlocked(board);
 
         Assert.True(res == PawnBlockStatus.NOT_BLOCKED);
     }
@@ -90,7 +99,8 @@ public class PawnTests
     public void GetAttackIndexes_WhiteOnAFile_ExpectOnlyBFileAttack()
     {
         var board = new Board();
-        var result = Pawn.GetAttackIndexes(board, 48);
+        Pawn pawn = new Pawn(Color.WHITE, 48);
+        var result = pawn.GetAttackIndexes(board);
 
         Assert.True(result.Count == 1 && result.Contains(41));
     }
@@ -98,7 +108,8 @@ public class PawnTests
     public void GetAttackIndexes_WhiteOnHFile_ExpectOnlyGFileAttack()
     {
         var board = new Board();
-        var result = Pawn.GetAttackIndexes(board, 55);
+        Pawn pawn = new Pawn(Color.WHITE, 55);
+        var result = pawn.GetAttackIndexes(board);
 
         Assert.True(result.Count == 1 && result.Contains(46));
     }
@@ -106,7 +117,8 @@ public class PawnTests
     public void GetAttackIndexes_BlackOnAFile_ExpectOnlyBFileAttack()
     {
         var board = new Board();
-        var result = Pawn.GetAttackIndexes(board, 8);
+        Pawn pawn = new Pawn(Color.BLACK, 8);
+        var result = pawn.GetAttackIndexes(board);
 
         Assert.True(result.Count == 1 && result.Contains(17));
     }
@@ -114,7 +126,8 @@ public class PawnTests
     public void GetAttackIndexes_BlackOnHFile_ExpectOnlyGFileAttack()
     {
         var board = new Board();
-        var result = Pawn.GetAttackIndexes(board, 15);
+        Pawn pawn = new Pawn(Color.BLACK, 15);
+        var result = pawn.GetAttackIndexes(board);
 
         Assert.True(result.Count == 1 && result.Contains(22));
     }
@@ -122,7 +135,8 @@ public class PawnTests
     public void GetAttackIndexes_WhiteInMiddleOfBoard_ExpectBothIndexes()
     {
         var board = new Board();
-        var result = Pawn.GetAttackIndexes(board, 52);
+        Pawn pawn = new Pawn(Color.WHITE, 52);
+        var result = pawn.GetAttackIndexes(board);
 
         Assert.True(result.Count == 2 && result.Contains(43) && result.Contains(45));
     }
@@ -130,7 +144,8 @@ public class PawnTests
     public void GetAttackIndexes_BlackInMiddleOfBoard_ExpectBothIndexes()
     {
         var board = new Board();
-        var result = Pawn.GetAttackIndexes(board, 11);
+        Pawn pawn = new Pawn(Color.BLACK, 11);
+        var result = pawn.GetAttackIndexes(board);
 
         Assert.True(result.Count == 2 && result.Contains(18) && result.Contains(20));
     }
@@ -138,7 +153,8 @@ public class PawnTests
     public void GetAttackIndexes_PiecesOnAttackSquares_ExpectBothIndexes()
     {
         var board = new Board("rnbqkbnr/ppp3pp/8/3ppp2/3PPP2/8/PPP3PP/RNBQKBNR");
-        var result = Pawn.GetAttackIndexes(board, 36);
+        Pawn pawn = new Pawn(Color.WHITE, 36);
+        var result = pawn.GetAttackIndexes(board);
 
         Assert.True(result.Count == 2 && result.Contains(27) && result.Contains(29));
     }
@@ -149,7 +165,8 @@ public class PawnTests
     public void GetStandardMoveIndexes_WhiteNoAttackSquares_ExpectStartingIndexes()
     {
         var game = new Game();
-        var res = Pawn.GetStandardMoveIndexes(game, 52);
+        Pawn pawn = new Pawn(Color.WHITE, 52);
+        var res = pawn.GetStandardMoveIndexes(game);
 
         Assert.Contains(res, move => move.Index == 36 && move.IsCapture == false);
         Assert.Contains(res, move => move.Index == 44 && move.IsCapture == false);
@@ -159,7 +176,8 @@ public class PawnTests
     public void GetStandardMoveIndexes_BlackNoAttackSquares_ExpectStartingIndexes()
     {
         var game = new Game();
-        var res = Pawn.GetStandardMoveIndexes(game, 12);
+        Pawn pawn = new Pawn(Color.BLACK, 12);
+        var res = pawn.GetStandardMoveIndexes(game);
 
         Assert.Contains(res, move => move.Index == 20 && move.IsCapture == false);
         Assert.Contains(res, move => move.Index == 28 && move.IsCapture == false);
@@ -170,7 +188,8 @@ public class PawnTests
     {
         var game = new Game();
         game.Board = new Board("rnbqkbnr/ppp3pp/3p4/4pp2/4P3/8/PPPP1PPP/RNBQKBNR");
-        var res = Pawn.GetStandardMoveIndexes(game, 36);
+        Pawn pawn = new Pawn(Color.WHITE, 36);
+        var res = pawn.GetStandardMoveIndexes(game);
 
         Assert.Contains(res, move => move.Index == 29 && move.IsCapture == true);
         Assert.True(res.Count == 1);
@@ -180,7 +199,8 @@ public class PawnTests
     {
         var game = new Game();
         game.Board = new Board("rnbqkbnr/ppp3pp/8/3ppp2/4P3/8/PPPP1PPP/RNBQKBNR");
-        var res = Pawn.GetStandardMoveIndexes(game, 36);
+        Pawn pawn = new Pawn(Color.WHITE, 36);
+        var res = pawn.GetStandardMoveIndexes(game);
 
         Assert.Contains(res, move => move.Index == 27 && move.IsCapture == true);
         Assert.Contains(res, move => move.Index == 29 && move.IsCapture == true);
@@ -191,13 +211,10 @@ public class PawnTests
     {
         var game = new Game();
         game.Board = new Board("rnbqkbnr/ppp1p1pp/8/3p1p2/4P3/8/PPPP1PPP/RNBQKBNR");
-        var piece = game.Board.Squares[36].Piece;
-        if (piece is null)
-        {
-            throw new Exception("No piece found at the expected position (36).");
-        }
-        piece.HasMoved = true;
-        var res = Pawn.GetStandardMoveIndexes(game, 36);
+        Pawn pawn = new Pawn(Color.WHITE, 36);
+        pawn.HasMoved = true;
+
+        var res = pawn.GetStandardMoveIndexes(game);
 
         Assert.Contains(res, move => move.Index == 27 && move.IsCapture == true);
         Assert.Contains(res, move => move.Index == 28 && move.IsCapture == false);
@@ -210,13 +227,9 @@ public class PawnTests
         var game = new Game();
         game.ActiveColor = Color.BLACK;
         game.Board = new Board("rnbqkbnr/pppp1ppp/8/4p3/3P1P2/8/PPP1P1PP/RNBQKBNR");
-        var piece = game.Board.Squares[28].Piece;
-        if (piece is null)
-        {
-            throw new Exception("No piece found at the expected position (28).");
-        }
-        piece.HasMoved = true;
-        var res = Pawn.GetStandardMoveIndexes(game, 28);
+        Pawn pawn = new Pawn(Color.BLACK, 28);
+        pawn.HasMoved = true;
+        var res = pawn.GetStandardMoveIndexes(game);
 
         Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
         Assert.Contains(res, move => move.Index == 36 && move.IsCapture == false);
@@ -229,7 +242,8 @@ public class PawnTests
         var game = new Game();
         game.ActiveColor = Color.BLACK;
         game.Board = new Board("rnbqkbnr/pppp1ppp/8/4p3/3PPP2/8/PPP3PP/RNBQKBNR");
-        var res = Pawn.GetStandardMoveIndexes(game, 28);
+        Pawn pawn = new Pawn(Color.BLACK, 28);
+        var res = pawn.GetStandardMoveIndexes(game);
 
         Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
         Assert.Contains(res, move => move.Index == 37 && move.IsCapture == true);
@@ -241,7 +255,8 @@ public class PawnTests
         var game = new Game();
         game.ActiveColor = Color.BLACK;
         game.Board = new Board("rnbqkbnr/pppp1ppp/8/4p3/3PP3/8/PPP2PPP/RNBQKBNR");
-        var res = Pawn.GetStandardMoveIndexes(game, 28);
+        Pawn pawn = new Pawn(Color.BLACK, 28);
+        var res = pawn.GetStandardMoveIndexes(game);
 
         Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
         Assert.True(res.Count == 1);

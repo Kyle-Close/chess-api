@@ -87,7 +87,6 @@ app.MapPost("/chess-api/build-board", (BuildBoardApiPayload payload) =>
 {
     Console.WriteLine(payload);
     var board = new Board(payload.Fen);
-    board.Print();
     return board;
 })
 .WithName("Board")

@@ -26,9 +26,14 @@ namespace Chess
             StartIndex = start;
             IsCapture = false;
 
-            List<ValidMove> validMoves = new List<ValidMove>();
             // 1. Get the unfiltered list of squares the piece can moved to based purely on how the piece can move.
-            //a
+            List<ValidMove> validMoves = GetStandardMoves(game, start);
+
+            // 2. Add en-passant square if a pawn is attacking it.
+
+            // 3. Add castling moves if possible
+
+            // 4. Filter out any moves that would put the player in check
 
             ValidMoves = validMoves;
         }
@@ -55,7 +60,7 @@ namespace Chess
             switch (piece.PieceType)
             {
                 case PieceType.PAWN:
-                    return Pawn.GetStandardMoveIndexes(game, index);
+                    return piece.GetStandardMoveIndexes(game);
                 default:
                     throw new NotImplementedException("");
             }
