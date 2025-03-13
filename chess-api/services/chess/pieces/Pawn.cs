@@ -14,7 +14,7 @@ namespace Chess
         public override PieceType PieceType { get; }
 
         // ----- Constructor -----
-        public Pawn(Color color, int posIndex) : base(posIndex, color)
+        public Pawn(int squareIndex, Color color) : base(squareIndex, color)
         {
             PieceType = PieceType.PAWN;
         }
