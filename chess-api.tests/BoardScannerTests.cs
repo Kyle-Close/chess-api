@@ -243,5 +243,173 @@ namespace Chess
             Assert.True(rank.Count == 8);
             Assert.Equal(8, rank.Count(square => square.Piece == null));
         }
+
+        // ----- Evaluate Diagonal -----
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_WhiteStartPos_ExpectNoMoves()
+        {
+            var game = new Game();
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 58);
+
+            Assert.True(res.Count == 0);
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_BlackStartPos_ExpectNoMoves()
+        {
+            var game = new Game();
+            game.ActiveColor = Color.BLACK;
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 5);
+
+            Assert.True(res.Count == 0);
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_OnlySouthEastWithCapture_Expect4Moves()
+        {
+            var game = new Game();
+            game.Board = new Board("rn1qkbnr/pppppppp/b7/8/8/8/PPPPPPPP/RNBQKBNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 16);
+
+            Assert.True(res.Count == 4);
+            Assert.Equal(3, res.Count(res => res.IsCapture == false));
+            Assert.Equal(1, res.Count(res => res.IsCapture == true));
+
+            Assert.Contains(res, res => res.Index == 25);
+            Assert.Contains(res, res => res.Index == 34);
+            Assert.Contains(res, res => res.Index == 43);
+            Assert.Contains(res, res => res.Index == 52);
+        }
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_OnlyEastWithCaptures_Expect5Moves()
+        {
+            var game = new Game();
+            game.ActiveColor = Color.BLACK;
+            game.Board = new Board("rn1qkbnr/pppppppp/b7/8/8/8/PPPPPPPP/RNBQKBNRrn1qkbnr/ppp1pp1p/b5p1/3p4/4B3/3P2P1/PPP1PP1P/RN1QKBNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 16);
+
+            Assert.True(res.Count == 5);
+            Assert.Equal(2, res.Count(res => res.IsCapture == true));
+            Assert.Equal(3, res.Count(res => res.IsCapture == false));
+
+            Assert.Contains(res, res => res.Index == 27);
+            Assert.Contains(res, res => res.Index == 29);
+            Assert.Contains(res, res => res.Index == 22);
+            Assert.Contains(res, res => res.Index == 45);
+            Assert.Contains(res, res => res.Index == 54);
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_OnlySouthNoCaptures_Expect7Moves()
+        {
+            var game = new Game();
+            game.Board = new Board("rn1q1knr/ppp1bp1p/b3p1p1/3p4/4B3/3P2P1/PPP1PP1P/RN1QKBNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 12);
+
+            Assert.True(res.Count == 7);
+            Assert.Equal(7, res.Count(res => res.IsCapture == false));
+
+            Assert.Contains(res, res => res.Index == 19);
+            Assert.Contains(res, res => res.Index == 26);
+            Assert.Contains(res, res => res.Index == 33);
+            Assert.Contains(res, res => res.Index == 40);
+
+            Assert.Contains(res, res => res.Index == 21);
+            Assert.Contains(res, res => res.Index == 30);
+            Assert.Contains(res, res => res.Index == 39);
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_SurroundedByOpponent_Expect4Captures()
+        {
+            var game = new Game();
+            game.Board = new Board("r2q1knr/pp1pbp1p/2n1b1p1/3B4/2p1p3/6P1/PPPPPP1P/RN1QKBNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 27);
+
+            Assert.True(res.Count == 4);
+            Assert.Equal(4, res.Count(res => res.IsCapture == true));
+
+            Assert.Contains(res, res => res.Index == 18);
+            Assert.Contains(res, res => res.Index == 20);
+            Assert.Contains(res, res => res.Index == 36);
+            Assert.Contains(res, res => res.Index == 34);
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_InvalidIndex_ExpectThrow()
+        {
+            var game = new Game();
+            var scanner = new BoardScanner(game.Board);
+
+            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(game, 66));
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_NoPieceOnSquare_ExpectThrow()
+        {
+            var game = new Game();
+            var scanner = new BoardScanner(game.Board);
+
+            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(game, 34));
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_InvalidPiece_ExpectThrow()
+        {
+            var game = new Game();
+            var scanner = new BoardScanner(game.Board);
+
+            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(game, 0));
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_BlackCommonMove_Expect6MovesWithCapture()
+        {
+            var game = new Game();
+            game.ActiveColor = Color.BLACK;
+            game.Board = new Board("r2q1knr/pp1pbp1p/2n3p1/3B4/2p1p1b1/6P1/PPPPPP1P/RN1QKBNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 38);
+
+            Assert.True(res.Count == 6);
+            Assert.Equal(5, res.Count(res => res.IsCapture == false));
+            Assert.Equal(1, res.Count(res => res.IsCapture == true));
+
+            Assert.Contains(res, res => res.Index == 20);
+            Assert.Contains(res, res => res.Index == 29);
+            Assert.Contains(res, res => res.Index == 31);
+            Assert.Contains(res, res => res.Index == 47);
+            Assert.Contains(res, res => res.Index == 45);
+            Assert.Contains(res, res => res.Index == 52);
+        }
+
+        [Fact]
+        public void EvaluateDiagonalPieceMoves_QueenCommonMove_Expect9MovesWithCaptures()
+        {
+            var game = new Game();
+            game.Board = new Board("r2q1knr/pp1pbp1p/2n3p1/3B4/2pQp1b1/6P1/PPPPPP1P/RN2KBNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 35);
+
+            Assert.True(res.Count == 9);
+            Assert.Equal(7, res.Count(res => res.IsCapture == false));
+            Assert.Equal(2, res.Count(res => res.IsCapture == true));
+
+            Assert.Contains(res, res => res.Index == 7);
+            Assert.Contains(res, res => res.Index == 8);
+            Assert.Contains(res, res => res.Index == 14);
+            Assert.Contains(res, res => res.Index == 17);
+            Assert.Contains(res, res => res.Index == 21);
+            Assert.Contains(res, res => res.Index == 26);
+            Assert.Contains(res, res => res.Index == 28);
+            Assert.Contains(res, res => res.Index == 42);
+            Assert.Contains(res, res => res.Index == 44);
+        }
     }
 }

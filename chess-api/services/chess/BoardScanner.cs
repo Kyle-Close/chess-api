@@ -14,6 +14,8 @@ namespace Chess
             Board = board;
         }
 
+        // TODO: Surrounding Squares scanner (for king)
+
         // EvaluateSlidingPieceMove - Pass in game, index you want to evaluate from
         //  Based on who's turn it is, it will return a list of ValidMoves for sliding pieces (rook & queen)
         public List<ValidMove> EvaluateSlidingPieceMove(Game game, int index)
@@ -211,6 +213,13 @@ namespace Chess
             }
         }
 
+
+        // EvaluateDiagonalPieceMove - Pass in game, index you want to evaluate from
+        //  Based on who's turn it is, it will return a list of ValidMoves in all 4 diagonal directions
+        public List<ValidMove> EvaluateDiagonalPieceMove(Game game, int index)
+        {
+            throw new NotImplementedException();
+        }
 
         public List<Square> GetDiagonal(int index, Diagonal diagonal)
         {
