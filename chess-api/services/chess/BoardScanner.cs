@@ -101,15 +101,6 @@ namespace Chess
 
         public List<Square> GetDiagonal(int index, Diagonal diagonal)
         {
-            // for TOP_LEFT_TO_BOTTOM_RIGHT
-            // subtract 9 till on a file or 8th rank
-            // add 9 till on h file or 1st rank
-            //
-            // for BOTTOM_LEFT_TO_TOP_RIGHT
-            // add 7 till on a file or 1st rank
-            // subtract 7 till on h file or 8th rank
-            //
-
             if (!Board.IsValidSquareIndex(index))
             {
                 throw new Exception("Sent invalid index to GetDiagonal");
@@ -121,10 +112,52 @@ namespace Chess
 
             if (diagonal == Diagonal.BOTTOM_LEFT_TO_TOP_RIGHT)
             {
+                while (file != BoardFile.A && rank != BoardRank.ONE)
+                {
+                    index += 7;
 
+                    file = Square.GetFile(index);
+                    rank = Square.GetRank(index);
+                }
+
+                // Push index square as this is the start
+                result.Add(Board.Squares[index]);
+
+                while (file != BoardFile.H && rank != BoardRank.EIGHT)
+                {
+                    index -= 7;
+                    result.Add(Board.Squares[index]);
+
+                    file = Square.GetFile(index);
+                    rank = Square.GetRank(index);
+                }
+
+                return result;
             }
+            else
+            {
+                while (file != BoardFile.A && rank != BoardRank.EIGHT)
+                {
+                    index -= 9;
 
-            return new List<Square>();
+                    file = Square.GetFile(index);
+                    rank = Square.GetRank(index);
+                }
+
+
+                result.Add(Board.Squares[index]);
+
+                while (file != BoardFile.H && rank != BoardRank.ONE)
+                {
+                    index += 9;
+                    result.Add(Board.Squares[index]);
+
+                    file = Square.GetFile(index);
+                    rank = Square.GetRank(index);
+                }
+
+                return result;
+            }
         }
 
         public Square GetSquare(int index)
