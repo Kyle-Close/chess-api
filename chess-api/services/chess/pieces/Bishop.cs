@@ -18,7 +18,8 @@ namespace Chess
         // considers being blocked and ensuring not to go off board.
         public override List<ValidMove> GetStandardMoves(Game game)
         {
-            throw new NotImplementedException();
+            var scanner = new BoardScanner(game.Board);
+            return scanner.EvaluateDiagonalPieceMove(game, PosIndex);
         }
     }
 }

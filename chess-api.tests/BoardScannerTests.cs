@@ -270,6 +270,7 @@ namespace Chess
         public void EvaluateDiagonalPieceMoves_OnlySouthEastWithCapture_Expect4Moves()
         {
             var game = new Game();
+            game.ActiveColor = Color.BLACK;
             game.Board = new Board("rn1qkbnr/pppppppp/b7/8/8/8/PPPPPPPP/RNBQKBNR");
             var scanner = new BoardScanner(game.Board);
             var res = scanner.EvaluateDiagonalPieceMove(game, 16);
@@ -287,18 +288,18 @@ namespace Chess
         public void EvaluateDiagonalPieceMoves_OnlyEastWithCaptures_Expect5Moves()
         {
             var game = new Game();
-            game.ActiveColor = Color.BLACK;
-            game.Board = new Board("rn1qkbnr/pppppppp/b7/8/8/8/PPPPPPPP/RNBQKBNRrn1qkbnr/ppp1pp1p/b5p1/3p4/4B3/3P2P1/PPP1PP1P/RN1QKBNR");
+            game.Board = new Board("rn1qkbnr/ppp1pp1p/b5p1/3p4/4B3/3P2P1/PPP1PP1P/RN1QKBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 16);
+            var res = scanner.EvaluateDiagonalPieceMove(game, 36);
 
             Assert.True(res.Count == 5);
             Assert.Equal(2, res.Count(res => res.IsCapture == true));
             Assert.Equal(3, res.Count(res => res.IsCapture == false));
 
+            Assert.Contains(res, res => res.Index == 22);
             Assert.Contains(res, res => res.Index == 27);
             Assert.Contains(res, res => res.Index == 29);
-            Assert.Contains(res, res => res.Index == 22);
+            
             Assert.Contains(res, res => res.Index == 45);
             Assert.Contains(res, res => res.Index == 54);
         }
@@ -307,6 +308,7 @@ namespace Chess
         public void EvaluateDiagonalPieceMoves_OnlySouthNoCaptures_Expect7Moves()
         {
             var game = new Game();
+            game.ActiveColor = Color.BLACK;
             game.Board = new Board("rn1q1knr/ppp1bp1p/b3p1p1/3p4/4B3/3P2P1/PPP1PP1P/RN1QKBNR");
             var scanner = new BoardScanner(game.Board);
             var res = scanner.EvaluateDiagonalPieceMove(game, 12);

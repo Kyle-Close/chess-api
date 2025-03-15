@@ -218,7 +218,119 @@ namespace Chess
         //  Based on who's turn it is, it will return a list of ValidMoves in all 4 diagonal directions
         public List<ValidMove> EvaluateDiagonalPieceMove(Game game, int index)
         {
-            throw new NotImplementedException();
+            if (!Board.IsValidSquareIndex(index))
+            {
+                throw new Exception("Provided invalid index to EvaluateDiagonalPieceMove");
+            }
+
+            var ogPiece = game.Board.Squares[index].Piece;
+            if (ogPiece == null)
+            {
+                throw new Exception("You provided a square with no piece on it.");
+            }
+            else if (ogPiece.PieceType != PieceType.BISHOP && ogPiece.PieceType != PieceType.QUEEN)
+            {
+                throw new Exception("Only bishops and queens can move diagonally.");
+            }
+
+            var result = new List<ValidMove>();
+
+            var scannedDiagTLtBR = GetDiagonal(index, Diagonal.TOP_LEFT_TO_BOTTOM_RIGHT);
+            int indexInScanned = scannedDiagTLtBR.FindIndex(square => square.Index == index);
+
+            if (indexInScanned < scannedDiagTLtBR.Count - 1)
+            {
+                for (int i = indexInScanned + 1; i < scannedDiagTLtBR.Count; i++)
+                {
+                    var piece = scannedDiagTLtBR[i].Piece;
+                    if (piece == null)
+                    {
+                        result.Add(new ValidMove(scannedDiagTLtBR[i].Index, false));
+                    }
+                    else if (piece.Color != game.ActiveColor)
+                    {
+                        result.Add(new ValidMove(piece.PosIndex, true));
+                        break;
+                    }
+                    else if (piece.Color == game.ActiveColor)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Count down from rookSquare index to end. From higher rank to lower
+            // Empty = add, enemy = capture & stop, ally = blocked & stop
+            if (indexInScanned > 0)
+            {
+                for (int i = indexInScanned - 1; i >= 0; i--)
+                {
+                    var piece = scannedDiagTLtBR[i].Piece;
+                    if (piece == null)
+                    {
+                        result.Add(new ValidMove(scannedDiagTLtBR[i].Index, false));
+                    }
+                    else if (piece.Color != game.ActiveColor)
+                    {
+                        result.Add(new ValidMove(piece.PosIndex, true));
+                        break;
+                    }
+                    else if (piece.Color == game.ActiveColor)
+                    {
+                        break;
+                    }
+                }
+            }
+
+
+            var scannedDiagBLtTR = GetDiagonal(index, Diagonal.BOTTOM_LEFT_TO_TOP_RIGHT);
+            indexInScanned = scannedDiagBLtTR.FindIndex(square => square.Index == index);
+
+            if (indexInScanned < scannedDiagBLtTR.Count - 1)
+            {
+                for (int i = indexInScanned + 1; i < scannedDiagBLtTR.Count; i++)
+                {
+                    var piece = scannedDiagBLtTR[i].Piece;
+                    if (piece == null)
+                    {
+                        result.Add(new ValidMove(scannedDiagBLtTR[i].Index, false));
+                    }
+                    else if (piece.Color != game.ActiveColor)
+                    {
+                        result.Add(new ValidMove(piece.PosIndex, true));
+                        break;
+                    }
+                    else if (piece.Color == game.ActiveColor)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Count down from rookSquare index to start. From H-A direction
+            // Empty = add, enemy = capture & stop, ally = blocked & stop
+            if (indexInScanned > 0)
+            {
+                for (int i = indexInScanned - 1; i >= 0; i--)
+                {
+                    var piece = scannedDiagBLtTR[i].Piece;
+                    if (piece == null)
+                    {
+                        result.Add(new ValidMove(scannedDiagBLtTR[i].Index, false));
+                    }
+                    else if (piece.Color != game.ActiveColor)
+                    {
+                        result.Add(new ValidMove(piece.PosIndex, true));
+                        break;
+                    }
+                    else if (piece.Color == game.ActiveColor)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return result;
         }
 
         public List<Square> GetDiagonal(int index, Diagonal diagonal)
