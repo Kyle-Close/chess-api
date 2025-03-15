@@ -13,6 +13,119 @@ namespace Chess
         {
             Board = board;
         }
+
+        // EvaluateSlidingPieceMove - Pass in game, index you want to evaluate from
+        //  Based on who's turn it is, it will return a list of ValidMoves for sliding pieces (rook & queen)
+        public List<ValidMove> EvaluateSlidingPieceMove(Game game, int index)
+        {
+            var result = new List<ValidMove>();
+
+            var file = Square.GetFile(index);
+            var rank = Square.GetRank(index);
+
+            // Scan file
+            var scannedFile = GetFile(file);
+            var scannedFilePieceIndex = scannedFile.FindIndex(square => square.Index == index);
+
+            // Count up from rookSquare index to end. From lower rank to higher
+            // Empty = add, enemy = capture & stop, ally = blocked & stop
+            if (scannedFilePieceIndex < scannedFile.Count - 1)
+            {
+                for (int i = scannedFilePieceIndex + 1; i < scannedFile.Count; i++)
+                {
+                    var piece = scannedFile[i].Piece;
+                    if (piece == null)
+                    {
+                        result.Add(new ValidMove(scannedFile[i].Index, false));
+                    }
+                    else if (piece.Color != game.ActiveColor)
+                    {
+                        result.Add(new ValidMove(piece.PosIndex, true));
+                        break;
+                    }
+                    else if (piece.Color == game.ActiveColor)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Count down from rookSquare index to end. From higher rank to lower
+            // Empty = add, enemy = capture & stop, ally = blocked & stop
+            if (scannedFilePieceIndex > 0)
+            {
+                for (int i = scannedFilePieceIndex - 1; i >= 0; i--)
+                {
+                    var piece = scannedFile[i].Piece;
+                    if (piece == null)
+                    {
+                        result.Add(new ValidMove(scannedFile[i].Index, false));
+                    }
+                    else if (piece.Color != game.ActiveColor)
+                    {
+                        result.Add(new ValidMove(piece.PosIndex, true));
+                        break;
+                    }
+                    else if (piece.Color == game.ActiveColor)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Scan rank
+            var scannedRank = GetRank(rank);
+            var scannedRankPieceIndex = scannedRank.FindIndex(square => square.Index == index);
+
+            // Count up from rookSquare index to end. From A-H direction
+            // Empty = add, enemy = capture & stop, ally = blocked & stop
+            if (scannedRankPieceIndex < scannedRank.Count - 1)
+            {
+                for (int i = scannedRankPieceIndex + 1; i < scannedRank.Count; i++)
+                {
+                    var piece = scannedRank[i].Piece;
+                    if (piece == null)
+                    {
+                        result.Add(new ValidMove(scannedRank[i].Index, false));
+                    }
+                    else if (piece.Color != game.ActiveColor)
+                    {
+                        result.Add(new ValidMove(piece.PosIndex, true));
+                        break;
+                    }
+                    else if (piece.Color == game.ActiveColor)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Count down from rookSquare index to start. From H-A direction
+            // Empty = add, enemy = capture & stop, ally = blocked & stop
+            if (scannedRankPieceIndex > 0)
+            {
+                for (int i = scannedRankPieceIndex - 1; i >= 0; i--)
+                {
+                    var piece = scannedRank[i].Piece;
+                    if (piece == null)
+                    {
+                        result.Add(new ValidMove(scannedRank[i].Index, false));
+                    }
+                    else if (piece.Color != game.ActiveColor)
+                    {
+                        result.Add(new ValidMove(piece.PosIndex, true));
+                        break;
+                    }
+                    else if (piece.Color == game.ActiveColor)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         // Returns an array of squares of whatever file you provide.
         // Reads from [1-8] (ranks)
         public List<Square> GetFile(BoardFile file)

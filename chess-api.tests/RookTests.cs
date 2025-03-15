@@ -13,6 +13,17 @@ namespace Chess
         }
 
         [Fact]
+        public void GetStandardMoves_BlackStartingPosition_ExpectNoMoves()
+        {
+            var game = new Game();
+            game.ActiveColor = Color.BLACK;
+            var rook = new Rook(0, Color.BLACK);
+
+            var res = rook.GetStandardMoves(game);
+            Assert.True(res.Count == 0);
+        }
+
+        [Fact]
         public void GetStandardMoves_BlackHFileOpen_Expect7Moves()
         {
             var game = new Game();
