@@ -20,35 +20,35 @@ namespace Chess
             switch (file)
             {
                 case BoardFile.A:
-                    var list = new List<int>() { 0, 8, 16, 24, 32, 40, 48, 56 };
+                    var list = new List<int>() { 56, 48, 40, 32, 24, 16, 8, 0 };
                     return GetBoardSquares(list);
 
                 case BoardFile.B:
-                    list = new List<int>() { 1, 9, 17, 25, 33, 41, 49, 57 };
+                    list = new List<int>() { 57, 49, 41, 33, 25, 17, 9, 1 };
                     return GetBoardSquares(list);
 
                 case BoardFile.C:
-                    list = new List<int>() { 2, 10, 18, 26, 34, 42, 50, 58 };
+                    list = new List<int>() { 58, 50, 42, 34, 26, 18, 10, 2 };
                     return GetBoardSquares(list);
 
                 case BoardFile.D:
-                    list = new List<int>() { 3, 11, 19, 27, 35, 43, 51, 59 };
+                    list = new List<int>() { 59, 51, 43, 35, 27, 19, 11, 3 };
                     return GetBoardSquares(list);
 
                 case BoardFile.E:
-                    list = new List<int>() { 4, 12, 20, 28, 36, 44, 52, 60 };
+                    list = new List<int>() { 60, 52, 44, 36, 28, 20, 12, 4 };
                     return GetBoardSquares(list);
 
                 case BoardFile.F:
-                    list = new List<int>() { 5, 13, 21, 29, 37, 45, 53, 61 };
+                    list = new List<int>() { 61, 53, 45, 37, 29, 21, 13, 5 };
                     return GetBoardSquares(list);
 
                 case BoardFile.G:
-                    list = new List<int>() { 6, 14, 22, 30, 38, 46, 54, 62 };
+                    list = new List<int>() { 62, 54, 46, 38, 30, 22, 14, 6 };
                     return GetBoardSquares(list);
 
                 case BoardFile.H:
-                    list = new List<int>() { 7, 15, 23, 31, 39, 47, 55, 63 };
+                    list = new List<int>() { 63, 55, 47, 39, 31, 23, 15, 7 };
                     return GetBoardSquares(list);
 
                 default:
