@@ -10,7 +10,7 @@ namespace Chess
         public int PosIndex { get; set; }
 
         // ----- Methods -----
-        public abstract List<ValidMove> GetStandardMoveIndexes(Game game);
+        public abstract List<ValidMove> GetStandardMoves(Game game);
         public abstract char GetPieceChar();
 
         // ----- Constructors -----

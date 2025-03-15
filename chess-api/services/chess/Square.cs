@@ -2,23 +2,25 @@ namespace Chess
 {
     public class Square
     {
+        public int Index { get; set; }
         public Piece? Piece { get; set; }
         public BoardFile File { get; set; }
         public BoardRank Rank { get; set; }
 
-        public Square(Piece piece, BoardFile file, BoardRank rank)
+        public Square(int index, Piece piece, BoardFile file, BoardRank rank)
         {
+            Index = index;
             Piece = piece;
             File = file;
             Rank = rank;
         }
 
-        public Square(BoardFile file, BoardRank rank)
+        public Square(int index, BoardFile file, BoardRank rank)
         {
+            Index = index;
             File = file;
             Rank = rank;
         }
-
 
         public static int GetSquareIndex(BoardFile file, BoardRank rank)
         {

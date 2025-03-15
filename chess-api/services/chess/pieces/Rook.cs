@@ -14,8 +14,10 @@ namespace Chess
             return Color == Color.WHITE ? 'R' : 'r';
         }
 
-        public override List<ValidMove> GetStandardMoveIndexes(Game game)
+        public override List<ValidMove> GetStandardMoves(Game game)
         {
+
+
             return new List<ValidMove>();
         }
     }

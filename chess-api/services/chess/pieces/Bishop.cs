@@ -16,7 +16,7 @@ namespace Chess
 
         // Gets the standard bishop moves that are possible.
         // considers being blocked and ensuring not to go off board.
-        public override List<ValidMove> GetStandardMoveIndexes(Game game)
+        public override List<ValidMove> GetStandardMoves(Game game)
         {
             throw new NotImplementedException();
         }

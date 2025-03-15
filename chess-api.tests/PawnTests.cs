@@ -163,59 +163,59 @@ public class PawnTests
     // ---- Get Standard Pawn Moves ----
     //
     [Fact]
-    public void GetStandardMoveIndexes_WhiteNoAttackSquares_ExpectStartingIndexes()
+    public void GetStandardMoves_WhiteNoAttackSquares_ExpectStartingIndexes()
     {
         var game = new Game();
         Pawn pawn = new Pawn(52, Color.WHITE);
-        var res = pawn.GetStandardMoveIndexes(game);
+        var res = pawn.GetStandardMoves(game);
 
         Assert.Contains(res, move => move.Index == 36 && move.IsCapture == false);
         Assert.Contains(res, move => move.Index == 44 && move.IsCapture == false);
         Assert.True(res.Count == 2);
     }
     [Fact]
-    public void GetStandardMoveIndexes_BlackNoAttackSquares_ExpectStartingIndexes()
+    public void GetStandardMoves_BlackNoAttackSquares_ExpectStartingIndexes()
     {
         var game = new Game();
         Pawn pawn = new Pawn(12, Color.BLACK);
-        var res = pawn.GetStandardMoveIndexes(game);
+        var res = pawn.GetStandardMoves(game);
 
         Assert.Contains(res, move => move.Index == 20 && move.IsCapture == false);
         Assert.Contains(res, move => move.Index == 28 && move.IsCapture == false);
         Assert.True(res.Count == 2);
     }
     [Fact]
-    public void GetStandardMoveIndexes_WhiteOneAttackerAndBlocked_ExpectSingleCapture()
+    public void GetStandardMoves_WhiteOneAttackerAndBlocked_ExpectSingleCapture()
     {
         var game = new Game();
         game.Board = new Board("rnbqkbnr/ppp3pp/3p4/4pp2/4P3/8/PPPP1PPP/RNBQKBNR");
         Pawn pawn = new Pawn(36, Color.WHITE);
-        var res = pawn.GetStandardMoveIndexes(game);
+        var res = pawn.GetStandardMoves(game);
 
         Assert.Contains(res, move => move.Index == 29 && move.IsCapture == true);
         Assert.True(res.Count == 1);
     }
     [Fact]
-    public void GetStandardMoveIndexes_WhiteTwoAttackersAndBlocked_ExpectDoubleCapture()
+    public void GetStandardMoves_WhiteTwoAttackersAndBlocked_ExpectDoubleCapture()
     {
         var game = new Game();
         game.Board = new Board("rnbqkbnr/ppp3pp/8/3ppp2/4P3/8/PPPP1PPP/RNBQKBNR");
         Pawn pawn = new Pawn(36, Color.WHITE);
-        var res = pawn.GetStandardMoveIndexes(game);
+        var res = pawn.GetStandardMoves(game);
 
         Assert.Contains(res, move => move.Index == 27 && move.IsCapture == true);
         Assert.Contains(res, move => move.Index == 29 && move.IsCapture == true);
         Assert.True(res.Count == 2);
     }
     [Fact]
-    public void GetStandardMoveIndexes_WhiteTwoAttackers_ExpectDoubleCaptureAndPush()
+    public void GetStandardMoves_WhiteTwoAttackers_ExpectDoubleCaptureAndPush()
     {
         var game = new Game();
         game.Board = new Board("rnbqkbnr/ppp1p1pp/8/3p1p2/4P3/8/PPPP1PPP/RNBQKBNR");
         game.Board.Squares[36].Piece.HasMoved = true;
 
         Pawn pawn = new Pawn(36, Color.WHITE);
-        var res = pawn.GetStandardMoveIndexes(game);
+        var res = pawn.GetStandardMoves(game);
 
         Assert.Contains(res, move => move.Index == 27 && move.IsCapture == true);
         Assert.Contains(res, move => move.Index == 28 && move.IsCapture == false);
@@ -223,7 +223,7 @@ public class PawnTests
         Assert.True(res.Count == 3);
     }
     [Fact]
-    public void GetStandardMoveIndexes_BlackTwoAttackers_ExpectDoubleCaptureAndPush()
+    public void GetStandardMoves_BlackTwoAttackers_ExpectDoubleCaptureAndPush()
     {
         var game = new Game();
         game.ActiveColor = Color.BLACK;
@@ -231,7 +231,7 @@ public class PawnTests
         game.Board.Squares[28].Piece.HasMoved = true;
 
         Pawn pawn = new Pawn(28, Color.BLACK);
-        var res = pawn.GetStandardMoveIndexes(game);
+        var res = pawn.GetStandardMoves(game);
 
 
         Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
@@ -240,26 +240,26 @@ public class PawnTests
         Assert.True(res.Count == 3);
     }
     [Fact]
-    public void GetStandardMoveIndexes_BlackTwoAttackersAndBlocked_ExpectDoubleCapture()
+    public void GetStandardMoves_BlackTwoAttackersAndBlocked_ExpectDoubleCapture()
     {
         var game = new Game();
         game.ActiveColor = Color.BLACK;
         game.Board = new Board("rnbqkbnr/pppp1ppp/8/4p3/3PPP2/8/PPP3PP/RNBQKBNR");
         Pawn pawn = new Pawn(28, Color.BLACK);
-        var res = pawn.GetStandardMoveIndexes(game);
+        var res = pawn.GetStandardMoves(game);
 
         Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
         Assert.Contains(res, move => move.Index == 37 && move.IsCapture == true);
         Assert.True(res.Count == 2);
     }
     [Fact]
-    public void GetStandardMoveIndexes_BlackOneAttackerAndBlocked_ExpectCapture()
+    public void GetStandardMoves_BlackOneAttackerAndBlocked_ExpectCapture()
     {
         var game = new Game();
         game.ActiveColor = Color.BLACK;
         game.Board = new Board("rnbqkbnr/pppp1ppp/8/4p3/3PP3/8/PPP2PPP/RNBQKBNR");
         Pawn pawn = new Pawn(28, Color.BLACK);
-        var res = pawn.GetStandardMoveIndexes(game);
+        var res = pawn.GetStandardMoves(game);
 
         Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
         Assert.True(res.Count == 1);

@@ -60,7 +60,7 @@ namespace Chess
             switch (piece.PieceType)
             {
                 case PieceType.PAWN:
-                    return piece.GetStandardMoveIndexes(game);
+                    return piece.GetStandardMoves(game);
                 default:
                     throw new NotImplementedException("");
             }

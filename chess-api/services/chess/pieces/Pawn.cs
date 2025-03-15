@@ -27,7 +27,7 @@ namespace Chess
 
         // Gets the standard pawn moves that are possible. Does not consider en-passant.
         // 2 square moves, single square moves, capture (left & right) are considered.
-        public override List<ValidMove> GetStandardMoveIndexes(Game game)
+        public override List<ValidMove> GetStandardMoves(Game game)
         {
             var piece = Board.ValidatePieceOnSquare(game.Board, PosIndex, PieceType.PAWN);
             var moveIndexList = new List<ValidMove>();

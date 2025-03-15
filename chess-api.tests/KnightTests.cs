@@ -261,4 +261,66 @@ public class KnightTests
         Assert.Contains(res, move => move == 29);
         Assert.Contains(res, move => move == 20);
     }
+
+    [Fact]
+    public void GetStandardMoves_WhiteStartingPos_Expect2Moves()
+    {
+        var game = new Game();
+        var knight = new Knight(62, Color.WHITE);
+        var res = knight.GetStandardMoves(game);
+
+        Assert.True(res.Count == 2);
+        Assert.Contains(res, move => move.Index == 45 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 47 && move.IsCapture == false);
+    }
+
+    [Fact]
+    public void GetStandardMoves_BlackStartingPos_Expect2Moves()
+    {
+        var game = new Game();
+        game.ActiveColor = Color.BLACK;
+        var knight = new Knight(1, Color.BLACK);
+        var res = knight.GetStandardMoves(game);
+
+        Assert.True(res.Count == 2);
+        Assert.Contains(res, move => move.Index == 16 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 18 && move.IsCapture == false);
+    }
+
+    [Fact]
+    public void GetStandardMoves_AllSquaresFree_Expect8Moves()
+    {
+        var game = new Game();
+        game.Board = new Board("rnbqkbnr/pppppppp/8/5P2/5NP1/4P3/PPPP3P/RNBQKB1R");
+        var knight = new Knight(37, Color.WHITE);
+        var res = knight.GetStandardMoves(game);
+
+        Assert.True(res.Count == 8);
+        Assert.Contains(res, move => move.Index == 20 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 22 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 31 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 47 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 54 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 52 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 43 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 27 && move.IsCapture == false);
+    }
+
+
+    [Fact]
+    public void GetStandardMoves_BlackWithCaptures_ExpectCorrectMoves()
+    {
+        var game = new Game();
+        game.ActiveColor = Color.BLACK;
+        game.Board = new Board("rnbqkb1r/pp1ppppp/2p5/4nP2/5NP1/3PP3/PPP4P/RNBQKB1R");
+        var knight = new Knight(28, Color.BLACK);
+        var res = knight.GetStandardMoves(game);
+
+        Assert.True(res.Count == 5);
+        Assert.Contains(res, move => move.Index == 22 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 38 && move.IsCapture == true);
+        Assert.Contains(res, move => move.Index == 45 && move.IsCapture == false);
+        Assert.Contains(res, move => move.Index == 43 && move.IsCapture == true);
+        Assert.Contains(res, move => move.Index == 34 && move.IsCapture == false);
+    }
 }

@@ -14,7 +14,7 @@ namespace Chess
             return Color == Color.WHITE ? 'Q' : 'q';
         }
 
-        public override List<ValidMove> GetStandardMoveIndexes(Game game)
+        public override List<ValidMove> GetStandardMoves(Game game)
         {
             throw new NotImplementedException();
         }

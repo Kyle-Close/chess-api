@@ -113,14 +113,14 @@ namespace Chess
                         {
                             file = Square.GetFile(count);
                             rank = Square.GetRank(count);
-                            board[count] = new Square(file, rank);
+                            board[count] = new Square(count, file, rank);
                             count++;
                         }
                     }
                     else
                     {
                         Piece piece = Piece.ConvertCharToPiece(letter, count);
-                        Square square = new Square(piece, file, rank);
+                        Square square = new Square(count, piece, file, rank);
 
                         board[count] = square;
                         count++;
