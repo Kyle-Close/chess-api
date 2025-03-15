@@ -161,5 +161,87 @@ namespace Chess
             Assert.True(diagonal.Count == 1);
             Assert.Contains(diagonal, square => square.Piece != null && square.Piece.PieceType == PieceType.ROOK && square.Piece.Color == Color.WHITE);
         }
+
+        // ----- Scan Files & Ranks -----
+
+        [Fact]
+        public void GetFile_StartingPos_ExpectCorrectSquares()
+        {
+            var board = new Board();
+            var scanner = new BoardScanner(board);
+            var file = scanner.GetFile(BoardFile.D);
+
+            Assert.True(file.Count == 8);
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.QUEEN && square.Piece.Color == Color.WHITE);
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.PAWN && square.Piece.Color == Color.WHITE);
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.QUEEN && square.Piece.Color == Color.BLACK);
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.PAWN && square.Piece.Color == Color.BLACK);
+            Assert.Contains(file, square => square.Piece == null);
+        }
+
+        [Fact]
+        public void GetFile_ManyPiecesOnFile_ExpectCorrectSquares()
+        {
+            var board = new Board("rnb1kbnr/ppppqppp/8/4p3/4P3/3PB3/PPP1BPPP/RN1QK1NR");
+            var scanner = new BoardScanner(board);
+            var file = scanner.GetFile(BoardFile.E);
+
+            Assert.True(file.Count == 8);
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.KING && square.Piece.Color == Color.WHITE);
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.BISHOP && square.Piece.Color == Color.WHITE);
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.PAWN && square.Piece.Color == Color.WHITE);
+
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.QUEEN && square.Piece.Color == Color.BLACK);
+            Assert.Contains(file, square => square.Piece != null && square.Piece.PieceType == PieceType.KING && square.Piece.Color == Color.BLACK);
+            Assert.Contains(file, square => square.Piece == null);
+        }
+
+        [Fact]
+        public void GetFile_EmptyFile_ExpectEmptySquares()
+        {
+            var board = new Board("rnb1kbn1/pppp1pp1/6p1/4p1q1/4Pr2/3PBRP1/PPP1BPP1/RN1QK1N1");
+            var scanner = new BoardScanner(board);
+            var file = scanner.GetFile(BoardFile.H);
+
+            Assert.True(file.Count == 8);
+            Assert.Equal(8, file.Count(square => square.Piece == null));
+        }
+
+        [Fact]
+        public void GetRank_StartingPos1stRank_ExpectCorrectSquares()
+        {
+            var board = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+            var scanner = new BoardScanner(board);
+            var rank = scanner.GetRank(BoardRank.ONE);
+
+            Assert.True(rank.Count == 8);
+            Assert.Equal(2, rank.Count(square => square.Piece != null && square.Piece.PieceType == PieceType.ROOK && square.Piece.Color == Color.WHITE));
+            Assert.Equal(2, rank.Count(square => square.Piece != null && square.Piece.PieceType == PieceType.KNIGHT && square.Piece.Color == Color.WHITE));
+            Assert.Equal(2, rank.Count(square => square.Piece != null && square.Piece.PieceType == PieceType.BISHOP && square.Piece.Color == Color.WHITE));
+            Assert.Contains(rank, square => square.Piece != null && square.Piece.PieceType == PieceType.QUEEN && square.Piece.Color == Color.WHITE);
+            Assert.Contains(rank, square => square.Piece != null && square.Piece.PieceType == PieceType.KING && square.Piece.Color == Color.WHITE);
+        }
+
+        [Fact]
+        public void GetRank_StartingPos7thRank_ExpectCorrectSquares()
+        {
+            var board = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+            var scanner = new BoardScanner(board);
+            var rank = scanner.GetRank(BoardRank.SEVEN);
+
+            Assert.True(rank.Count == 8);
+            Assert.Equal(8, rank.Count(square => square.Piece != null && square.Piece.PieceType == PieceType.PAWN && square.Piece.Color == Color.BLACK));
+        }
+
+        [Fact]
+        public void GetRank_EmptyRank_ExpectEmptySquares()
+        {
+            var board = new Board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+            var scanner = new BoardScanner(board);
+            var rank = scanner.GetRank(BoardRank.FOUR);
+
+            Assert.True(rank.Count == 8);
+            Assert.Equal(8, rank.Count(square => square.Piece == null));
+        }
     }
 }
