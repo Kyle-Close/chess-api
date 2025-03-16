@@ -7,7 +7,7 @@ namespace Chess
         public Color ActiveColor { get; set; }
         public CastleRights WhiteCastleRights { get; set; }
         public CastleRights BlackCastleRights { get; set; }
-        public string EnPassantSquare { get; set; }
+        public int? EnPassantIndex { get; set; }
         public int HalfMoves { get; set; }
         public int FullMoves { get; set; }
 
@@ -20,7 +20,7 @@ namespace Chess
             ActiveColor = Color.WHITE;
             HalfMoves = 0;
             FullMoves = 1;
-            EnPassantSquare = "-";
+            EnPassantIndex = null;
             WhiteCastleRights = new CastleRights();
             BlackCastleRights = new CastleRights();
             FenHistory = new List<string>();
@@ -35,10 +35,9 @@ namespace Chess
             ActiveColor = fenHelper.ActiveColorSegment.ToUpper() == "W" ? Color.WHITE : Color.BLACK;
             HalfMoves = int.Parse(fenHelper.HalfMoveSegment);
             FullMoves = int.Parse(fenHelper.FullMoveSegment);
-            EnPassantSquare = fenHelper.EnPassantSegment;
+            EnPassantIndex = fenHelper.EnPassantIndex;
             FenHistory = new List<string>();
             Board = new Board(fenHelper.BoardSegment);
-
 
             var crSeg = fenHelper.CastleRightsSegment;
             if (crSeg == "-")

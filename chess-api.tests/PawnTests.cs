@@ -264,4 +264,24 @@ public class PawnTests
         Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
         Assert.True(res.Count == 1);
     }
+
+    [Fact]
+    public void IsAttackingEnPassantSquare_NoAttackingPawns_ExpectFalse()
+    {
+        var game = new Game("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1");
+        var pawn = Board.ValidatePieceOnSquare<Pawn>(game.Board, 12);
+        var res = pawn.IsAttackingEnPassantSquare(44, game.Board);
+
+        Assert.False(res);
+    }
+
+    [Fact]
+    public void IsAttackingEnPassantSquare_AttackingEnPassantSquare_ExpectTrue()
+    {
+        var game = new Game("rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 1");
+        var pawn = Board.ValidatePieceOnSquare<Pawn>(game.Board, 28);
+        var res = pawn.IsAttackingEnPassantSquare(21, game.Board);
+
+        Assert.True(res);
+    }
 }

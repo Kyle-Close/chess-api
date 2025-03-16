@@ -49,12 +49,11 @@ namespace Chess
                     return Results.NotFound("Game is not currently active.");
                 }
 
-                // Generate a list of valid moves in chess notation based on board and turn
                 var targetSquareIndex = Square.GetSquareIndex(payload.File, payload.Rank);
                 var piece = game.Board.Squares[targetSquareIndex].Piece;
                 if (piece == null)
                 {
-                    return Results.BadRequest();
+                    return Results.BadRequest("Selected a square with no piece.");
                 }
 
                 // Check if it's the correct players turn.

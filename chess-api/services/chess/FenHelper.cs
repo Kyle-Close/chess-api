@@ -6,6 +6,7 @@ namespace Chess
         public string ActiveColorSegment { get; set; }
         public string CastleRightsSegment { get; set; }
         public string EnPassantSegment { get; set; }
+        public int? EnPassantIndex {get; set;}
         public string HalfMoveSegment { get; set; }
         public string FullMoveSegment { get; set; }
 
@@ -23,6 +24,25 @@ namespace Chess
             EnPassantSegment = parts[3];
             HalfMoveSegment = parts[4];
             FullMoveSegment = parts[5];
+
+            // En-passant index
+            var index = ConvertEnPassantSegmentToIndex(EnPassantSegment);
+            EnPassantIndex = index;
+        }
+
+        public static int? ConvertEnPassantSegmentToIndex(string segment)
+        {
+            if(string.IsNullOrWhiteSpace(segment))
+            {
+                throw new Exception("Empty en-passant segment provided.");
+            }
+
+            if(segment == "-")
+            {
+                return null;
+            }
+        
+            return Square.GetSquareIndex(segment[0], segment[1]);
         }
 
         public static string BuildFen(Game game, Board board)
@@ -40,7 +60,7 @@ namespace Chess
             if (game.BlackCastleRights.QueenSide)
                 castleRightsSegment += "q";
 
-            string enPassantSegment = game.EnPassantSquare;
+            var enPassantSegment = game.EnPassantIndex;
             string halfMovesSegment = game.HalfMoves.ToString();
             string fullMovesSegment = game.FullMoves.ToString();
 

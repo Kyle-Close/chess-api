@@ -33,22 +33,27 @@ namespace Chess
             return index >= 0 && index < 64;
         }
 
-        public static Piece ValidatePieceOnSquare(Board board, int index, PieceType expectedPieceType)
-        {
-            if (!Board.IsValidSquareIndex(index))
-            {
-                throw new Exception("Index provided is not in range.");
-            }
+public static T ValidatePieceOnSquare<T>(Board board, int index) where T : Piece
+{
+    if (!IsValidSquareIndex(index))
+    {
+        throw new Exception("Index provided is not in range.");
+    }
 
-            var piece = board.Squares[index].Piece;
-            if (piece == null || piece.PieceType != expectedPieceType)
-            {
-                var pieceType = piece == null ? "none" : piece.PieceType.ToString();
-                throw new Exception($"Expected piece type: {expectedPieceType}. But got {pieceType}");
-            }
+    var piece = board.Squares[index].Piece;
+    if (piece == null)
+    {
+        throw new Exception($"No piece on this square.");
+    }
 
-            return piece;
-        }
+    if (piece is not T typedPiece)
+    {
+        throw new Exception($"Expected to get piece of type {typeof(T).Name} but got {piece.GetType().Name}");
+    }
+
+    return typedPiece;
+}
+
 
         public string BuildFen()
         {

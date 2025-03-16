@@ -23,14 +23,14 @@ namespace Chess
                 }
                 catch (Exception ex)
                 {
-                    System.Console.WriteLine(ex);
+                    Console.WriteLine(ex);
                 }
 
                 string fen = FenHelper.BuildFen(game, game.Board);
                 game.FenHistory.Add(fen);
                 activeGames.Add(game);
 
-                System.Console.WriteLine(game.Id);
+                Console.WriteLine(game.Id);
 
                 return fen;
             })
