@@ -333,6 +333,107 @@ namespace Chess
             return result;
         }
 
+        // EvaluateSurroundingPieceMove - Pass in game, index you want to evaluate from
+        //  Based on who's turn it is, it will return a list of ValidMoves in all 8 directions 1 square away
+        public List<ValidMove> EvaluateSurroundingPieceMove(Game game, int index)
+        {
+            var result = new List<ValidMove>();
+
+            var file = Square.GetFile(index);
+            var rank = Square.GetRank(index);
+
+            if (file == BoardFile.A)
+            {
+                if (rank == BoardRank.ONE)
+                {
+                    result.Add(new ValidMove(index - 8, false));
+                    result.Add(new ValidMove(index - 7, false));
+                    result.Add(new ValidMove(index + 1, false));
+                }
+                else if (rank == BoardRank.EIGHT)
+                {
+                    result.Add(new ValidMove(index + 1, false));
+                    result.Add(new ValidMove(index + 8, false));
+                    result.Add(new ValidMove(index + 9, false));
+                }
+                else
+                {
+                    result.Add(new ValidMove(index - 8, false));
+                    result.Add(new ValidMove(index - 7, false));
+                    result.Add(new ValidMove(index + 1, false));
+                    result.Add(new ValidMove(index + 8, false));
+                    result.Add(new ValidMove(index + 9, false));
+                }
+            }
+            else if (file == BoardFile.H)
+            {
+                if (rank == BoardRank.ONE)
+                {
+                    result.Add(new ValidMove(index - 9, false));
+                    result.Add(new ValidMove(index - 8, false));
+                    result.Add(new ValidMove(index - 1, false));
+                }
+                else if (rank == BoardRank.EIGHT)
+                {
+                    result.Add(new ValidMove(index - 1, false));
+                    result.Add(new ValidMove(index + 7, false));
+                    result.Add(new ValidMove(index + 8, false));
+                }
+                else
+                {
+                    result.Add(new ValidMove(index - 9, false));
+                    result.Add(new ValidMove(index - 8, false));
+                    result.Add(new ValidMove(index - 1, false));
+                    result.Add(new ValidMove(index + 7, false));
+                    result.Add(new ValidMove(index + 8, false));
+                }
+            }
+            else if (rank == BoardRank.ONE)
+            {
+                result.Add(new ValidMove(index - 9, false));
+                result.Add(new ValidMove(index - 8, false));
+                result.Add(new ValidMove(index - 7, false));
+                result.Add(new ValidMove(index - 1, false));
+                result.Add(new ValidMove(index + 1, false));
+            }
+            else if (rank == BoardRank.EIGHT)
+            {
+                result.Add(new ValidMove(index - 1, false));
+                result.Add(new ValidMove(index + 1, false));
+                result.Add(new ValidMove(index + 7, false));
+                result.Add(new ValidMove(index + 8, false));
+                result.Add(new ValidMove(index + 9, false));
+            }
+            else
+            {
+                result.Add(new ValidMove(index - 9, false));
+                result.Add(new ValidMove(index - 8, false));
+                result.Add(new ValidMove(index - 7, false));
+                result.Add(new ValidMove(index - 1, false));
+                result.Add(new ValidMove(index + 1, false));
+                result.Add(new ValidMove(index + 7, false));
+                result.Add(new ValidMove(index + 8, false));
+                result.Add(new ValidMove(index + 9, false));
+            }
+// Remove friendly pieces and mark enemy pieces as captures
+result.RemoveAll(move =>  
+{
+    var piece = game.Board.Squares[move.Index].Piece;
+    if (piece == null) 
+        return false; // Keep empty squares
+
+    if (piece.Color == game.ActiveColor) 
+        return true; // Remove friendly pieces
+
+    move.IsCapture = true; // Mark enemy pieces as captures
+    return false; // Keep enemy pieces
+});
+
+
+
+            return result;
+        }
+
         public List<Square> GetDiagonal(int index, Diagonal diagonal)
         {
             if (!Board.IsValidSquareIndex(index))

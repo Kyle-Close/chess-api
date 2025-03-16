@@ -299,7 +299,7 @@ namespace Chess
             Assert.Contains(res, res => res.Index == 22);
             Assert.Contains(res, res => res.Index == 27);
             Assert.Contains(res, res => res.Index == 29);
-            
+
             Assert.Contains(res, res => res.Index == 45);
             Assert.Contains(res, res => res.Index == 54);
         }
@@ -412,6 +412,78 @@ namespace Chess
             Assert.Contains(res, res => res.Index == 28);
             Assert.Contains(res, res => res.Index == 42);
             Assert.Contains(res, res => res.Index == 44);
+        }
+
+        // ----- Evaluate Surrounding Squares -----
+        //
+
+        [Fact]
+        public void EvaluateSurroundingPieceMoves_NorthEdge_Expect5Moves()
+        {
+            var game = new Game();
+            game.ActiveColor = Color.BLACK;
+            game.Board = new Board("rnb1k1nr/p1p3pp/1b2pp2/1pqB4/1PPp3Q/4P2P/P2P1PP1/RN2KBNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateSurroundingPieceMove(game, 4);
+
+            Assert.True(res.Count == 5);
+            Assert.Contains(res, res => res.Index == 3);
+            Assert.Contains(res, res => res.Index == 5);
+            Assert.Contains(res, res => res.Index == 11);
+            Assert.Contains(res, res => res.Index == 12);
+            Assert.Contains(res, res => res.Index == 13);
+        }
+
+        [Fact]
+        public void EvaluateSurroundingPieceMoves_AllSurroundingEmpty_Expect8Moves()
+        {
+            var game = new Game();
+            game.ActiveColor = Color.BLACK;
+            game.Board = new Board("rnb3nr/p1p1k1pp/1b6/1pqB1p2/1PPpp2Q/4P2P/P2P1PP1/RN2KBNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateSurroundingPieceMove(game, 12);
+
+            Assert.True(res.Count == 8);
+            Assert.Contains(res, res => res.Index == 3);
+            Assert.Contains(res, res => res.Index == 4);
+            Assert.Contains(res, res => res.Index == 5);
+            Assert.Contains(res, res => res.Index == 11);
+            Assert.Contains(res, res => res.Index == 13);
+            Assert.Contains(res, res => res.Index == 19);
+            Assert.Contains(res, res => res.Index == 20);
+            Assert.Contains(res, res => res.Index == 21);
+        }
+
+
+        [Fact]
+        public void EvaluateSurroundingPieceMoves_SomeCaptureSomeEmpty_ExpectCorrectMoves()
+        {
+            var game = new Game();
+            game.Board = new Board("rnb3nr/p1p1k1pp/3PB3/1pq2p2/1Pbpp2Q/2K1P2P/P2P1PP1/RN3BNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateSurroundingPieceMove(game, 42);
+
+            Assert.True(res.Count == 6);
+            Assert.Contains(res, res => res.Index == 41);
+            Assert.Contains(res, res => res.Index == 43);
+            Assert.Contains(res, res => res.Index == 49);
+            Assert.Contains(res, res => res.Index == 50);
+            Assert.Contains(res, res => res.Index == 34 && res.IsCapture == true);
+            Assert.Contains(res, res => res.Index == 35 && res.IsCapture == true);
+        }
+
+        [Fact]
+        public void EvaluateSurroundingPieceMoves_OnCornerSquare_Expect3Moves()
+        {
+            var game = new Game();
+            game.Board = new Board("rnb3nr/p1p1k1pp/3PB3/1pq2p2/RPbpp2Q/PN2P2P/3P1PP1/K4BNR");
+            var scanner = new BoardScanner(game.Board);
+            var res = scanner.EvaluateSurroundingPieceMove(game, 56);
+
+            Assert.True(res.Count == 3);
+            Assert.Contains(res, res => res.Index == 48);
+            Assert.Contains(res, res => res.Index == 49);
+            Assert.Contains(res, res => res.Index == 57);
         }
     }
 }
