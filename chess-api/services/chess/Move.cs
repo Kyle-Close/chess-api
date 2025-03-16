@@ -40,7 +40,7 @@ namespace Chess
 
         // Based on the piece being targeted, this fn returns a list of valid indexes
         //  the piece can move to. A standard move is either a move that the piece can go to
-        //  (like a bishop moving diagonally) or any special attacking moves (pawn diagonal)
+        //  (like a bishop moving diagonally) or any attacking moves (pawn diagonal)
         //  This also accounts for if a piece is blocked or off the side of the board.
         public List<ValidMove> GetStandardMoves(Game game, int index)
         {
@@ -55,15 +55,7 @@ namespace Chess
                 throw new Exception("Cannot get standard moves. Square does not have a piece on it.");
             }
 
-            var result = new List<ValidMove>();
-
-            switch (piece.PieceType)
-            {
-                case PieceType.PAWN:
-                    return piece.GetStandardMoves(game);
-                default:
-                    throw new NotImplementedException("");
-            }
+            return piece.GetStandardMoves(game);
         }
 
         /*public MoveMetaData(Game game, int start, int end) // Execute the move.*/

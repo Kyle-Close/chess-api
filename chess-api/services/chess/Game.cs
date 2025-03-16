@@ -27,6 +27,55 @@ namespace Chess
             Board = new Board();
         }
 
+        public Game(string fen)
+        {
+            var fenHelper = new FenHelper(fen);
+
+            Id = Guid.NewGuid().ToString();
+            ActiveColor = fenHelper.ActiveColorSegment.ToUpper() == "W" ? Color.WHITE : Color.BLACK;
+            HalfMoves = int.Parse(fenHelper.HalfMoveSegment);
+            FullMoves = int.Parse(fenHelper.FullMoveSegment);
+            EnPassantSquare = fenHelper.EnPassantSegment;
+            FenHistory = new List<string>();
+            Board = new Board(fenHelper.BoardSegment);
+
+
+            var crSeg = fenHelper.CastleRightsSegment;
+            if (crSeg == "-")
+            {
+                WhiteCastleRights = new CastleRights(false, false);
+                BlackCastleRights = new CastleRights(false, false);
+            }
+            else
+            {
+                bool whiteKing = false;
+                bool whiteQueen = false;
+                bool blackKing = false;
+                bool blackQueen = false;
+
+                if (crSeg.Contains("K"))
+                {
+                    whiteKing = true;
+                }
+                if (crSeg.Contains("k"))
+                {
+                    blackKing = true;
+                }
+                if (crSeg.Contains("Q"))
+                {
+                    whiteQueen = true;
+                }
+                if (crSeg.Contains("q"))
+                {
+                    blackQueen = false;
+                }
+
+                WhiteCastleRights = new CastleRights(whiteKing, whiteQueen);
+                BlackCastleRights = new CastleRights(blackKing, blackQueen);
+            }
+
+        }
+
         // Returns an array of squares of whatever file you provide.
         // Reads from [1-8] (ranks)
         public List<Square> GetCurrentBoardFile(BoardFile file)

@@ -33,26 +33,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Custom below
 
 List<Game> activeGames = new List<Game>();
-
-app.MapPost("/chess-api/start-new-game", () =>
-{
-    //TODO: Make an option to send in a fen string and start the game in that state
-    Game game = new Game();
-    var board = new Board();
-
-    string fen = FenHelper.BuildFen(game, board);
-    game.FenHistory.Add(fen);
-    activeGames.Add(game);
-
-    System.Console.WriteLine(game.Id);
-
-    return fen;
-})
-.WithName("Start New Game")
-.WithOpenApi();
 
 app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
 {
@@ -75,12 +57,12 @@ app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
     }
 
     // Check if the move is valid. If it is then update the board and return.
-
     return Results.Ok(doesMatch);
 })
 .WithName("Execute Move")
 .WithOpenApi();
 
+StartNewGameApi.EnableEndpoint(app, activeGames);
 GetValidMovesApi.EnableEndpoint(app, activeGames);
 
 app.MapPost("/chess-api/build-board", (BuildBoardApiPayload payload) =>

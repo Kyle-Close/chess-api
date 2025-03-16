@@ -14,5 +14,11 @@ namespace Chess
             KingSide = true;
             QueenSide = true;
         }
+
+        public CastleRights(bool kingSide, bool queenSide)
+        {
+            KingSide = kingSide;
+            QueenSide = queenSide;
+        }
     }
 }

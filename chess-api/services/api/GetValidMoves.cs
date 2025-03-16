@@ -60,15 +60,13 @@ namespace Chess
                 // Check if it's the correct players turn.
                 if (piece.Color != game.ActiveColor)
                 {
-                    //GetValidMovesResponse response = new GetValidMovesResponse(game, [], "Whoops! Looks like it's not your turn.");
-                    return Results.BadRequest();
+                    return Results.BadRequest("Not this colors turn.");
                 }
 
                 // Generate possible moves
                 MoveMetaData moveMetaData = new MoveMetaData(game, targetSquareIndex);
-                //GetValidMovesResponse res = new GetValidMovesResponse(game, [moveResponse]);
 
-                return Results.Ok();
+                return Results.Ok(moveMetaData);
             })
             .WithName("Get Valid Moves")
             .Accepts<GetValidMovesApi>("application/json")
