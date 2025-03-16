@@ -1,5 +1,4 @@
 using Chess;
-using Xunit.Sdk;
 namespace chess_api.tests;
 
 public class PawnTests

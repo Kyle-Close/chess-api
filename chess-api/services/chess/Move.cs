@@ -16,17 +16,21 @@ namespace Chess
     {
         public int StartIndex { get; set; }
         public List<ValidMove> ValidMoves { get; set; } // List of squares the piece can move to. The index
-        public bool? IsEnPassantCapture {get; set;}
-        public bool? IsCastle {get; set;}
+        public bool? IsEnPassantCapture { get; set; }
+        public bool? IsCastle { get; set; }
         public bool? IsCapture { get; set; }
         public int? EndIndex { get; set; } // If this is sent that indicates a move was executed
         public string? Notation { get; set; } // Also only gets sent when move is executed. "e4" for ex.
-        public string? NewFen {get; set;}
+        public string? NewFen { get; set; }
 
         public MoveMetaData(Game game, int start) // Generate a list of moves.
         {
             StartIndex = start;
             var piece = game.Board.Squares[start].Piece;
+            if (piece == null)
+            {
+                throw new Exception("Cannot generate move meta data. No piece on square.");
+            }
 
             // 1. Get the unfiltered list of squares the piece can moved to based purely on how the piece can move.
             List<ValidMove> validMoves = GetStandardMoves(game, start);
@@ -35,7 +39,7 @@ namespace Chess
             if (game.EnPassantIndex != null && piece is Pawn pawn)
             {
                 bool isPawnAttacking = pawn.IsAttackingEnPassantSquare(game.EnPassantIndex.Value, game.Board);
-                if(isPawnAttacking)
+                if (isPawnAttacking)
                 {
                     validMoves.Add(new ValidMove(game.EnPassantIndex.Value, true));
                     IsEnPassantCapture = true;
@@ -43,9 +47,9 @@ namespace Chess
             }
 
             // 3. Add castling moves if possible
-            if(piece?.PieceType == PieceType.KING)
+            if (piece.PieceType == PieceType.KING)
             {
-                if(piece.Color == Color.WHITE)
+                if (piece.Color == Color.WHITE)
                 {
                     var castleRights = game.WhiteCastleRights;
                     // TODO: make fn that takes castleRights & returns a List<int>. 
