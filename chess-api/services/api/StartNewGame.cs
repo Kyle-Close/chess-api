@@ -5,11 +5,23 @@ namespace Chess
         public string? Fen { get; set; }
     }
 
+    public class NewGameResponse
+    {
+        public string GameId { get; set; }
+        public string Fen { get; set; }
+
+        public NewGameResponse(string id, string fen)
+        {
+            GameId = id;
+            Fen = fen;
+        }
+    }
+
     public class StartNewGameApi
     {
         public static void EnableEndpoint(WebApplication app, List<Game> activeGames)
         {
-            app.MapPost("/chess-api/start-new-game", async (HttpContext context) =>
+            app.MapPost("/chess-api/start-game", async (HttpContext context) =>
             {
                 Game game = new Game();
 
@@ -30,9 +42,8 @@ namespace Chess
                 game.FenHistory.Add(fen);
                 activeGames.Add(game);
 
-                Console.WriteLine(game.Id);
 
-                return fen;
+                return new NewGameResponse(game.Id, fen);
             })
             .WithName("Start New Game")
             .WithOpenApi();

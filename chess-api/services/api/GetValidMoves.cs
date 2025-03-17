@@ -23,14 +23,12 @@ namespace Chess
     public class GetValidMovesApi
     {
         public string GameId { get; set; }
-        public BoardRank Rank { get; set; }
-        public BoardFile File { get; set; }
+        public int Index { get; set; }
 
-        public GetValidMovesApi(string gameId, BoardRank rank, BoardFile file)
+        public GetValidMovesApi(string gameId, int index)
         {
             GameId = gameId;
-            Rank = rank;
-            File = file;
+            Index = index;
         }
 
         public static void EnableEndpoint(WebApplication app, List<Game> activeGames)
@@ -49,8 +47,7 @@ namespace Chess
                     return Results.NotFound("Game is not currently active.");
                 }
 
-                var targetSquareIndex = Square.GetSquareIndex(payload.File, payload.Rank);
-                var piece = game.Board.Squares[targetSquareIndex].Piece;
+                var piece = game.Board.Squares[payload.Index].Piece;
                 if (piece == null)
                 {
                     return Results.BadRequest("Selected a square with no piece.");
@@ -63,7 +60,7 @@ namespace Chess
                 }
 
                 // Generate possible moves
-                MoveMetaData moveMetaData = new MoveMetaData(game, targetSquareIndex);
+                MoveMetaData moveMetaData = new MoveMetaData(game, payload.Index);
 
                 return Results.Ok(moveMetaData);
             })
