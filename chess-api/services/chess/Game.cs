@@ -25,6 +25,8 @@ namespace Chess
             BlackCastleRights = new CastleRights();
             FenHistory = new List<string>();
             Board = new Board();
+
+            UpdateValidMoves();
         }
 
         public Game(string fen)
@@ -73,6 +75,30 @@ namespace Chess
                 BlackCastleRights = new CastleRights(blackKing, blackQueen);
             }
 
+            UpdateValidMoves();
+        }
+
+        public List<ValidMove> GetCurrentValidMoves()
+        {
+            var pieces = Board.GetPieces(ActiveColor);
+            return pieces.SelectMany(piece => piece.ValidMoves).ToList();
+        }
+
+        public void UpdateValidMoves()
+        {
+
+            var wPieces = Board.GetPieces(Color.WHITE);
+            var bPieces = Board.GetPieces(Color.BLACK);
+
+            foreach (var piece in wPieces)
+            {
+                piece.UpdateValidMoves(this);
+            }
+
+            foreach (var piece in bPieces)
+            {
+                piece.UpdateValidMoves(this);
+            }
         }
 
         // Returns an array of squares of whatever file you provide.

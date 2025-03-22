@@ -37,50 +37,50 @@ namespace Chess
             Regex regex = new Regex(@"[A-H]", RegexOptions.IgnoreCase);
             Match match = regex.Match(file.ToString());
 
-            if(!match.Success)
+            if (!match.Success)
             {
                 throw new Exception("File must be between A-H.");
             }
 
             int rankNumber;
-            if(!int.TryParse(rank.ToString(), out rankNumber) || rankNumber < 1 || rankNumber > 8)
+            if (!int.TryParse(rank.ToString(), out rankNumber) || rankNumber < 1 || rankNumber > 8)
             {
                 throw new Exception("Rank must be a number between 1-8");
             }
 
             var rankFinal = (BoardRank)rankNumber;
-         BoardFile fileFinal;
+            BoardFile fileFinal;
 
-         switch(file.ToString().ToUpper())
-         {
-            case "A":
-                fileFinal = BoardFile.A;
-                break;
-            case "B":
-                fileFinal = BoardFile.B;
-                break;
-            case "C":
-                fileFinal = BoardFile.C;
-                break;
-            case "D":
-                fileFinal = BoardFile.D;
-                break;
-            case "E":
-                fileFinal = BoardFile.E;
-                break;
-            case "F":
-                fileFinal = BoardFile.F;
-                break;
-            case "G":
-                fileFinal = BoardFile.G;
-                break;
-            case "H":
-                fileFinal = BoardFile.H;
-                break;
-            default:
-                throw new Exception("Provided invalid file letter.");
-         }
-            
+            switch (file.ToString().ToUpper())
+            {
+                case "A":
+                    fileFinal = BoardFile.A;
+                    break;
+                case "B":
+                    fileFinal = BoardFile.B;
+                    break;
+                case "C":
+                    fileFinal = BoardFile.C;
+                    break;
+                case "D":
+                    fileFinal = BoardFile.D;
+                    break;
+                case "E":
+                    fileFinal = BoardFile.E;
+                    break;
+                case "F":
+                    fileFinal = BoardFile.F;
+                    break;
+                case "G":
+                    fileFinal = BoardFile.G;
+                    break;
+                case "H":
+                    fileFinal = BoardFile.H;
+                    break;
+                default:
+                    throw new Exception("Provided invalid file letter.");
+            }
+
             return GetSquareIndex(fileFinal, rankFinal);
 
         }

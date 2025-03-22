@@ -7,7 +7,8 @@ namespace Chess
 
         public Color Color { get; }
         public bool HasMoved { get; set; }
-        public int PosIndex { get; set; }
+        public int Index { get; set; }
+        public List<ValidMove> ValidMoves { get; set; }
 
         // ----- Methods -----
         public abstract List<ValidMove> GetStandardMoves(Game game);
@@ -16,18 +17,34 @@ namespace Chess
         // ----- Constructors -----
         public Piece(int posIndex, Color color)
         {
-            PosIndex = posIndex;
+            Index = posIndex;
             Color = color;
             HasMoved = false;
+            ValidMoves = new List<ValidMove>();
         }
         public Piece(int posIndex, Color color, bool hasMoved)
         {
-            PosIndex = posIndex;
+            Index = posIndex;
             Color = color;
             HasMoved = hasMoved;
+            ValidMoves = new List<ValidMove>();
+        }
+        public Piece(int posIndex, Color color, bool hasMoved, List<ValidMove> validMoves)
+        {
+            Index = posIndex;
+            Color = color;
+            HasMoved = hasMoved;
+            ValidMoves = validMoves;
         }
 
         // ----- Methods -----
+        public void UpdateValidMoves(Game game)
+        {
+            // 1. Get the unfiltered list of squares the piece can moved to based purely on how the piece can move.
+            List<ValidMove> validMoves = GetStandardMoves(game);
+            ValidMoves = validMoves;
+        }
+
         public static Piece ConvertCharToPiece(char letter, int index)
         {
             switch (letter)

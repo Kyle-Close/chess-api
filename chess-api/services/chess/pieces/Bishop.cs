@@ -19,7 +19,7 @@ namespace Chess
         public override List<ValidMove> GetStandardMoves(Game game)
         {
             var scanner = new BoardScanner(game.Board);
-            return scanner.EvaluateDiagonalPieceMove(game, PosIndex);
+            return scanner.EvaluateDiagonalPieceMove(game, Index);
         }
     }
 }

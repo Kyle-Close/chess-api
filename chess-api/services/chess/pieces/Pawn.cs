@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components.Web;
-
 namespace Chess
 {
 
@@ -24,19 +22,19 @@ namespace Chess
         // ----- Methods -----
         public bool IsAttackingEnPassantSquare(int enPassantIndex, Board board)
         {
-            if(!Board.IsValidSquareIndex(enPassantIndex))
+            if (!Board.IsValidSquareIndex(enPassantIndex))
             {
                 throw new Exception("Sent an invalid en passant target square");
             }
 
             var rank = Square.GetRank(enPassantIndex);
-            if(rank != BoardRank.THREE && rank != BoardRank.SIX)
+            if (rank != BoardRank.THREE && rank != BoardRank.SIX)
             {
                 throw new Exception("En-passant target square should be on the 3rd or 6th rank only.");
             }
 
             var targetSquares = GetAttackIndexes(board);
-            if(targetSquares.Contains(enPassantIndex))
+            if (targetSquares.Contains(enPassantIndex))
             {
                 return true;
             }
@@ -52,7 +50,7 @@ namespace Chess
         // 2 square moves, single square moves, capture (left & right) are considered.
         public override List<ValidMove> GetStandardMoves(Game game)
         {
-            var piece = Board.ValidatePieceOnSquare<Pawn>(game.Board, PosIndex);
+            var piece = Board.ValidatePieceOnSquare<Pawn>(game.Board, Index);
             var moveIndexList = new List<ValidMove>();
             var blockStatus = IsBlocked(game.Board);
 
@@ -62,29 +60,29 @@ namespace Chess
                 {
                     if (piece.Color == Color.WHITE)
                     {
-                        moveIndexList.Add(new ValidMove(PosIndex - 8, false));
-                        moveIndexList.Add(new ValidMove(PosIndex - 16, false));
+                        moveIndexList.Add(new ValidMove(Index, Index - 8, false));
+                        moveIndexList.Add(new ValidMove(Index, Index - 16, false));
                     }
                     else
                     {
-                        moveIndexList.Add(new ValidMove(PosIndex + 8, false));
-                        moveIndexList.Add(new ValidMove(PosIndex + 16, false));
+                        moveIndexList.Add(new ValidMove(Index, Index + 8, false));
+                        moveIndexList.Add(new ValidMove(Index, Index + 16, false));
                     }
                 }
                 else
                 {
                     if (piece.Color == Color.WHITE)
-                        moveIndexList.Add(new ValidMove(PosIndex - 8, false));
+                        moveIndexList.Add(new ValidMove(Index, Index - 8, false));
                     else
-                        moveIndexList.Add(new ValidMove(PosIndex + 8, false));
+                        moveIndexList.Add(new ValidMove(Index, Index + 8, false));
                 }
             }
             else if (blockStatus == PawnBlockStatus.BLOCKED_TWO_RANKS_AHEAD)
             {
                 if (piece.Color == Color.WHITE)
-                    moveIndexList.Add(new ValidMove(PosIndex - 8, false));
+                    moveIndexList.Add(new ValidMove(Index, Index - 8, false));
                 else
-                    moveIndexList.Add(new ValidMove(PosIndex + 8, false));
+                    moveIndexList.Add(new ValidMove(Index, Index + 8, false));
             }
 
             // Get pawn capture info
@@ -95,7 +93,7 @@ namespace Chess
                 var isTargetIndex = game.IsEnemySquare(idx, enemyColor);
                 if (isTargetIndex)
                 {
-                    moveIndexList.Add(new ValidMove(idx, true));
+                    moveIndexList.Add(new ValidMove(Index, idx, true));
                 }
                 ;
             }
@@ -107,13 +105,13 @@ namespace Chess
         // Only considered attacking if there is an enemy piece on that square.
         public List<int> GetAttackIndexes(Board board)
         {
-            if (!Board.IsValidSquareIndex(PosIndex))
+            if (!Board.IsValidSquareIndex(Index))
             {
                 throw new Exception("Cannot get pawn attacking indexes. Given index off the board.");
             }
 
-            var pawn = Board.ValidatePieceOnSquare<Pawn>(board, PosIndex);
-            var file = Square.GetFile(PosIndex);
+            var pawn = Board.ValidatePieceOnSquare<Pawn>(board, Index);
+            var file = Square.GetFile(Index);
 
             List<int> result = new List<int>();
 
@@ -121,12 +119,12 @@ namespace Chess
             {
                 if (pawn.Color == Color.WHITE)
                 {
-                    result.Add(PosIndex - 7);
+                    result.Add(Index - 7);
                     return result;
                 }
                 else
                 {
-                    result.Add(PosIndex + 9);
+                    result.Add(Index + 9);
                     return result;
                 }
             }
@@ -134,12 +132,12 @@ namespace Chess
             {
                 if (pawn.Color == Color.WHITE)
                 {
-                    result.Add(PosIndex - 9);
+                    result.Add(Index - 9);
                     return result;
                 }
                 else
                 {
-                    result.Add(PosIndex + 7);
+                    result.Add(Index + 7);
                     return result;
                 }
             }
@@ -147,24 +145,24 @@ namespace Chess
             // Getting here means we are in a center file and have 2 attack squares.
             if (pawn.Color == Color.WHITE)
             {
-                result.Add(PosIndex - 7); // Right
-                result.Add(PosIndex - 9); // Left
+                result.Add(Index - 7); // Right
+                result.Add(Index - 9); // Left
                 return result;
             }
             else
             {
-                result.Add(PosIndex + 7); // Left
-                result.Add(PosIndex + 9); // Right
+                result.Add(Index + 7); // Left
+                result.Add(Index + 9); // Right
                 return result;
             }
         }
 
         public PawnBlockStatus IsBlocked(Board board)
         {
-            var piece = Board.ValidatePieceOnSquare<Pawn>(board, PosIndex);
+            var piece = Board.ValidatePieceOnSquare<Pawn>(board, Index);
 
             int adder = piece.Color == Color.WHITE ? -8 : 8;
-            int oneAhead = PosIndex + adder;
+            int oneAhead = Index + adder;
             int twoAhead = oneAhead + adder;
 
             if (!Board.IsValidSquareIndex(oneAhead))
@@ -190,7 +188,7 @@ namespace Chess
         public bool IsInStartPosition()
         {
             // Assume we are sending the index of a pawn. No check here.
-            BoardRank rank = Square.GetRank(PosIndex);
+            BoardRank rank = Square.GetRank(Index);
             bool isWhite = Color == Color.WHITE;
 
             if (isWhite)

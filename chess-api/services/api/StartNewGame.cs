@@ -5,18 +5,6 @@ namespace Chess
         public string? Fen { get; set; }
     }
 
-    public class NewGameResponse
-    {
-        public string GameId { get; set; }
-        public string Fen { get; set; }
-
-        public NewGameResponse(string id, string fen)
-        {
-            GameId = id;
-            Fen = fen;
-        }
-    }
-
     public class StartNewGameApi
     {
         public static void EnableEndpoint(WebApplication app, List<Game> activeGames)
@@ -43,7 +31,7 @@ namespace Chess
                 activeGames.Add(game);
 
 
-                return new NewGameResponse(game.Id, fen);
+                return game;
             })
             .WithName("Start New Game")
             .WithOpenApi();

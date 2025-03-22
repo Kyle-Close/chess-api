@@ -2,12 +2,15 @@ namespace Chess
 {
     public class ValidMove
     {
-        public int Index { get; set; }
+        public int StartIndex { get; set; }
+        public int EndIndex { get; set; }
+
         public bool IsCapture { get; set; }
 
-        public ValidMove(int index, bool isCapture)
+        public ValidMove(int startIndex, int endIndex, bool isCapture)
         {
-            Index = index;
+            StartIndex = startIndex;
+            EndIndex = endIndex;
             IsCapture = isCapture;
         }
     }
@@ -41,7 +44,7 @@ namespace Chess
                 bool isPawnAttacking = pawn.IsAttackingEnPassantSquare(game.EnPassantIndex.Value, game.Board);
                 if (isPawnAttacking)
                 {
-                    validMoves.Add(new ValidMove(game.EnPassantIndex.Value, true));
+                    validMoves.Add(new ValidMove(start, game.EnPassantIndex.Value, true));
                     IsEnPassantCapture = true;
                 }
             }
@@ -56,7 +59,6 @@ namespace Chess
                     // TODO:   empty = no castle possible, 1 = either k or q side castle king index, 2 = both k & q castle king index
                 }
                 // TODO:
-                throw new NotImplementedException();
             }
 
             // 4. Filter out any moves that would put the player in check

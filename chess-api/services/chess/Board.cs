@@ -33,26 +33,46 @@ namespace Chess
             return index >= 0 && index < 64;
         }
 
-public static T ValidatePieceOnSquare<T>(Board board, int index) where T : Piece
-{
-    if (!IsValidSquareIndex(index))
-    {
-        throw new Exception("Index provided is not in range.");
-    }
+        public List<Piece> GetPieces(Color color)
+        {
+            var result = new List<Piece>();
 
-    var piece = board.Squares[index].Piece;
-    if (piece == null)
-    {
-        throw new Exception($"No piece on this square.");
-    }
+            if (color == Color.WHITE)
+            {
+                result = Squares.Where(square => square.Piece != null && square.Piece.Color == Color.WHITE)
+                  .Select(square => square.Piece!)
+                  .ToList();
+            }
+            else
+            {
+                result = Squares.Where(square => square.Piece != null && square.Piece.Color == Color.BLACK)
+                  .Select(square => square.Piece!)
+                  .ToList();
+            }
 
-    if (piece is not T typedPiece)
-    {
-        throw new Exception($"Expected to get piece of type {typeof(T).Name} but got {piece.GetType().Name}");
-    }
+            return result;
+        }
 
-    return typedPiece;
-}
+        public static T ValidatePieceOnSquare<T>(Board board, int index) where T : Piece
+        {
+            if (!IsValidSquareIndex(index))
+            {
+                throw new Exception("Index provided is not in range.");
+            }
+
+            var piece = board.Squares[index].Piece;
+            if (piece == null)
+            {
+                throw new Exception($"No piece on this square.");
+            }
+
+            if (piece is not T typedPiece)
+            {
+                throw new Exception($"Expected to get piece of type {typeof(T).Name} but got {piece.GetType().Name}");
+            }
+
+            return typedPiece;
+        }
 
 
         public string BuildFen()

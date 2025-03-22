@@ -16,7 +16,8 @@ namespace Chess
 
         public override List<ValidMove> GetStandardMoves(Game game)
         {
-            throw new NotImplementedException();
+            var scanner = new BoardScanner(game.Board);
+            return scanner.EvaluateSurroundingPieceMove(game, Index);
         }
     }
 }

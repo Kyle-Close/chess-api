@@ -19,7 +19,7 @@ namespace Chess
         // Returns valid open squares and squares to capture on
         public override List<ValidMove> GetStandardMoves(Game game)
         {
-            var unfiltered = GetUnfilteredMoveIndexes(PosIndex);
+            var unfiltered = GetUnfilteredMoveIndexes(Index);
             var result = new List<ValidMove>();
 
             foreach (var index in unfiltered)
@@ -27,11 +27,11 @@ namespace Chess
                 var piece = game.Board.Squares[index].Piece;
                 if (piece == null)
                 {
-                    result.Add(new ValidMove(index, false));
+                    result.Add(new ValidMove(Index, index, false));
                 }
                 else if (piece.Color != game.ActiveColor)
                 {
-                    result.Add(new ValidMove(index, true));
+                    result.Add(new ValidMove(Index, index, true));
                 }
             }
 

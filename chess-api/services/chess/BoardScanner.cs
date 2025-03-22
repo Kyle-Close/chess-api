@@ -38,11 +38,11 @@ namespace Chess
                     var piece = scannedFile[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new ValidMove(scannedFile[i].Index, false));
+                        result.Add(new ValidMove(index, scannedFile[i].Index, false));
                     }
                     else if (piece.Color != game.ActiveColor)
                     {
-                        result.Add(new ValidMove(piece.PosIndex, true));
+                        result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
                     else if (piece.Color == game.ActiveColor)
@@ -61,11 +61,11 @@ namespace Chess
                     var piece = scannedFile[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new ValidMove(scannedFile[i].Index, false));
+                        result.Add(new ValidMove(index, scannedFile[i].Index, false));
                     }
                     else if (piece.Color != game.ActiveColor)
                     {
-                        result.Add(new ValidMove(piece.PosIndex, true));
+                        result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
                     else if (piece.Color == game.ActiveColor)
@@ -88,11 +88,11 @@ namespace Chess
                     var piece = scannedRank[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new ValidMove(scannedRank[i].Index, false));
+                        result.Add(new ValidMove(index, scannedRank[i].Index, false));
                     }
                     else if (piece.Color != game.ActiveColor)
                     {
-                        result.Add(new ValidMove(piece.PosIndex, true));
+                        result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
                     else if (piece.Color == game.ActiveColor)
@@ -111,11 +111,11 @@ namespace Chess
                     var piece = scannedRank[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new ValidMove(scannedRank[i].Index, false));
+                        result.Add(new ValidMove(index, scannedRank[i].Index, false));
                     }
                     else if (piece.Color != game.ActiveColor)
                     {
-                        result.Add(new ValidMove(piece.PosIndex, true));
+                        result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
                     else if (piece.Color == game.ActiveColor)
@@ -245,11 +245,11 @@ namespace Chess
                     var piece = scannedDiagTLtBR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new ValidMove(scannedDiagTLtBR[i].Index, false));
+                        result.Add(new ValidMove(index, scannedDiagTLtBR[i].Index, false));
                     }
                     else if (piece.Color != game.ActiveColor)
                     {
-                        result.Add(new ValidMove(piece.PosIndex, true));
+                        result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
                     else if (piece.Color == game.ActiveColor)
@@ -268,11 +268,11 @@ namespace Chess
                     var piece = scannedDiagTLtBR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new ValidMove(scannedDiagTLtBR[i].Index, false));
+                        result.Add(new ValidMove(index, scannedDiagTLtBR[i].Index, false));
                     }
                     else if (piece.Color != game.ActiveColor)
                     {
-                        result.Add(new ValidMove(piece.PosIndex, true));
+                        result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
                     else if (piece.Color == game.ActiveColor)
@@ -293,11 +293,11 @@ namespace Chess
                     var piece = scannedDiagBLtTR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new ValidMove(scannedDiagBLtTR[i].Index, false));
+                        result.Add(new ValidMove(index, scannedDiagBLtTR[i].Index, false));
                     }
                     else if (piece.Color != game.ActiveColor)
                     {
-                        result.Add(new ValidMove(piece.PosIndex, true));
+                        result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
                     else if (piece.Color == game.ActiveColor)
@@ -316,11 +316,11 @@ namespace Chess
                     var piece = scannedDiagBLtTR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new ValidMove(scannedDiagBLtTR[i].Index, false));
+                        result.Add(new ValidMove(index, scannedDiagBLtTR[i].Index, false));
                     }
                     else if (piece.Color != game.ActiveColor)
                     {
-                        result.Add(new ValidMove(piece.PosIndex, true));
+                        result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
                     else if (piece.Color == game.ActiveColor)
@@ -346,88 +346,89 @@ namespace Chess
             {
                 if (rank == BoardRank.ONE)
                 {
-                    result.Add(new ValidMove(index - 8, false));
-                    result.Add(new ValidMove(index - 7, false));
-                    result.Add(new ValidMove(index + 1, false));
+                    result.Add(new ValidMove(index, index - 8, false));
+                    result.Add(new ValidMove(index, index - 7, false));
+                    result.Add(new ValidMove(index, index + 1, false));
                 }
                 else if (rank == BoardRank.EIGHT)
                 {
-                    result.Add(new ValidMove(index + 1, false));
-                    result.Add(new ValidMove(index + 8, false));
-                    result.Add(new ValidMove(index + 9, false));
+                    result.Add(new ValidMove(index, index + 1, false));
+                    result.Add(new ValidMove(index, index + 8, false));
+                    result.Add(new ValidMove(index, index + 9, false));
                 }
                 else
                 {
-                    result.Add(new ValidMove(index - 8, false));
-                    result.Add(new ValidMove(index - 7, false));
-                    result.Add(new ValidMove(index + 1, false));
-                    result.Add(new ValidMove(index + 8, false));
-                    result.Add(new ValidMove(index + 9, false));
+                    result.Add(new ValidMove(index, index - 8, false));
+                    result.Add(new ValidMove(index, index - 7, false));
+                    result.Add(new ValidMove(index, index + 1, false));
+                    result.Add(new ValidMove(index, index + 8, false));
+                    result.Add(new ValidMove(index, index + 9, false));
                 }
             }
             else if (file == BoardFile.H)
             {
                 if (rank == BoardRank.ONE)
                 {
-                    result.Add(new ValidMove(index - 9, false));
-                    result.Add(new ValidMove(index - 8, false));
-                    result.Add(new ValidMove(index - 1, false));
+                    result.Add(new ValidMove(index, index - 9, false));
+                    result.Add(new ValidMove(index, index - 8, false));
+                    result.Add(new ValidMove(index, index - 1, false));
                 }
                 else if (rank == BoardRank.EIGHT)
                 {
-                    result.Add(new ValidMove(index - 1, false));
-                    result.Add(new ValidMove(index + 7, false));
-                    result.Add(new ValidMove(index + 8, false));
+                    result.Add(new ValidMove(index, index - 1, false));
+                    result.Add(new ValidMove(index, index + 7, false));
+                    result.Add(new ValidMove(index, index + 8, false));
                 }
                 else
                 {
-                    result.Add(new ValidMove(index - 9, false));
-                    result.Add(new ValidMove(index - 8, false));
-                    result.Add(new ValidMove(index - 1, false));
-                    result.Add(new ValidMove(index + 7, false));
-                    result.Add(new ValidMove(index + 8, false));
+                    result.Add(new ValidMove(index, index - 9, false));
+                    result.Add(new ValidMove(index, index - 8, false));
+                    result.Add(new ValidMove(index, index - 1, false));
+                    result.Add(new ValidMove(index, index + 7, false));
+                    result.Add(new ValidMove(index, index + 8, false));
                 }
             }
             else if (rank == BoardRank.ONE)
             {
-                result.Add(new ValidMove(index - 9, false));
-                result.Add(new ValidMove(index - 8, false));
-                result.Add(new ValidMove(index - 7, false));
-                result.Add(new ValidMove(index - 1, false));
-                result.Add(new ValidMove(index + 1, false));
+                result.Add(new ValidMove(index, index - 9, false));
+                result.Add(new ValidMove(index, index - 8, false));
+                result.Add(new ValidMove(index, index - 7, false));
+                result.Add(new ValidMove(index, index - 1, false));
+                result.Add(new ValidMove(index, index + 1, false));
             }
             else if (rank == BoardRank.EIGHT)
             {
-                result.Add(new ValidMove(index - 1, false));
-                result.Add(new ValidMove(index + 1, false));
-                result.Add(new ValidMove(index + 7, false));
-                result.Add(new ValidMove(index + 8, false));
-                result.Add(new ValidMove(index + 9, false));
+                result.Add(new ValidMove(index, index - 1, false));
+                result.Add(new ValidMove(index, index + 1, false));
+                result.Add(new ValidMove(index, index + 7, false));
+                result.Add(new ValidMove(index, index + 8, false));
+                result.Add(new ValidMove(index, index + 9, false));
             }
             else
             {
-                result.Add(new ValidMove(index - 9, false));
-                result.Add(new ValidMove(index - 8, false));
-                result.Add(new ValidMove(index - 7, false));
-                result.Add(new ValidMove(index - 1, false));
-                result.Add(new ValidMove(index + 1, false));
-                result.Add(new ValidMove(index + 7, false));
-                result.Add(new ValidMove(index + 8, false));
-                result.Add(new ValidMove(index + 9, false));
+                result.Add(new ValidMove(index, index - 9, false));
+                result.Add(new ValidMove(index, index - 8, false));
+                result.Add(new ValidMove(index, index - 7, false));
+                result.Add(new ValidMove(index, index - 1, false));
+                result.Add(new ValidMove(index, index + 1, false));
+                result.Add(new ValidMove(index, index + 7, false));
+                result.Add(new ValidMove(index, index + 8, false));
+                result.Add(new ValidMove(index, index + 9, false));
             }
-// Remove friendly pieces and mark enemy pieces as captures
-result.RemoveAll(move =>  
-{
-    var piece = game.Board.Squares[move.Index].Piece;
-    if (piece == null) 
-        return false; // Keep empty squares
 
-    if (piece.Color == game.ActiveColor) 
-        return true; // Remove friendly pieces
+            // Remove friendly pieces and mark enemy pieces as captures
+            result.RemoveAll(move =>
+            {
+                var piece = game.Board.Squares[move.EndIndex].Piece;
+                if (piece == null)
+                    return false; // Keep empty squares
 
-    move.IsCapture = true; // Mark enemy pieces as captures
-    return false; // Keep enemy pieces
-});
+                if (piece.Color == game.ActiveColor)
+                    return true; // Remove friendly pieces
+
+                move.IsCapture = true; // Mark enemy pieces as captures
+                return false; // Keep enemy pieces
+            });
 
 
 
