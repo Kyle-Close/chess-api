@@ -34,13 +34,13 @@ namespace Chess
             var res = rook.GetStandardMoves(game);
             Assert.True(res.Count == 7);
 
-            Assert.Contains(res, move => move.Index == 15 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 23 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 31 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 39 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 47 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 55 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 63 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 15 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 23 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 31 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 39 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 47 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 55 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 63 && move.IsCapture == false);
         }
 
         [Fact]
@@ -53,10 +53,10 @@ namespace Chess
             var res = rook.GetStandardMoves(game);
             Assert.True(res.Count == 4);
 
-            Assert.Contains(res, move => move.Index == 31 && move.IsCapture == true);
-            Assert.Contains(res, move => move.Index == 39 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 47 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 55 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 31 && move.IsCapture == true);
+            Assert.Contains(res, move => move.EndIndex == 39 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 47 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 55 && move.IsCapture == false);
         }
 
         [Fact]
@@ -70,13 +70,13 @@ namespace Chess
             var res = rook.GetStandardMoves(game);
             Assert.True(res.Count == 7);
 
-            Assert.Contains(res, move => move.Index == 1 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 2 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 3 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 4 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 5 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 6 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 7 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 1 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 2 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 3 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 4 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 5 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 6 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 7 && move.IsCapture == false);
         }
 
         [Fact]
@@ -89,19 +89,19 @@ namespace Chess
             var res = rook.GetStandardMoves(game);
             Assert.True(res.Count == 12);
 
-            Assert.Contains(res, move => move.Index == 32 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 24 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 16 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 8 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 0 && move.IsCapture == true);
+            Assert.Contains(res, move => move.EndIndex == 32 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 24 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 16 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 8 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 0 && move.IsCapture == true);
 
-            Assert.Contains(res, move => move.Index == 41 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 42 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 43 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 44 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 45 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 46 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 47 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 41 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 42 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 43 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 44 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 45 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 46 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 47 && move.IsCapture == false);
         }
 
         [Fact]
@@ -115,8 +115,8 @@ namespace Chess
             var res = rook.GetStandardMoves(game);
             Assert.True(res.Count == 2);
 
-            Assert.Contains(res, move => move.Index == 26 && move.IsCapture == true);
-            Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
+            Assert.Contains(res, move => move.EndIndex == 26 && move.IsCapture == true);
+            Assert.Contains(res, move => move.EndIndex == 35 && move.IsCapture == true);
         }
 
         [Fact]
@@ -130,12 +130,12 @@ namespace Chess
             Assert.True(res.Count == 5);
 
             // captures
-            Assert.Contains(res, move => move.Index == 28 && move.IsCapture == true);
-            Assert.Contains(res, move => move.Index == 14 && move.IsCapture == true);
+            Assert.Contains(res, move => move.EndIndex == 28 && move.IsCapture == true);
+            Assert.Contains(res, move => move.EndIndex == 14 && move.IsCapture == true);
 
-            Assert.Contains(res, move => move.Index == 22 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 31 && move.IsCapture == false);
-            Assert.Contains(res, move => move.Index == 29 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 22 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 31 && move.IsCapture == false);
+            Assert.Contains(res, move => move.EndIndex == 29 && move.IsCapture == false);
         }
     }
 }

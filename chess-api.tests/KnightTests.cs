@@ -270,8 +270,8 @@ public class KnightTests
         var res = knight.GetStandardMoves(game);
 
         Assert.True(res.Count == 2);
-        Assert.Contains(res, move => move.Index == 45 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 47 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 45 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 47 && move.IsCapture == false);
     }
 
     [Fact]
@@ -283,8 +283,8 @@ public class KnightTests
         var res = knight.GetStandardMoves(game);
 
         Assert.True(res.Count == 2);
-        Assert.Contains(res, move => move.Index == 16 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 18 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 16 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 18 && move.IsCapture == false);
     }
 
     [Fact]
@@ -296,14 +296,14 @@ public class KnightTests
         var res = knight.GetStandardMoves(game);
 
         Assert.True(res.Count == 8);
-        Assert.Contains(res, move => move.Index == 20 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 22 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 31 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 47 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 54 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 52 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 43 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 27 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 20 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 22 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 31 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 47 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 54 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 52 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 43 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 27 && move.IsCapture == false);
     }
 
 
@@ -317,10 +317,10 @@ public class KnightTests
         var res = knight.GetStandardMoves(game);
 
         Assert.True(res.Count == 5);
-        Assert.Contains(res, move => move.Index == 22 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 38 && move.IsCapture == true);
-        Assert.Contains(res, move => move.Index == 45 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 43 && move.IsCapture == true);
-        Assert.Contains(res, move => move.Index == 34 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 22 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 38 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 45 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 43 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 34 && move.IsCapture == false);
     }
 }

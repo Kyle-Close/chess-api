@@ -168,8 +168,8 @@ public class PawnTests
         Pawn pawn = new Pawn(52, Color.WHITE);
         var res = pawn.GetStandardMoves(game);
 
-        Assert.Contains(res, move => move.Index == 36 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 44 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 36 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 44 && move.IsCapture == false);
         Assert.True(res.Count == 2);
     }
     [Fact]
@@ -179,8 +179,8 @@ public class PawnTests
         Pawn pawn = new Pawn(12, Color.BLACK);
         var res = pawn.GetStandardMoves(game);
 
-        Assert.Contains(res, move => move.Index == 20 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 28 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 20 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 28 && move.IsCapture == false);
         Assert.True(res.Count == 2);
     }
     [Fact]
@@ -191,7 +191,7 @@ public class PawnTests
         Pawn pawn = new Pawn(36, Color.WHITE);
         var res = pawn.GetStandardMoves(game);
 
-        Assert.Contains(res, move => move.Index == 29 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 29 && move.IsCapture == true);
         Assert.True(res.Count == 1);
     }
     [Fact]
@@ -202,8 +202,8 @@ public class PawnTests
         Pawn pawn = new Pawn(36, Color.WHITE);
         var res = pawn.GetStandardMoves(game);
 
-        Assert.Contains(res, move => move.Index == 27 && move.IsCapture == true);
-        Assert.Contains(res, move => move.Index == 29 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 27 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 29 && move.IsCapture == true);
         Assert.True(res.Count == 2);
     }
     [Fact]
@@ -216,9 +216,9 @@ public class PawnTests
         Pawn pawn = new Pawn(36, Color.WHITE);
         var res = pawn.GetStandardMoves(game);
 
-        Assert.Contains(res, move => move.Index == 27 && move.IsCapture == true);
-        Assert.Contains(res, move => move.Index == 28 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 29 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 27 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 28 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 29 && move.IsCapture == true);
         Assert.True(res.Count == 3);
     }
     [Fact]
@@ -233,9 +233,9 @@ public class PawnTests
         var res = pawn.GetStandardMoves(game);
 
 
-        Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
-        Assert.Contains(res, move => move.Index == 36 && move.IsCapture == false);
-        Assert.Contains(res, move => move.Index == 37 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 35 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 36 && move.IsCapture == false);
+        Assert.Contains(res, move => move.EndIndex == 37 && move.IsCapture == true);
         Assert.True(res.Count == 3);
     }
     [Fact]
@@ -247,8 +247,8 @@ public class PawnTests
         Pawn pawn = new Pawn(28, Color.BLACK);
         var res = pawn.GetStandardMoves(game);
 
-        Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
-        Assert.Contains(res, move => move.Index == 37 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 35 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 37 && move.IsCapture == true);
         Assert.True(res.Count == 2);
     }
     [Fact]
@@ -260,7 +260,7 @@ public class PawnTests
         Pawn pawn = new Pawn(28, Color.BLACK);
         var res = pawn.GetStandardMoves(game);
 
-        Assert.Contains(res, move => move.Index == 35 && move.IsCapture == true);
+        Assert.Contains(res, move => move.EndIndex == 35 && move.IsCapture == true);
         Assert.True(res.Count == 1);
     }
 

@@ -279,10 +279,10 @@ namespace Chess
             Assert.Equal(3, res.Count(res => res.IsCapture == false));
             Assert.Equal(1, res.Count(res => res.IsCapture == true));
 
-            Assert.Contains(res, res => res.Index == 25);
-            Assert.Contains(res, res => res.Index == 34);
-            Assert.Contains(res, res => res.Index == 43);
-            Assert.Contains(res, res => res.Index == 52);
+            Assert.Contains(res, res => res.EndIndex == 25);
+            Assert.Contains(res, res => res.EndIndex == 34);
+            Assert.Contains(res, res => res.EndIndex == 43);
+            Assert.Contains(res, res => res.EndIndex == 52);
         }
         [Fact]
         public void EvaluateDiagonalPieceMoves_OnlyEastWithCaptures_Expect5Moves()
@@ -296,12 +296,12 @@ namespace Chess
             Assert.Equal(2, res.Count(res => res.IsCapture == true));
             Assert.Equal(3, res.Count(res => res.IsCapture == false));
 
-            Assert.Contains(res, res => res.Index == 22);
-            Assert.Contains(res, res => res.Index == 27);
-            Assert.Contains(res, res => res.Index == 29);
+            Assert.Contains(res, res => res.EndIndex == 22);
+            Assert.Contains(res, res => res.EndIndex == 27);
+            Assert.Contains(res, res => res.EndIndex == 29);
 
-            Assert.Contains(res, res => res.Index == 45);
-            Assert.Contains(res, res => res.Index == 54);
+            Assert.Contains(res, res => res.EndIndex == 45);
+            Assert.Contains(res, res => res.EndIndex == 54);
         }
 
         [Fact]
@@ -316,14 +316,14 @@ namespace Chess
             Assert.True(res.Count == 7);
             Assert.Equal(7, res.Count(res => res.IsCapture == false));
 
-            Assert.Contains(res, res => res.Index == 19);
-            Assert.Contains(res, res => res.Index == 26);
-            Assert.Contains(res, res => res.Index == 33);
-            Assert.Contains(res, res => res.Index == 40);
+            Assert.Contains(res, res => res.EndIndex == 19);
+            Assert.Contains(res, res => res.EndIndex == 26);
+            Assert.Contains(res, res => res.EndIndex == 33);
+            Assert.Contains(res, res => res.EndIndex == 40);
 
-            Assert.Contains(res, res => res.Index == 21);
-            Assert.Contains(res, res => res.Index == 30);
-            Assert.Contains(res, res => res.Index == 39);
+            Assert.Contains(res, res => res.EndIndex == 21);
+            Assert.Contains(res, res => res.EndIndex == 30);
+            Assert.Contains(res, res => res.EndIndex == 39);
         }
 
         [Fact]
@@ -337,10 +337,10 @@ namespace Chess
             Assert.True(res.Count == 4);
             Assert.Equal(4, res.Count(res => res.IsCapture == true));
 
-            Assert.Contains(res, res => res.Index == 18);
-            Assert.Contains(res, res => res.Index == 20);
-            Assert.Contains(res, res => res.Index == 36);
-            Assert.Contains(res, res => res.Index == 34);
+            Assert.Contains(res, res => res.EndIndex == 18);
+            Assert.Contains(res, res => res.EndIndex == 20);
+            Assert.Contains(res, res => res.EndIndex == 36);
+            Assert.Contains(res, res => res.EndIndex == 34);
         }
 
         [Fact]
@@ -383,12 +383,12 @@ namespace Chess
             Assert.Equal(5, res.Count(res => res.IsCapture == false));
             Assert.Equal(1, res.Count(res => res.IsCapture == true));
 
-            Assert.Contains(res, res => res.Index == 20);
-            Assert.Contains(res, res => res.Index == 29);
-            Assert.Contains(res, res => res.Index == 31);
-            Assert.Contains(res, res => res.Index == 47);
-            Assert.Contains(res, res => res.Index == 45);
-            Assert.Contains(res, res => res.Index == 52);
+            Assert.Contains(res, res => res.EndIndex == 20);
+            Assert.Contains(res, res => res.EndIndex == 29);
+            Assert.Contains(res, res => res.EndIndex == 31);
+            Assert.Contains(res, res => res.EndIndex == 47);
+            Assert.Contains(res, res => res.EndIndex == 45);
+            Assert.Contains(res, res => res.EndIndex == 52);
         }
 
         [Fact]
@@ -403,15 +403,15 @@ namespace Chess
             Assert.Equal(7, res.Count(res => res.IsCapture == false));
             Assert.Equal(2, res.Count(res => res.IsCapture == true));
 
-            Assert.Contains(res, res => res.Index == 7);
-            Assert.Contains(res, res => res.Index == 8);
-            Assert.Contains(res, res => res.Index == 14);
-            Assert.Contains(res, res => res.Index == 17);
-            Assert.Contains(res, res => res.Index == 21);
-            Assert.Contains(res, res => res.Index == 26);
-            Assert.Contains(res, res => res.Index == 28);
-            Assert.Contains(res, res => res.Index == 42);
-            Assert.Contains(res, res => res.Index == 44);
+            Assert.Contains(res, res => res.EndIndex == 7);
+            Assert.Contains(res, res => res.EndIndex == 8);
+            Assert.Contains(res, res => res.EndIndex == 14);
+            Assert.Contains(res, res => res.EndIndex == 17);
+            Assert.Contains(res, res => res.EndIndex == 21);
+            Assert.Contains(res, res => res.EndIndex == 26);
+            Assert.Contains(res, res => res.EndIndex == 28);
+            Assert.Contains(res, res => res.EndIndex == 42);
+            Assert.Contains(res, res => res.EndIndex == 44);
         }
 
         // ----- Evaluate Surrounding Squares -----
@@ -427,11 +427,11 @@ namespace Chess
             var res = scanner.EvaluateSurroundingPieceMove(game, 4);
 
             Assert.True(res.Count == 5);
-            Assert.Contains(res, res => res.Index == 3);
-            Assert.Contains(res, res => res.Index == 5);
-            Assert.Contains(res, res => res.Index == 11);
-            Assert.Contains(res, res => res.Index == 12);
-            Assert.Contains(res, res => res.Index == 13);
+            Assert.Contains(res, res => res.EndIndex == 3);
+            Assert.Contains(res, res => res.EndIndex == 5);
+            Assert.Contains(res, res => res.EndIndex == 11);
+            Assert.Contains(res, res => res.EndIndex == 12);
+            Assert.Contains(res, res => res.EndIndex == 13);
         }
 
         [Fact]
@@ -444,14 +444,14 @@ namespace Chess
             var res = scanner.EvaluateSurroundingPieceMove(game, 12);
 
             Assert.True(res.Count == 8);
-            Assert.Contains(res, res => res.Index == 3);
-            Assert.Contains(res, res => res.Index == 4);
-            Assert.Contains(res, res => res.Index == 5);
-            Assert.Contains(res, res => res.Index == 11);
-            Assert.Contains(res, res => res.Index == 13);
-            Assert.Contains(res, res => res.Index == 19);
-            Assert.Contains(res, res => res.Index == 20);
-            Assert.Contains(res, res => res.Index == 21);
+            Assert.Contains(res, res => res.EndIndex == 3);
+            Assert.Contains(res, res => res.EndIndex == 4);
+            Assert.Contains(res, res => res.EndIndex == 5);
+            Assert.Contains(res, res => res.EndIndex == 11);
+            Assert.Contains(res, res => res.EndIndex == 13);
+            Assert.Contains(res, res => res.EndIndex == 19);
+            Assert.Contains(res, res => res.EndIndex == 20);
+            Assert.Contains(res, res => res.EndIndex == 21);
         }
 
 
@@ -464,12 +464,12 @@ namespace Chess
             var res = scanner.EvaluateSurroundingPieceMove(game, 42);
 
             Assert.True(res.Count == 6);
-            Assert.Contains(res, res => res.Index == 41);
-            Assert.Contains(res, res => res.Index == 43);
-            Assert.Contains(res, res => res.Index == 49);
-            Assert.Contains(res, res => res.Index == 50);
-            Assert.Contains(res, res => res.Index == 34 && res.IsCapture == true);
-            Assert.Contains(res, res => res.Index == 35 && res.IsCapture == true);
+            Assert.Contains(res, res => res.EndIndex == 41);
+            Assert.Contains(res, res => res.EndIndex == 43);
+            Assert.Contains(res, res => res.EndIndex == 49);
+            Assert.Contains(res, res => res.EndIndex == 50);
+            Assert.Contains(res, res => res.EndIndex == 34 && res.IsCapture == true);
+            Assert.Contains(res, res => res.EndIndex == 35 && res.IsCapture == true);
         }
 
         [Fact]
@@ -481,9 +481,9 @@ namespace Chess
             var res = scanner.EvaluateSurroundingPieceMove(game, 56);
 
             Assert.True(res.Count == 3);
-            Assert.Contains(res, res => res.Index == 48);
-            Assert.Contains(res, res => res.Index == 49);
-            Assert.Contains(res, res => res.Index == 57);
+            Assert.Contains(res, res => res.EndIndex == 48);
+            Assert.Contains(res, res => res.EndIndex == 49);
+            Assert.Contains(res, res => res.EndIndex == 57);
         }
     }
 }
