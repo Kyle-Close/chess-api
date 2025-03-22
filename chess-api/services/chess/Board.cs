@@ -53,6 +53,23 @@ namespace Chess
             return result;
         }
 
+        public List<T> GetPieces<T>(Color color) where T : Piece
+        {
+            return Squares
+                .Where(square => square.Piece is T && square.Piece.Color == color)
+                .Select(square => (T)square.Piece!)
+                .ToList();
+        }
+
+        public List<T> GetPieces<T>() where T : Piece
+        {
+            return Squares
+                .Where(square => square.Piece is T)
+                .Select(square => (T)square.Piece!)
+                .ToList();
+        }
+
+
         public static T ValidatePieceOnSquare<T>(Board board, int index) where T : Piece
         {
             if (!IsValidSquareIndex(index))

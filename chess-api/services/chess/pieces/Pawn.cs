@@ -193,17 +193,11 @@ namespace Chess
 
             if (isWhite)
             {
-                if (rank == BoardRank.TWO)
-                    return false;
-
-                return false;
+                return rank == BoardRank.TWO ? true : false;
             }
             else
             {
-                if (rank == BoardRank.SEVEN)
-                    return false;
-
-                return true;
+                return rank == BoardRank.SEVEN ? true : false;
             }
         }
     }

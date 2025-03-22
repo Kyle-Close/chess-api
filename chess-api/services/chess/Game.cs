@@ -75,6 +75,13 @@ namespace Chess
                 BlackCastleRights = new CastleRights(blackKing, blackQueen);
             }
 
+            // TODO: Mark pieces that have moved off their starting squares.
+            var pawns = Board.GetPieces<Pawn>();
+            foreach (var pawn in pawns)
+            {
+                pawn.HasMoved = !pawn.IsInStartPosition();
+            }
+
             UpdateValidMoves();
         }
 
@@ -86,7 +93,6 @@ namespace Chess
 
         public void UpdateValidMoves()
         {
-
             var wPieces = Board.GetPieces(Color.WHITE);
             var bPieces = Board.GetPieces(Color.BLACK);
 
