@@ -17,7 +17,24 @@ namespace Chess
         public override List<ValidMove> GetStandardMoves(Game game)
         {
             var scanner = new BoardScanner(game.Board);
-            return scanner.EvaluateSurroundingPieceMove(game, Index);
+            return scanner.EvaluateSurroundingPieceMove(Index, game.ActiveColor);
+        }
+
+        public bool IsInStartPosition()
+        {
+            if (Color == Color.WHITE)
+            {
+                return Index == 60;
+            }
+            else
+            {
+                return Index == 4;
+            }
+        }
+
+        public bool IsInCheck(Board board)
+        {
+            return Piece.IsPieceBeingAttacked(board, Index);
         }
     }
 }

@@ -9,6 +9,14 @@ namespace Chess
         public BoardFile File { get; set; }
         public BoardRank Rank { get; set; }
 
+        public Square()
+        {
+            Index = 0;
+            Piece = null;
+            File = BoardFile.A;
+            Rank = BoardRank.EIGHT;
+        }
+
         public Square(int index, Piece piece, BoardFile file, BoardRank rank)
         {
             Index = index;
@@ -22,6 +30,11 @@ namespace Chess
             Index = index;
             File = file;
             Rank = rank;
+        }
+
+        public bool isSquareEmpty()
+        {
+            return Piece == null;
         }
 
         public static int GetSquareIndex(BoardFile file, BoardRank rank)

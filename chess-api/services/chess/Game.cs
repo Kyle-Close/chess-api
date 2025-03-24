@@ -68,18 +68,31 @@ namespace Chess
                 }
                 if (crSeg.Contains("q"))
                 {
-                    blackQueen = false;
+                    blackQueen = true;
                 }
 
                 WhiteCastleRights = new CastleRights(whiteKing, whiteQueen);
                 BlackCastleRights = new CastleRights(blackKing, blackQueen);
             }
 
-            // TODO: Mark pieces that have moved off their starting squares.
+            // Update the hasMoved property based on the state of the board.
+            // Only care about pawns for double moves & king, rook for castle rights
             var pawns = Board.GetPieces<Pawn>();
             foreach (var pawn in pawns)
             {
                 pawn.HasMoved = !pawn.IsInStartPosition();
+            }
+
+            var kings = Board.GetPieces<King>();
+            foreach (var king in kings)
+            {
+                king.HasMoved = !king.IsInStartPosition();
+            }
+
+            var rooks = Board.GetPieces<Rook>();
+            foreach (var rook in rooks)
+            {
+                rook.HasMoved = !rook.IsInStartPosition();
             }
 
             UpdateValidMoves();

@@ -14,11 +14,10 @@ namespace Chess
             Board = board;
         }
 
-        // TODO: Surrounding Squares scanner (for king)
 
         // EvaluateSlidingPieceMove - Pass in game, index you want to evaluate from
         //  Based on who's turn it is, it will return a list of ValidMoves for sliding pieces (rook & queen)
-        public List<ValidMove> EvaluateSlidingPieceMove(Game game, int index)
+        public List<ValidMove> EvaluateSlidingPieceMove(int index, Color activeColor)
         {
             var result = new List<ValidMove>();
 
@@ -40,12 +39,12 @@ namespace Chess
                     {
                         result.Add(new ValidMove(index, scannedFile[i].Index, false));
                     }
-                    else if (piece.Color != game.ActiveColor)
+                    else if (piece.Color != activeColor)
                     {
                         result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
-                    else if (piece.Color == game.ActiveColor)
+                    else if (piece.Color == activeColor)
                     {
                         break;
                     }
@@ -63,12 +62,12 @@ namespace Chess
                     {
                         result.Add(new ValidMove(index, scannedFile[i].Index, false));
                     }
-                    else if (piece.Color != game.ActiveColor)
+                    else if (piece.Color != activeColor)
                     {
                         result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
-                    else if (piece.Color == game.ActiveColor)
+                    else if (piece.Color == activeColor)
                     {
                         break;
                     }
@@ -90,12 +89,12 @@ namespace Chess
                     {
                         result.Add(new ValidMove(index, scannedRank[i].Index, false));
                     }
-                    else if (piece.Color != game.ActiveColor)
+                    else if (piece.Color != activeColor)
                     {
                         result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
-                    else if (piece.Color == game.ActiveColor)
+                    else if (piece.Color == activeColor)
                     {
                         break;
                     }
@@ -113,12 +112,12 @@ namespace Chess
                     {
                         result.Add(new ValidMove(index, scannedRank[i].Index, false));
                     }
-                    else if (piece.Color != game.ActiveColor)
+                    else if (piece.Color != activeColor)
                     {
                         result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
-                    else if (piece.Color == game.ActiveColor)
+                    else if (piece.Color == activeColor)
                     {
                         break;
                     }
@@ -213,17 +212,16 @@ namespace Chess
             }
         }
 
-
         // EvaluateDiagonalPieceMove - Pass in game, index you want to evaluate from
         //  Based on who's turn it is, it will return a list of ValidMoves in all 4 diagonal directions
-        public List<ValidMove> EvaluateDiagonalPieceMove(Game game, int index)
+        public List<ValidMove> EvaluateDiagonalPieceMove(int index, Color activeColor)
         {
             if (!Board.IsValidSquareIndex(index))
             {
                 throw new Exception("Provided invalid index to EvaluateDiagonalPieceMove");
             }
 
-            var ogPiece = game.Board.Squares[index].Piece;
+            var ogPiece = Board.Squares[index].Piece;
             if (ogPiece == null)
             {
                 throw new Exception("You provided a square with no piece on it.");
@@ -247,12 +245,12 @@ namespace Chess
                     {
                         result.Add(new ValidMove(index, scannedDiagTLtBR[i].Index, false));
                     }
-                    else if (piece.Color != game.ActiveColor)
+                    else if (piece.Color != activeColor)
                     {
                         result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
-                    else if (piece.Color == game.ActiveColor)
+                    else if (piece.Color == activeColor)
                     {
                         break;
                     }
@@ -270,12 +268,12 @@ namespace Chess
                     {
                         result.Add(new ValidMove(index, scannedDiagTLtBR[i].Index, false));
                     }
-                    else if (piece.Color != game.ActiveColor)
+                    else if (piece.Color != activeColor)
                     {
                         result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
-                    else if (piece.Color == game.ActiveColor)
+                    else if (piece.Color == activeColor)
                     {
                         break;
                     }
@@ -295,12 +293,12 @@ namespace Chess
                     {
                         result.Add(new ValidMove(index, scannedDiagBLtTR[i].Index, false));
                     }
-                    else if (piece.Color != game.ActiveColor)
+                    else if (piece.Color != activeColor)
                     {
                         result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
-                    else if (piece.Color == game.ActiveColor)
+                    else if (piece.Color == activeColor)
                     {
                         break;
                     }
@@ -318,12 +316,12 @@ namespace Chess
                     {
                         result.Add(new ValidMove(index, scannedDiagBLtTR[i].Index, false));
                     }
-                    else if (piece.Color != game.ActiveColor)
+                    else if (piece.Color != activeColor)
                     {
                         result.Add(new ValidMove(index, piece.Index, true));
                         break;
                     }
-                    else if (piece.Color == game.ActiveColor)
+                    else if (piece.Color == activeColor)
                     {
                         break;
                     }
@@ -335,7 +333,7 @@ namespace Chess
 
         // EvaluateSurroundingPieceMove - Pass in game, index you want to evaluate from
         //  Based on who's turn it is, it will return a list of ValidMoves in all 8 directions 1 square away
-        public List<ValidMove> EvaluateSurroundingPieceMove(Game game, int index)
+        public List<ValidMove> EvaluateSurroundingPieceMove(int index, Color activeColor)
         {
             var result = new List<ValidMove>();
 
@@ -419,11 +417,11 @@ namespace Chess
             // Remove friendly pieces and mark enemy pieces as captures
             result.RemoveAll(move =>
             {
-                var piece = game.Board.Squares[move.EndIndex].Piece;
+                var piece = Board.Squares[move.EndIndex].Piece;
                 if (piece == null)
                     return false; // Keep empty squares
 
-                if (piece.Color == game.ActiveColor)
+                if (piece.Color == activeColor)
                     return true; // Remove friendly pieces
 
                 move.IsCapture = true; // Mark enemy pieces as captures

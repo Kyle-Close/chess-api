@@ -20,27 +20,35 @@ namespace Chess
         }
 
         // ----- Methods -----
-        public bool IsAttackingEnPassantSquare(int enPassantIndex, Board board)
+        public bool IsAttackingEnPassantSquare(int? enPassantIndex, Board board)
         {
-            if (!Board.IsValidSquareIndex(enPassantIndex))
+            if (enPassantIndex == null)
+            {
+                return false;
+            }
+
+            int index = enPassantIndex.Value;
+
+            if (!Board.IsValidSquareIndex(index))
             {
                 throw new Exception("Sent an invalid en passant target square");
             }
 
-            var rank = Square.GetRank(enPassantIndex);
+            var rank = Square.GetRank(index);
             if (rank != BoardRank.THREE && rank != BoardRank.SIX)
             {
                 throw new Exception("En-passant target square should be on the 3rd or 6th rank only.");
             }
 
             var targetSquares = GetAttackIndexes(board);
-            if (targetSquares.Contains(enPassantIndex))
+            if (targetSquares.Contains(index))
             {
                 return true;
             }
 
             return false;
         }
+
         public override char GetPieceChar()
         {
             return Color == Color.WHITE ? 'P' : 'p';

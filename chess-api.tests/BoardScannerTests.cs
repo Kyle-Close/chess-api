@@ -250,7 +250,7 @@ namespace Chess
         {
             var game = new Game();
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 58);
+            var res = scanner.EvaluateDiagonalPieceMove(58, game.ActiveColor);
 
             Assert.True(res.Count == 0);
         }
@@ -261,7 +261,7 @@ namespace Chess
             var game = new Game();
             game.ActiveColor = Color.BLACK;
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 5);
+            var res = scanner.EvaluateDiagonalPieceMove(5, game.ActiveColor);
 
             Assert.True(res.Count == 0);
         }
@@ -273,7 +273,7 @@ namespace Chess
             game.ActiveColor = Color.BLACK;
             game.Board = new Board("rn1qkbnr/pppppppp/b7/8/8/8/PPPPPPPP/RNBQKBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 16);
+            var res = scanner.EvaluateDiagonalPieceMove(16, game.ActiveColor);
 
             Assert.True(res.Count == 4);
             Assert.Equal(3, res.Count(res => res.IsCapture == false));
@@ -290,7 +290,7 @@ namespace Chess
             var game = new Game();
             game.Board = new Board("rn1qkbnr/ppp1pp1p/b5p1/3p4/4B3/3P2P1/PPP1PP1P/RN1QKBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 36);
+            var res = scanner.EvaluateDiagonalPieceMove(36, game.ActiveColor);
 
             Assert.True(res.Count == 5);
             Assert.Equal(2, res.Count(res => res.IsCapture == true));
@@ -311,7 +311,7 @@ namespace Chess
             game.ActiveColor = Color.BLACK;
             game.Board = new Board("rn1q1knr/ppp1bp1p/b3p1p1/3p4/4B3/3P2P1/PPP1PP1P/RN1QKBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 12);
+            var res = scanner.EvaluateDiagonalPieceMove(12, game.ActiveColor);
 
             Assert.True(res.Count == 7);
             Assert.Equal(7, res.Count(res => res.IsCapture == false));
@@ -332,7 +332,7 @@ namespace Chess
             var game = new Game();
             game.Board = new Board("r2q1knr/pp1pbp1p/2n1b1p1/3B4/2p1p3/6P1/PPPPPP1P/RN1QKBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 27);
+            var res = scanner.EvaluateDiagonalPieceMove(27, game.ActiveColor);
 
             Assert.True(res.Count == 4);
             Assert.Equal(4, res.Count(res => res.IsCapture == true));
@@ -349,7 +349,7 @@ namespace Chess
             var game = new Game();
             var scanner = new BoardScanner(game.Board);
 
-            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(game, 66));
+            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(66, game.ActiveColor));
         }
 
         [Fact]
@@ -358,7 +358,7 @@ namespace Chess
             var game = new Game();
             var scanner = new BoardScanner(game.Board);
 
-            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(game, 34));
+            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(34, game.ActiveColor));
         }
 
         [Fact]
@@ -367,7 +367,7 @@ namespace Chess
             var game = new Game();
             var scanner = new BoardScanner(game.Board);
 
-            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(game, 0));
+            Assert.Throws<Exception>(() => scanner.EvaluateDiagonalPieceMove(0, game.ActiveColor));
         }
 
         [Fact]
@@ -377,7 +377,7 @@ namespace Chess
             game.ActiveColor = Color.BLACK;
             game.Board = new Board("r2q1knr/pp1pbp1p/2n3p1/3B4/2p1p1b1/6P1/PPPPPP1P/RN1QKBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 38);
+            var res = scanner.EvaluateDiagonalPieceMove(38, game.ActiveColor);
 
             Assert.True(res.Count == 6);
             Assert.Equal(5, res.Count(res => res.IsCapture == false));
@@ -397,7 +397,7 @@ namespace Chess
             var game = new Game();
             game.Board = new Board("r2q1knr/pp1pbp1p/2n3p1/3B4/2pQp1b1/6P1/PPPPPP1P/RN2KBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateDiagonalPieceMove(game, 35);
+            var res = scanner.EvaluateDiagonalPieceMove(35, game.ActiveColor);
 
             Assert.True(res.Count == 9);
             Assert.Equal(7, res.Count(res => res.IsCapture == false));
@@ -424,7 +424,7 @@ namespace Chess
             game.ActiveColor = Color.BLACK;
             game.Board = new Board("rnb1k1nr/p1p3pp/1b2pp2/1pqB4/1PPp3Q/4P2P/P2P1PP1/RN2KBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateSurroundingPieceMove(game, 4);
+            var res = scanner.EvaluateSurroundingPieceMove(4, game.ActiveColor);
 
             Assert.True(res.Count == 5);
             Assert.Contains(res, res => res.EndIndex == 3);
@@ -441,7 +441,7 @@ namespace Chess
             game.ActiveColor = Color.BLACK;
             game.Board = new Board("rnb3nr/p1p1k1pp/1b6/1pqB1p2/1PPpp2Q/4P2P/P2P1PP1/RN2KBNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateSurroundingPieceMove(game, 12);
+            var res = scanner.EvaluateSurroundingPieceMove(12, game.ActiveColor);
 
             Assert.True(res.Count == 8);
             Assert.Contains(res, res => res.EndIndex == 3);
@@ -461,7 +461,7 @@ namespace Chess
             var game = new Game();
             game.Board = new Board("rnb3nr/p1p1k1pp/3PB3/1pq2p2/1Pbpp2Q/2K1P2P/P2P1PP1/RN3BNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateSurroundingPieceMove(game, 42);
+            var res = scanner.EvaluateSurroundingPieceMove(42, game.ActiveColor);
 
             Assert.True(res.Count == 6);
             Assert.Contains(res, res => res.EndIndex == 41);
@@ -478,7 +478,7 @@ namespace Chess
             var game = new Game();
             game.Board = new Board("rnb3nr/p1p1k1pp/3PB3/1pq2p2/RPbpp2Q/PN2P2P/3P1PP1/K4BNR");
             var scanner = new BoardScanner(game.Board);
-            var res = scanner.EvaluateSurroundingPieceMove(game, 56);
+            var res = scanner.EvaluateSurroundingPieceMove(56, game.ActiveColor);
 
             Assert.True(res.Count == 3);
             Assert.Contains(res, res => res.EndIndex == 48);

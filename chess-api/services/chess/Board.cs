@@ -1,5 +1,17 @@
 namespace Chess
 {
+    public class IsCheck
+    {
+        public bool WhiteInCheck { get; set; }
+        public bool BlackInCheck { get; set; }
+
+        public IsCheck(bool white, bool black)
+        {
+            WhiteInCheck = white;
+            BlackInCheck = black;
+        }
+    }
+
     public class Board
     {
         // The start of the array represents the top left corner
@@ -26,6 +38,55 @@ namespace Chess
         public Board()
         {
             Squares = BuildStartingBoard();
+        }
+
+        public void MovePiece(int start, int end)
+        {
+            if (!Board.IsValidSquareIndex(start) || !Board.IsValidSquareIndex(end))
+            {
+                throw new Exception("Passed invalid board index to MovePiece");
+            }
+
+            var piece = Squares[start].Piece;
+            if (piece == null)
+            {
+                throw new Exception("There is no piece on this square.");
+            }
+
+            var startSquare = Squares[start];
+            var endSquare = Squares[end];
+
+            endSquare.Piece = piece;
+            startSquare.Piece = null;
+        }
+
+        public IsCheck IsCheck()
+        {
+            var wKing = GetPieces<King>(Color.WHITE);
+            var bKing = GetPieces<King>(Color.BLACK);
+
+            if (wKing.Count < 1 || bKing.Count < 1)
+            {
+                throw new Exception("Could not find one of the kings on the board.");
+            }
+
+            var isWhiteCheck = wKing[0].IsInCheck(this);
+            var isBlackCheck = bKing[0].IsInCheck(this);
+
+            return new IsCheck(isWhiteCheck, isBlackCheck);
+        }
+
+        public bool AreSquaresEmpty(int[] indexes)
+        {
+            bool allEmpty = true;
+            foreach (int index in indexes)
+            {
+                if (Squares[index].Piece != null)
+                {
+                    allEmpty = false;
+                }
+            }
+            return allEmpty;
         }
 
         public static bool IsValidSquareIndex(int index)
@@ -68,7 +129,6 @@ namespace Chess
                 .Select(square => (T)square.Piece!)
                 .ToList();
         }
-
 
         public static T ValidatePieceOnSquare<T>(Board board, int index) where T : Piece
         {

@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Chess
 {
     public abstract class Piece
@@ -15,6 +17,13 @@ namespace Chess
         public abstract char GetPieceChar();
 
         // ----- Constructors -----
+        public Piece()
+        {
+            Index = 0;
+            Color = Color.BLACK;
+            HasMoved = false;
+            ValidMoves = new List<ValidMove>();
+        }
         public Piece(int posIndex, Color color)
         {
             Index = posIndex;
@@ -37,11 +46,179 @@ namespace Chess
             ValidMoves = validMoves;
         }
 
+        // Returns whether the passed in piece is being attacked by opponent.
+        public static bool IsPieceBeingAttacked(Board board, int index)
+        {
+            if (!Board.IsValidSquareIndex(index))
+            {
+                throw new Exception("Passed invalid index to IsPieceBeingAttacked");
+            }
+
+            var piece = board.Squares[index].Piece;
+            if (piece == null)
+            {
+                throw new Exception("There is no piece on this square.");
+            }
+
+            var scanner = new BoardScanner(board);
+            var opponentColor = piece.Color == Color.WHITE ? Color.BLACK : Color.WHITE;
+
+            // 1. Check for pawn attacks.
+            var opponentPawns = board.GetPieces<Pawn>(opponentColor);
+            var attackedIndexes = new List<int>();
+
+            foreach (var pawn in opponentPawns)
+            {
+                var indexes = pawn.GetAttackIndexes(board);
+                attackedIndexes.AddRange(indexes);
+            }
+
+            // 2. Check for knight attacks
+            var opponentKnights = board.GetPieces<Knight>(opponentColor);
+
+            foreach (var knight in opponentKnights)
+            {
+                var indexes = knight.GetUnfilteredMoveIndexes(knight.Index);
+                attackedIndexes.AddRange(indexes);
+            }
+
+            // 3. Check for horizonal/vertical attacks
+            var opponentRooks = board.GetPieces<Rook>(opponentColor);
+            var opponentQueen = board.GetPieces<Queen>(opponentColor);
+
+            foreach (var rook in opponentRooks)
+            {
+                var validMoves = scanner.EvaluateSlidingPieceMove(rook.Index, opponentColor);
+                foreach (var move in validMoves)
+                {
+                    if (move.IsCapture)
+                    {
+                        attackedIndexes.Add(move.EndIndex);
+                    }
+                }
+            }
+
+            if (opponentQueen.Count > 0)
+            {
+                var validMoves = scanner.EvaluateSlidingPieceMove(opponentQueen[0].Index, opponentColor);
+                foreach (var move in validMoves)
+                {
+                    if (move.IsCapture)
+                    {
+                        attackedIndexes.Add(move.EndIndex);
+                    }
+                }
+            }
+
+            // 4. Check for diagonal attacks
+            var opponentBishops = board.GetPieces<Bishop>(opponentColor);
+
+            foreach (var bishop in opponentBishops)
+            {
+                var validMoves = scanner.EvaluateDiagonalPieceMove(bishop.Index, opponentColor);
+                foreach (var move in validMoves)
+                {
+                    if (move.IsCapture)
+                    {
+                        attackedIndexes.Add(move.EndIndex);
+                    }
+                }
+            }
+
+            if (opponentQueen.Count > 0)
+            {
+                var validMoves = scanner.EvaluateDiagonalPieceMove(opponentQueen[0].Index, opponentColor);
+                foreach (var move in validMoves)
+                {
+                    if (move.IsCapture)
+                    {
+                        attackedIndexes.Add(move.EndIndex);
+                    }
+                }
+            }
+
+            // 5. Check for king attacks
+            var opponentKing = board.GetPieces<King>(opponentColor);
+            if (opponentKing.Count > 0)
+            {
+                var moves = scanner.EvaluateSurroundingPieceMove(opponentKing[0].Index, opponentColor);
+                foreach (var move in moves)
+                {
+                    if (move.IsCapture)
+                    {
+                        attackedIndexes.Add(move.EndIndex);
+                    }
+                }
+            }
+
+            return attackedIndexes.Contains(index);
+        }
+
         // ----- Methods -----
         public void UpdateValidMoves(Game game)
         {
-            // 1. Get the unfiltered list of squares the piece can moved to based purely on how the piece can move.
+            // 1. Get the unfiltered list of squares the piece can moved to based purely on how the piece can move/attack.
             List<ValidMove> validMoves = GetStandardMoves(game);
+
+            // 2. Add en-passant captures (if applicable)
+            if (this is Pawn pawn)
+            {
+                if (game.EnPassantIndex != null && pawn.IsAttackingEnPassantSquare(game.EnPassantIndex, game.Board))
+                {
+                    int index = game.EnPassantIndex.Value;
+                    validMoves.Add(new ValidMove(pawn.Index, index, true));
+                }
+            }
+
+            // 3. Add castle moves (if applicable)
+            if (this is King king)
+            {
+                if (game.ActiveColor == Color.BLACK && king.Color == Color.BLACK)
+                {
+                    if (game.BlackCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_QUEEN_SIDE))
+                    {
+                        validMoves.Add(new ValidMove(king.Index, 2, false));
+                    }
+                    if (game.BlackCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_KING_SIDE))
+                    {
+                        validMoves.Add(new ValidMove(king.Index, 6, false));
+                    }
+                }
+                else if (game.ActiveColor == Color.WHITE)
+                {
+                    if (game.WhiteCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_QUEEN_SIDE))
+                    {
+                        validMoves.Add(new ValidMove(king.Index, 58, false));
+                    }
+                    if (game.WhiteCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_KING_SIDE))
+                    {
+                        validMoves.Add(new ValidMove(king.Index, 62, false));
+                    }
+                }
+            }
+
+            // 4. Filter out any moves that would put player in check.
+            foreach (var move in validMoves)
+            {
+                var newBoard = new Board(game.Board.BuildFen());
+
+                // 1. Make the move.
+                newBoard.MovePiece(move.StartIndex, move.EndIndex);
+
+                // 2. Call IsInCheck on the board
+                var isCheckResults = newBoard.IsCheck();
+
+                // 3. Remove any moves that would put the player in check
+                if (game.ActiveColor == Color.WHITE && isCheckResults.WhiteInCheck)
+                {
+                    validMoves.Remove(move);
+                }
+                else if (game.ActiveColor == Color.BLACK && isCheckResults.BlackInCheck)
+                {
+                    validMoves.Remove(move);
+                }
+            }
+
             ValidMoves = validMoves;
         }
 

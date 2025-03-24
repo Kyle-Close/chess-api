@@ -1,5 +1,13 @@
 namespace Chess
 {
+    public enum CastlePaths
+    {
+        BLACK_QUEEN_SIDE,
+        BLACK_KING_SIDE,
+        WHITE_QUEEN_SIDE,
+        WHITE_KING_SIDE
+    }
+
     public class CastleRights
     {
         // The castle rights indicate if the castle rights on each side are available.
@@ -19,6 +27,23 @@ namespace Chess
         {
             KingSide = kingSide;
             QueenSide = queenSide;
+        }
+
+        public static bool IsCastlePathClear(Board board, CastlePaths castlePath)
+        {
+            switch (castlePath)
+            {
+                case CastlePaths.BLACK_QUEEN_SIDE:
+                    return board.AreSquaresEmpty([1, 2, 3]);
+                case CastlePaths.BLACK_KING_SIDE:
+                    return board.AreSquaresEmpty([5, 6]);
+                case CastlePaths.WHITE_QUEEN_SIDE:
+                    return board.AreSquaresEmpty([57, 58, 59]);
+                case CastlePaths.WHITE_KING_SIDE:
+                    return board.AreSquaresEmpty([61, 62]);
+                default:
+                    throw new Exception("Passed invalid castle path.");
+            }
         }
     }
 }
