@@ -42,7 +42,6 @@ namespace Chess
 
         public void MovePiece(int start, int end)
         {
-            System.Console.WriteLine($"Entering MovePiece: {start}, {end}");
             if (!Board.IsValidSquareIndex(start) || !Board.IsValidSquareIndex(end))
             {
                 throw new Exception("Passed invalid board index to MovePiece");
@@ -53,7 +52,7 @@ namespace Chess
             {
                 throw new Exception("There is no piece on this square.");
             }
-            
+
             var startSquare = Squares[start];
             var endSquare = Squares[end];
 

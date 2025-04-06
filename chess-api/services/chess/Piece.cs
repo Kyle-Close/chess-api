@@ -49,7 +49,6 @@ namespace Chess
         // Returns whether the passed in piece is being attacked by opponent.
         public static bool IsPieceBeingAttacked(Board board, int index)
         {
-            System.Console.WriteLine("Called IsPieceBeingAttacked with index: " + index);
             if (!Board.IsValidSquareIndex(index))
             {
                 throw new Exception("Passed invalid index to IsPieceBeingAttacked");

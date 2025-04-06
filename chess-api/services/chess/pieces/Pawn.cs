@@ -58,7 +58,6 @@ namespace Chess
         // 2 square moves, single square moves, capture (left & right) are considered.
         public override List<ValidMove> GetStandardMoves(Game game)
         {
-            System.Console.WriteLine("Calling vPieceOnSquare from GetStandardMoves");
             var piece = Board.ValidatePieceOnSquare<Pawn>(game.Board, Index);
             var moveIndexList = new List<ValidMove>();
             var blockStatus = IsBlocked(game.Board);
@@ -119,7 +118,6 @@ namespace Chess
                 throw new Exception("Cannot get pawn attacking indexes. Given index off the board.");
             }
 
-            System.Console.WriteLine("Calling vPieceOnSquare from GetAttackIndexes");
             var pawn = Board.ValidatePieceOnSquare<Pawn>(board, Index);
             var file = Square.GetFile(Index);
 
@@ -169,7 +167,6 @@ namespace Chess
 
         public PawnBlockStatus IsBlocked(Board board)
         {
-            System.Console.WriteLine("Calling vPieceOnSquare from IsBlocked");
             var piece = Board.ValidatePieceOnSquare<Pawn>(board, Index);
 
             int adder = piece.Color == Color.WHITE ? -8 : 8;
