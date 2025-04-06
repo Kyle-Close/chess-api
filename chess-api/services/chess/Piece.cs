@@ -199,26 +199,17 @@ namespace Chess
             }
 
             // 4. Filter out any moves that would put player in check.
-            foreach (var move in validMoves)
+            validMoves = validMoves.Where(move =>
             {
                 var newBoard = new Board(game.Board.BuildFen());
-
-                // 1. Make the move.
                 newBoard.MovePiece(move.StartIndex, move.EndIndex);
-
-                // 2. Call IsInCheck on the board
                 var isCheckResults = newBoard.IsCheck();
 
-                // 3. Remove any moves that would put the player in check
-                if (game.ActiveColor == Color.WHITE && isCheckResults.WhiteInCheck)
-                {
-                    validMoves.Remove(move);
-                }
-                else if (game.ActiveColor == Color.BLACK && isCheckResults.BlackInCheck)
-                {
-                    validMoves.Remove(move);
-                }
-            }
+                if (game.ActiveColor == Color.WHITE)
+                    return !isCheckResults.WhiteInCheck;
+
+                return !isCheckResults.BlackInCheck;
+            }).ToList();
 
             ValidMoves = validMoves;
         }
