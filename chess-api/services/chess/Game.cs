@@ -98,6 +98,7 @@ namespace Chess
             UpdateValidMoves();
         }
 
+        // Returns a list of valid moves that the active player can make.
         public List<ValidMove> GetCurrentValidMoves()
         {
             var pieces = Board.GetPieces(ActiveColor);
