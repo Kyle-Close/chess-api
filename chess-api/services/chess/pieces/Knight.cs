@@ -29,7 +29,7 @@ namespace Chess
                 {
                     result.Add(new ValidMove(Index, index, false));
                 }
-                else if (piece.Color != game.ActiveColor)
+                else if (piece.Color != Color)
                 {
                     result.Add(new ValidMove(Index, index, true));
                 }

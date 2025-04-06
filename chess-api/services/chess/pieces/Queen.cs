@@ -19,8 +19,8 @@ namespace Chess
             var result = new List<ValidMove>();
 
             var scanner = new BoardScanner(game.Board);
-            result.AddRange(scanner.EvaluateDiagonalPieceMove(Index, game.ActiveColor));
-            result.AddRange(scanner.EvaluateSlidingPieceMove(Index, game.ActiveColor));
+            result.AddRange(scanner.EvaluateDiagonalPieceMove(Index, Color));
+            result.AddRange(scanner.EvaluateSlidingPieceMove(Index, Color));
 
             return result;
         }

@@ -49,6 +49,7 @@ namespace Chess
         // Returns whether the passed in piece is being attacked by opponent.
         public static bool IsPieceBeingAttacked(Board board, int index)
         {
+            System.Console.WriteLine("Called IsPieceBeingAttacked with index: " + index);
             if (!Board.IsValidSquareIndex(index))
             {
                 throw new Exception("Passed invalid index to IsPieceBeingAttacked");
@@ -173,7 +174,7 @@ namespace Chess
             // 3. Add castle moves (if applicable)
             if (this is King king)
             {
-                if (game.ActiveColor == Color.BLACK && king.Color == Color.BLACK)
+                if (Color == Color.BLACK)
                 {
                     if (game.BlackCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_QUEEN_SIDE))
                     {
@@ -184,7 +185,7 @@ namespace Chess
                         validMoves.Add(new ValidMove(king.Index, 6, false));
                     }
                 }
-                else if (game.ActiveColor == Color.WHITE)
+                else
                 {
                     if (game.WhiteCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_QUEEN_SIDE))
                     {
