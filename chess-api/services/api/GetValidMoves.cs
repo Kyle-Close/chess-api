@@ -32,12 +32,14 @@ namespace Chess
             app.MapPost("/chess-api/get-valid-moves", async (HttpContext httpContext) =>
             {
                 var payload = await httpContext.Request.ReadFromJsonAsync<GetValidMovesApi>();
+
                 if (payload == null)
                 {
                     return Results.BadRequest("Invalid request payload.");
                 }
 
                 var game = Game.FindActiveGame(activeGames, payload.GameId);
+
                 if (game == null)
                 {
                     return Results.NotFound("Game is not currently active.");

@@ -33,7 +33,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
 List<Game> activeGames = new List<Game>();
 
 app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>

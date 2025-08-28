@@ -15,14 +15,18 @@ namespace Chess
         }
     }
 
+    // Contains all information about an exectued move
     public class MoveMetaData
     {
         public int StartIndex { get; set; }
+        public int? EndIndex { get; set; } // If this is sent that indicates a move was executed
+
         public List<ValidMove> ValidMoves { get; set; } // List of squares the piece can move to. The index
+
         public bool? IsEnPassantCapture { get; set; }
         public bool? IsCastle { get; set; }
         public bool? IsCapture { get; set; }
-        public int? EndIndex { get; set; } // If this is sent that indicates a move was executed
+
         public string? Notation { get; set; } // Also only gets sent when move is executed. "e4" for ex.
         public string? NewFen { get; set; }
 
@@ -42,6 +46,7 @@ namespace Chess
             if (game.EnPassantIndex != null && piece is Pawn pawn)
             {
                 bool isPawnAttacking = pawn.IsAttackingEnPassantSquare(game.EnPassantIndex.Value, game.Board);
+
                 if (isPawnAttacking)
                 {
                     validMoves.Add(new ValidMove(start, game.EnPassantIndex.Value, true));
@@ -90,18 +95,7 @@ namespace Chess
 
             return piece.GetStandardMoves(game);
         }
-
-        /*public MoveMetaData(Game game, int start, int end) // Execute the move.*/
-        /*{*/
-        /*    StartIndex = start;*/
-        /*    EndIndex = end;*/
-        /**/
-        /*    // 1.*/
-        /**/
-        /**/
-        /*    Notation = ""; // TODO: build the notation string of the move*/
-        /*}*/
-    }
+   }
 
     public class Move
     {
