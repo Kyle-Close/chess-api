@@ -27,11 +27,11 @@ namespace Chess
                 var piece = game.Board.Squares[index].Piece;
                 if (piece == null)
                 {
-                    result.Add(new MoveMetaData(Index, index));
+                    result.Add(new MoveMetaData(game.Board, Index, index));
                 }
                 else if (piece.Color != Color)
                 {
-                    result.Add(new MoveMetaData(Index, index, isCapture: true));
+                    result.Add(new MoveMetaData(game.Board, Index, index, isCapture: true));
                 }
             }
 

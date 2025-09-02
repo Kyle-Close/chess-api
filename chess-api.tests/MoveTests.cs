@@ -2,9 +2,6 @@ namespace Chess;
 
 public class MoveTests
 {
-    #region BuildMoveNotation Tests
-    #region Basic Piece Moves
-
     [Fact]
     public void BuildMoveNotation_Knight_BasicMoves()
     {
@@ -73,9 +70,7 @@ public class MoveTests
 
         Assert.Equal("Kd3", m1.Notation);
     }
-    #endregion
 
-    #region Pawn Moves
 
     [Fact]
     public void BuildMoveNotation_Pawn_BasicMoves()
@@ -133,9 +128,9 @@ public class MoveTests
 
         Assert.Equal("exf8=?", m.Notation);
     }
-    #endregion
 
-    #region castling
+
+
     [Fact]
     public void BuildMoveNotation_White_Castle()
     {
@@ -163,9 +158,9 @@ public class MoveTests
         Assert.Equal("O-O", m1.Notation);
         Assert.Equal("O-O-O", m2.Notation);
     }
-    #endregion
 
-    #region Check and Checkmate
+
+
     [Fact]
     public void BuildMoveNotation_Bishop_Check()
     {
@@ -202,7 +197,4 @@ public class MoveTests
         Assert.Equal("Nf7+", m2.Notation);
         Assert.Equal("Nc4+", m3.Notation);
     }
-    #endregion
-
-    #endregion
 }

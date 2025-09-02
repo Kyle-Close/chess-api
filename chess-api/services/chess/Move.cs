@@ -15,7 +15,7 @@ namespace Chess
 
         public string Notation { get; set; }
 
-        public MoveMetaData(int start, int end, bool isCapture = false, bool isEnPassantCapture = false,
+        public MoveMetaData(Board board, int start, int end, bool isCapture = false, bool isEnPassantCapture = false,
                               bool isCastle = false, bool isPromotion = false, bool causesCheck = false, bool causesCheckmate = false)
         {
             StartIndex = start;
@@ -29,10 +29,10 @@ namespace Chess
             CausesCheckmate = causesCheckmate;
 
             // Set by using BuildMoveNotation a
-            Notation = "";
+            Notation = UpdateMoveNotation(board);
         }
 
-        public string BuildMoveNotation(Board board)
+        private string UpdateMoveNotation(Board board)
         {
             var piece = board.Squares[StartIndex].Piece;
             if (piece == null)
@@ -72,23 +72,67 @@ namespace Chess
                 }
             }
 
+            StringWriter algebraicNotation = new StringWriter();
+
+            // Get piece letter
             switch (piece.PieceType)
             {
-                case PieceType.PAWN:
-                    break;
                 case PieceType.KNIGHT:
+                    algebraicNotation.Write('N');
                     break;
                 case PieceType.BISHOP:
+                    algebraicNotation.Write('B');
                     break;
                 case PieceType.ROOK:
+                    algebraicNotation.Write('R');
                     break;
                 case PieceType.QUEEN:
+                    algebraicNotation.Write('Q');
                     break;
                 case PieceType.KING:
+                    algebraicNotation.Write('K');
                     break;
             }
 
-            return "";
+            char fileOriginLetter = Square.GetFileLetter(Square.GetFile(StartIndex));
+
+            char fileDestinationLetter = Square.GetFileLetter(Square.GetFile(EndIndex));
+            char rankDestinationLetter = Square.GetRankLetter(Square.GetRank(EndIndex));
+
+            // Handle capture
+            if (IsCapture)
+            {
+                // If capturing piece is a pawn we need to append the pawn starting file (exd4)
+                if (piece.PieceType == PieceType.PAWN)
+                {
+                    algebraicNotation.Write(fileOriginLetter.ToString().ToLower());
+                }
+
+                algebraicNotation.Write('x');
+            }
+
+            // Append destination square
+            algebraicNotation.Write(fileDestinationLetter);
+            algebraicNotation.Write(rankDestinationLetter);
+
+            // Handle promotion case
+            if (IsPromotion)
+            {
+                algebraicNotation.Write('=');
+                algebraicNotation.Write('?'); // At this point we don't know what the user will choose to promote to.
+            }
+
+            // Append check or checkmate if applicable
+            if (CausesCheckmate)
+            {
+                algebraicNotation.Write('#');
+            }
+            else if (CausesCheck)
+            {
+                algebraicNotation.Write('+');
+            }
+
+            return algebraicNotation.ToString();
         }
     }
 }

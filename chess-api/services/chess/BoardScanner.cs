@@ -17,7 +17,7 @@ namespace Chess
 
         // EvaluateSlidingPieceMove - Pass in game, index you want to evaluate from
         //  Based on who's turn it is, it will return a list of moves (MoveMetaData) for sliding pieces (rook & queen)
-        public List<MoveMetaData> EvaluateSlidingPieceMove(int index, Color activeColor)
+        public List<MoveMetaData> EvaluateSlidingPieceMove(Board board, int index, Color activeColor)
         {
             List<MoveMetaData> result = new List<MoveMetaData>();
 
@@ -37,11 +37,11 @@ namespace Chess
                     var piece = scannedFile[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedFile[i].Index));
+                        result.Add(new MoveMetaData(board, index, scannedFile[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, piece.Index, isCapture: true));
+                        result.Add(new MoveMetaData(board, index, piece.Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -60,11 +60,11 @@ namespace Chess
                     var piece = scannedFile[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedFile[i].Index));
+                        result.Add(new MoveMetaData(board, index, scannedFile[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, piece.Index, isCapture: true));
+                        result.Add(new MoveMetaData(board, index, piece.Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -87,11 +87,11 @@ namespace Chess
                     var piece = scannedRank[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedRank[i].Index));
+                        result.Add(new MoveMetaData(board, index, scannedRank[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, piece.Index, isCapture: true));
+                        result.Add(new MoveMetaData(board, index, piece.Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -110,11 +110,11 @@ namespace Chess
                     var piece = scannedRank[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedRank[i].Index));
+                        result.Add(new MoveMetaData(board, index, scannedRank[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, piece.Index, isCapture: true));
+                        result.Add(new MoveMetaData(board, index, piece.Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -214,7 +214,7 @@ namespace Chess
 
         // EvaluateDiagonalPieceMove - Pass in game, index you want to evaluate from
         //  Based on who's turn it is, it will return a list of ValidMoves in all 4 diagonal directions
-        public List<MoveMetaData> EvaluateDiagonalPieceMove(int index, Color activeColor)
+        public List<MoveMetaData> EvaluateDiagonalPieceMove(Board board, int index, Color activeColor)
         {
             if (!Board.IsValidSquareIndex(index))
             {
@@ -243,11 +243,11 @@ namespace Chess
                     var piece = scannedDiagTLtBR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagTLtBR[i].Index));
+                        result.Add(new MoveMetaData(board, index, scannedDiagTLtBR[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, piece.Index, isCapture: true));
+                        result.Add(new MoveMetaData(board, index, piece.Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -266,11 +266,11 @@ namespace Chess
                     var piece = scannedDiagTLtBR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagTLtBR[i].Index));
+                        result.Add(new MoveMetaData(board, index, scannedDiagTLtBR[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, piece.Index, isCapture: true));
+                        result.Add(new MoveMetaData(board, index, piece.Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -291,11 +291,11 @@ namespace Chess
                     var piece = scannedDiagBLtTR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagBLtTR[i].Index));
+                        result.Add(new MoveMetaData(board, index, scannedDiagBLtTR[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagBLtTR[i].Index, isCapture: true));
+                        result.Add(new MoveMetaData(board, index, scannedDiagBLtTR[i].Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -314,11 +314,11 @@ namespace Chess
                     var piece = scannedDiagBLtTR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagBLtTR[i].Index));
+                        result.Add(new MoveMetaData(board, index, scannedDiagBLtTR[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagBLtTR[i].Index, isCapture: true));
+                        result.Add(new MoveMetaData(board, index, scannedDiagBLtTR[i].Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -333,7 +333,7 @@ namespace Chess
 
         // EvaluateSurroundingPieceMove - Pass in game, index you want to evaluate from
         //  Based on who's turn it is, it will return a list of ValidMoves in all 8 directions 1 square away
-        public List<MoveMetaData> EvaluateSurroundingPieceMove(int index, Color activeColor)
+        public List<MoveMetaData> EvaluateSurroundingPieceMove(Board board, int index, Color activeColor)
         {
             var result = new List<MoveMetaData>();
 
@@ -344,75 +344,75 @@ namespace Chess
             {
                 if (rank == BoardRank.ONE)
                 {
+                    result.Add(new MoveMetaData(board, index, index - 8));
 
-                    result.Add(new MoveMetaData(index, index - 8));
-                    result.Add(new MoveMetaData(index, index - 7));
-                    result.Add(new MoveMetaData(index, index + 1));
+                    result.Add(new MoveMetaData(board, index, index - 7));
+                    result.Add(new MoveMetaData(board, index, index + 1));
                 }
                 else if (rank == BoardRank.EIGHT)
                 {
-                    result.Add(new MoveMetaData(index, index + 1));
-                    result.Add(new MoveMetaData(index, index + 8));
-                    result.Add(new MoveMetaData(index, index + 9));
+                    result.Add(new MoveMetaData(board, index, index + 1));
+                    result.Add(new MoveMetaData(board, index, index + 8));
+                    result.Add(new MoveMetaData(board, index, index + 9));
                 }
                 else
                 {
-                    result.Add(new MoveMetaData(index, index - 8));
-                    result.Add(new MoveMetaData(index, index - 7));
-                    result.Add(new MoveMetaData(index, index + 1));
-                    result.Add(new MoveMetaData(index, index + 8));
-                    result.Add(new MoveMetaData(index, index + 9));
+                    result.Add(new MoveMetaData(board, index, index - 8));
+                    result.Add(new MoveMetaData(board, index, index - 7));
+                    result.Add(new MoveMetaData(board, index, index + 1));
+                    result.Add(new MoveMetaData(board, index, index + 8));
+                    result.Add(new MoveMetaData(board, index, index + 9));
                 }
             }
             else if (file == BoardFile.H)
             {
                 if (rank == BoardRank.ONE)
                 {
-                    result.Add(new MoveMetaData(index, index - 9));
-                    result.Add(new MoveMetaData(index, index - 8));
-                    result.Add(new MoveMetaData(index, index - 1));
+                    result.Add(new MoveMetaData(board, index, index - 9));
+                    result.Add(new MoveMetaData(board, index, index - 8));
+                    result.Add(new MoveMetaData(board, index, index - 1));
                 }
                 else if (rank == BoardRank.EIGHT)
                 {
-                    result.Add(new MoveMetaData(index, index - 1));
-                    result.Add(new MoveMetaData(index, index + 7));
-                    result.Add(new MoveMetaData(index, index + 8));
+                    result.Add(new MoveMetaData(board, index, index - 1));
+                    result.Add(new MoveMetaData(board, index, index + 7));
+                    result.Add(new MoveMetaData(board, index, index + 8));
                 }
                 else
                 {
-                    result.Add(new MoveMetaData(index, index - 9));
-                    result.Add(new MoveMetaData(index, index - 8));
-                    result.Add(new MoveMetaData(index, index - 1));
-                    result.Add(new MoveMetaData(index, index + 7));
-                    result.Add(new MoveMetaData(index, index + 8));
+                    result.Add(new MoveMetaData(board, index, index - 9));
+                    result.Add(new MoveMetaData(board, index, index - 8));
+                    result.Add(new MoveMetaData(board, index, index - 1));
+                    result.Add(new MoveMetaData(board, index, index + 7));
+                    result.Add(new MoveMetaData(board, index, index + 8));
                 }
             }
             else if (rank == BoardRank.ONE)
             {
-                result.Add(new MoveMetaData(index, index - 9));
-                result.Add(new MoveMetaData(index, index - 8));
-                result.Add(new MoveMetaData(index, index - 7));
-                result.Add(new MoveMetaData(index, index - 1));
-                result.Add(new MoveMetaData(index, index + 1));
+                result.Add(new MoveMetaData(board, index, index - 9));
+                result.Add(new MoveMetaData(board, index, index - 8));
+                result.Add(new MoveMetaData(board, index, index - 7));
+                result.Add(new MoveMetaData(board, index, index - 1));
+                result.Add(new MoveMetaData(board, index, index + 1));
             }
             else if (rank == BoardRank.EIGHT)
             {
-                result.Add(new MoveMetaData(index, index - 1));
-                result.Add(new MoveMetaData(index, index + 1));
-                result.Add(new MoveMetaData(index, index + 7));
-                result.Add(new MoveMetaData(index, index + 8));
-                result.Add(new MoveMetaData(index, index + 9));
+                result.Add(new MoveMetaData(board, index, index - 1));
+                result.Add(new MoveMetaData(board, index, index + 1));
+                result.Add(new MoveMetaData(board, index, index + 7));
+                result.Add(new MoveMetaData(board, index, index + 8));
+                result.Add(new MoveMetaData(board, index, index + 9));
             }
             else
             {
-                result.Add(new MoveMetaData(index, index - 9));
-                result.Add(new MoveMetaData(index, index - 8));
-                result.Add(new MoveMetaData(index, index - 7));
-                result.Add(new MoveMetaData(index, index - 1));
-                result.Add(new MoveMetaData(index, index + 1));
-                result.Add(new MoveMetaData(index, index + 7));
-                result.Add(new MoveMetaData(index, index + 8));
-                result.Add(new MoveMetaData(index, index + 9));
+                result.Add(new MoveMetaData(board, index, index - 9));
+                result.Add(new MoveMetaData(board, index, index - 8));
+                result.Add(new MoveMetaData(board, index, index - 7));
+                result.Add(new MoveMetaData(board, index, index - 1));
+                result.Add(new MoveMetaData(board, index, index + 1));
+                result.Add(new MoveMetaData(board, index, index + 7));
+                result.Add(new MoveMetaData(board, index, index + 8));
+                result.Add(new MoveMetaData(board, index, index + 9));
             }
 
             // Remove friendly pieces and mark enemy pieces as captures

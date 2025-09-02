@@ -19,8 +19,8 @@ namespace Chess
             var result = new List<MoveMetaData>();
 
             var scanner = new BoardScanner(game.Board);
-            result.AddRange(scanner.EvaluateDiagonalPieceMove(Index, Color));
-            result.AddRange(scanner.EvaluateSlidingPieceMove(Index, Color));
+            result.AddRange(scanner.EvaluateDiagonalPieceMove(game.Board, Index, Color));
+            result.AddRange(scanner.EvaluateSlidingPieceMove(game.Board, Index, Color));
 
             return result;
         }

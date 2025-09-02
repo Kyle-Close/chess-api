@@ -151,5 +151,55 @@ namespace Chess
 
             throw new Exception("Invalid index passed to getSquareRank: " + index);
         }
+
+        public static char GetFileLetter(BoardFile file)
+        {
+            switch (file)
+            {
+                case BoardFile.A:
+                    return 'A';
+                case BoardFile.B:
+                    return 'B';
+                case BoardFile.C:
+                    return 'C';
+                case BoardFile.D:
+                    return 'D';
+                case BoardFile.E:
+                    return 'E';
+                case BoardFile.F:
+                    return 'F';
+                case BoardFile.G:
+                    return 'G';
+                case BoardFile.H:
+                    return 'H';
+                default:
+                    throw new Exception("Attempted to convert BoardFile to Char and failed due to invalid BoardFile being passed in.");
+            }
+        }
+
+        public static char GetRankLetter(BoardRank rank)
+        {
+            switch (rank)
+            {
+                case BoardRank.ONE:
+                    return '1';
+                case BoardRank.TWO:
+                    return '2';
+                case BoardRank.THREE:
+                    return '3';
+                case BoardRank.FOUR:
+                    return '4';
+                case BoardRank.FIVE:
+                    return '5';
+                case BoardRank.SIX:
+                    return '6';
+                case BoardRank.SEVEN:
+                    return '7';
+                case BoardRank.EIGHT:
+                    return '8';
+                default:
+                    throw new Exception("Attempted to convert BoardRank to Char and failed due to invalid BoardRank being passed in.");
+            }
+        }
     }
 }

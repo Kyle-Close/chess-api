@@ -17,7 +17,7 @@ namespace Chess
         public override List<MoveMetaData> GetStandardMoves(Game game)
         {
             var scanner = new BoardScanner(game.Board);
-            return scanner.EvaluateSlidingPieceMove(Index, Color);
+            return scanner.EvaluateSlidingPieceMove(game.Board, Index, Color);
         }
 
         public bool IsInStartPosition()

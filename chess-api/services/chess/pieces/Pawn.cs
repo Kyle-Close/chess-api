@@ -68,29 +68,29 @@ namespace Chess
                 {
                     if (piece.Color == Color.WHITE)
                     {
-                        moveIndexList.Add(new MoveMetaData(Index, Index - 8));
-                        moveIndexList.Add(new MoveMetaData(Index, Index - 16));
+                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index - 8));
+                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index - 16));
                     }
                     else
                     {
-                        moveIndexList.Add(new MoveMetaData(Index, Index + 8));
-                        moveIndexList.Add(new MoveMetaData(Index, Index + 16));
+                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index + 8));
+                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index + 16));
                     }
                 }
                 else
                 {
                     if (piece.Color == Color.WHITE)
-                        moveIndexList.Add(new MoveMetaData(Index, Index - 8));
+                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index - 8));
                     else
-                        moveIndexList.Add(new MoveMetaData(Index, Index + 8));
+                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index + 8));
                 }
             }
             else if (blockStatus == PawnBlockStatus.BLOCKED_TWO_RANKS_AHEAD)
             {
                 if (piece.Color == Color.WHITE)
-                    moveIndexList.Add(new MoveMetaData(Index, Index - 8));
+                    moveIndexList.Add(new MoveMetaData(game.Board, Index, Index - 8));
                 else
-                    moveIndexList.Add(new MoveMetaData(Index, Index + 8));
+                    moveIndexList.Add(new MoveMetaData(game.Board, Index, Index + 8));
             }
 
             // Get pawn capture info
@@ -101,7 +101,7 @@ namespace Chess
                 var isTargetIndex = game.IsEnemySquare(idx, enemyColor);
                 if (isTargetIndex)
                 {
-                    moveIndexList.Add(new MoveMetaData(Index, idx, true));
+                    moveIndexList.Add(new MoveMetaData(game.Board, Index, idx, true));
                 }
                 ;
             }

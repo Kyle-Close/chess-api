@@ -86,7 +86,7 @@ namespace Chess
 
             foreach (var rook in opponentRooks)
             {
-                var validMoves = scanner.EvaluateSlidingPieceMove(rook.Index, opponentColor);
+                var validMoves = scanner.EvaluateSlidingPieceMove(board, rook.Index, opponentColor);
                 foreach (var move in validMoves)
                 {
                     if (move.IsCapture)
@@ -98,7 +98,7 @@ namespace Chess
 
             if (opponentQueen.Count > 0)
             {
-                var validMoves = scanner.EvaluateSlidingPieceMove(opponentQueen[0].Index, opponentColor);
+                var validMoves = scanner.EvaluateSlidingPieceMove(board, opponentQueen[0].Index, opponentColor);
                 foreach (var move in validMoves)
                 {
                     if (move.IsCapture)
@@ -113,7 +113,7 @@ namespace Chess
 
             foreach (var bishop in opponentBishops)
             {
-                var validMoves = scanner.EvaluateDiagonalPieceMove(bishop.Index, opponentColor);
+                var validMoves = scanner.EvaluateDiagonalPieceMove(board, bishop.Index, opponentColor);
                 foreach (var move in validMoves)
                 {
                     if (move.IsCapture)
@@ -125,7 +125,7 @@ namespace Chess
 
             if (opponentQueen.Count > 0)
             {
-                var validMoves = scanner.EvaluateDiagonalPieceMove(opponentQueen[0].Index, opponentColor);
+                var validMoves = scanner.EvaluateDiagonalPieceMove(board, opponentQueen[0].Index, opponentColor);
                 foreach (var move in validMoves)
                 {
                     if (move.IsCapture)
@@ -139,7 +139,7 @@ namespace Chess
             var opponentKing = board.GetPieces<King>(opponentColor);
             if (opponentKing.Count > 0)
             {
-                var moves = scanner.EvaluateSurroundingPieceMove(opponentKing[0].Index, opponentColor);
+                var moves = scanner.EvaluateSurroundingPieceMove(board, opponentKing[0].Index, opponentColor);
                 foreach (var move in moves)
                 {
                     if (move.IsCapture)
@@ -165,7 +165,8 @@ namespace Chess
                 if (game.EnPassantIndex != null && pawn.IsAttackingEnPassantSquare(game.EnPassantIndex, game.Board))
                 {
                     int index = game.EnPassantIndex.Value;
-                    validMoves.Add(new MoveMetaData(pawn.Index, index, isCapture: true, isEnPassantCapture: true));
+                    MoveMetaData move = new MoveMetaData(game.Board, pawn.Index, index, isCapture: true, isEnPassantCapture: true);
+                    validMoves.Add(move);
                 }
 
                 // Handle pawn promotions
@@ -178,7 +179,7 @@ namespace Chess
                         move.IsPromotion = true;
                     }
                 }
-                
+
             }
 
             // 3. Add castle moves (if applicable)
@@ -188,22 +189,22 @@ namespace Chess
                 {
                     if (game.BlackCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_QUEEN_SIDE))
                     {
-                        validMoves.Add(new MoveMetaData(king.Index, 2, isCastle: true));
+                        validMoves.Add(new MoveMetaData(game.Board, king.Index, 2, isCastle: true));
                     }
                     if (game.BlackCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_KING_SIDE))
                     {
-                        validMoves.Add(new MoveMetaData(king.Index, 6, isCastle: true));
+                        validMoves.Add(new MoveMetaData(game.Board, king.Index, 6, isCastle: true));
                     }
                 }
                 else
                 {
                     if (game.WhiteCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_QUEEN_SIDE))
                     {
-                        validMoves.Add(new MoveMetaData(king.Index, 58, isCastle: true));
+                        validMoves.Add(new MoveMetaData(game.Board, king.Index, 58, isCastle: true));
                     }
                     if (game.WhiteCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_KING_SIDE))
                     {
-                        validMoves.Add(new MoveMetaData(king.Index, 62, isCastle: true));
+                        validMoves.Add(new MoveMetaData(game.Board, king.Index, 62, isCastle: true));
                     }
                 }
             }
