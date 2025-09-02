@@ -16,7 +16,7 @@ namespace Chess
 
         // Gets the standard bishop moves that are possible.
         // considers being blocked and ensuring not to go off board.
-        public override List<ValidMove> GetStandardMoves(Game game)
+        public override List<MoveMetaData> GetStandardMoves(Game game)
         {
             var scanner = new BoardScanner(game.Board);
             return scanner.EvaluateDiagonalPieceMove(Index, Color);

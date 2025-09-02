@@ -17,21 +17,21 @@ namespace Chess
         // Gets the standard knight moves that are possible.
         // considers being blocked and ensuring not to go off board.
         // Returns valid open squares and squares to capture on
-        public override List<ValidMove> GetStandardMoves(Game game)
+        public override List<MoveMetaData> GetStandardMoves(Game game)
         {
-            var unfiltered = GetUnfilteredMoveIndexes(Index);
-            var result = new List<ValidMove>();
+            List<int> unfiltered = GetUnfilteredMoveIndexes(Index);
+            List<MoveMetaData> result = new List<MoveMetaData>();
 
             foreach (var index in unfiltered)
             {
                 var piece = game.Board.Squares[index].Piece;
                 if (piece == null)
                 {
-                    result.Add(new ValidMove(Index, index, false));
+                    result.Add(new MoveMetaData(Index, index));
                 }
                 else if (piece.Color != Color)
                 {
-                    result.Add(new ValidMove(Index, index, true));
+                    result.Add(new MoveMetaData(Index, index, isCapture: true));
                 }
             }
 

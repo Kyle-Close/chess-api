@@ -56,10 +56,10 @@ namespace Chess
 
         // Gets the standard pawn moves that are possible. Does not consider en-passant.
         // 2 square moves, single square moves, capture (left & right) are considered.
-        public override List<ValidMove> GetStandardMoves(Game game)
+        public override List<MoveMetaData> GetStandardMoves(Game game)
         {
             var piece = Board.ValidatePieceOnSquare<Pawn>(game.Board, Index);
-            var moveIndexList = new List<ValidMove>();
+            var moveIndexList = new List<MoveMetaData>();
             var blockStatus = IsBlocked(game.Board);
 
             if (blockStatus == PawnBlockStatus.NOT_BLOCKED)
@@ -68,29 +68,29 @@ namespace Chess
                 {
                     if (piece.Color == Color.WHITE)
                     {
-                        moveIndexList.Add(new ValidMove(Index, Index - 8, false));
-                        moveIndexList.Add(new ValidMove(Index, Index - 16, false));
+                        moveIndexList.Add(new MoveMetaData(Index, Index - 8));
+                        moveIndexList.Add(new MoveMetaData(Index, Index - 16));
                     }
                     else
                     {
-                        moveIndexList.Add(new ValidMove(Index, Index + 8, false));
-                        moveIndexList.Add(new ValidMove(Index, Index + 16, false));
+                        moveIndexList.Add(new MoveMetaData(Index, Index + 8));
+                        moveIndexList.Add(new MoveMetaData(Index, Index + 16));
                     }
                 }
                 else
                 {
                     if (piece.Color == Color.WHITE)
-                        moveIndexList.Add(new ValidMove(Index, Index - 8, false));
+                        moveIndexList.Add(new MoveMetaData(Index, Index - 8));
                     else
-                        moveIndexList.Add(new ValidMove(Index, Index + 8, false));
+                        moveIndexList.Add(new MoveMetaData(Index, Index + 8));
                 }
             }
             else if (blockStatus == PawnBlockStatus.BLOCKED_TWO_RANKS_AHEAD)
             {
                 if (piece.Color == Color.WHITE)
-                    moveIndexList.Add(new ValidMove(Index, Index - 8, false));
+                    moveIndexList.Add(new MoveMetaData(Index, Index - 8));
                 else
-                    moveIndexList.Add(new ValidMove(Index, Index + 8, false));
+                    moveIndexList.Add(new MoveMetaData(Index, Index + 8));
             }
 
             // Get pawn capture info
@@ -101,7 +101,7 @@ namespace Chess
                 var isTargetIndex = game.IsEnemySquare(idx, enemyColor);
                 if (isTargetIndex)
                 {
-                    moveIndexList.Add(new ValidMove(Index, idx, true));
+                    moveIndexList.Add(new MoveMetaData(Index, idx, true));
                 }
                 ;
             }

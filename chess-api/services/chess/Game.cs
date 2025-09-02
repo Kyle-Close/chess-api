@@ -5,9 +5,13 @@ namespace Chess
         public string Id { get; set; }
 
         public Color ActiveColor { get; set; }
+
         public CastleRights WhiteCastleRights { get; set; }
         public CastleRights BlackCastleRights { get; set; }
+
         public int? EnPassantIndex { get; set; }
+        public bool IsCheck { get; set; }
+
         public int HalfMoves { get; set; }
         public int FullMoves { get; set; }
 
@@ -25,6 +29,7 @@ namespace Chess
             BlackCastleRights = new CastleRights();
             FenHistory = new List<string>();
             Board = new Board();
+            IsCheck = false;
 
             UpdateValidMoves();
         }
@@ -99,7 +104,7 @@ namespace Chess
         }
 
         // Returns a list of valid moves that the active player can make.
-        public List<ValidMove> GetCurrentValidMoves()
+        public List<MoveMetaData> GetCurrentValidMoves()
         {
             var pieces = Board.GetPieces(ActiveColor);
             return pieces.SelectMany(piece => piece.ValidMoves).ToList();

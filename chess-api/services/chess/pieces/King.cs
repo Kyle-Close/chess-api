@@ -14,7 +14,7 @@ namespace Chess
             return Color == Color.WHITE ? 'K' : 'k';
         }
 
-        public override List<ValidMove> GetStandardMoves(Game game)
+        public override List<MoveMetaData> GetStandardMoves(Game game)
         {
             var scanner = new BoardScanner(game.Board);
             return scanner.EvaluateSurroundingPieceMove(Index, Color);

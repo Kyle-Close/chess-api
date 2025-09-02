@@ -164,7 +164,7 @@ namespace Chess
                 if (game.EnPassantIndex != null && pawn.IsAttackingEnPassantSquare(game.EnPassantIndex, game.Board))
                 {
                     int index = game.EnPassantIndex.Value;
-                    validMoves.Add(new ValidMove(pawn.Index, index, true));
+                    validMoves.Add(new MoveMetaData(pawn.Index, index, isCapture: true, isEnPassantCapture: true));
                 }
             }
 
@@ -175,22 +175,22 @@ namespace Chess
                 {
                     if (game.BlackCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_QUEEN_SIDE))
                     {
-                        validMoves.Add(new ValidMove(king.Index, 2, false));
+                        validMoves.Add(new MoveMetaData(king.Index, 2, isCastle: true));
                     }
                     if (game.BlackCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_KING_SIDE))
                     {
-                        validMoves.Add(new ValidMove(king.Index, 6, false));
+                        validMoves.Add(new MoveMetaData(king.Index, 6, isCastle: true));
                     }
                 }
                 else
                 {
                     if (game.WhiteCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_QUEEN_SIDE))
                     {
-                        validMoves.Add(new ValidMove(king.Index, 58, false));
+                        validMoves.Add(new MoveMetaData(king.Index, 58, isCastle: true));
                     }
                     if (game.WhiteCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_KING_SIDE))
                     {
-                        validMoves.Add(new ValidMove(king.Index, 62, false));
+                        validMoves.Add(new MoveMetaData(king.Index, 62, isCastle: true));
                     }
                 }
             }

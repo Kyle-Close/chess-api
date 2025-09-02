@@ -12,11 +12,12 @@ namespace Chess
 
         public string Notation { get; set; }
 
-        public MoveMetaData(int start, int end, bool isCapture = false, bool IsEnPassantCapture = false, bool isCastle = false) // Generate a list of moves.
+        public MoveMetaData(int start, int end, bool isCapture = false, bool isEnPassantCapture = false, bool isCastle = false) // Generate a list of moves.
         {
             StartIndex = start;
             EndIndex = end;
 
+            IsEnPassantCapture = isEnPassantCapture;
             IsCapture = isCapture;
             IsCastle = isCastle;
 

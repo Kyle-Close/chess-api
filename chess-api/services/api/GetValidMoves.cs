@@ -2,10 +2,10 @@ namespace Chess
 {
     public class GetValidMovesResponse
     {
-        public List<ValidMove> ValidMoves { get; set; }
+        public List<MoveMetaData> ValidMoves { get; set; }
         public string? Message { get; set; }
 
-        public GetValidMovesResponse(List<ValidMove> validMoves, string message)
+        public GetValidMovesResponse(List<MoveMetaData> validMoves, string message)
         {
             ValidMoves = validMoves;
             Message = message;
@@ -13,7 +13,7 @@ namespace Chess
 
         public GetValidMovesResponse(string message)
         {
-            ValidMoves = new List<ValidMove>();
+            ValidMoves = new List<MoveMetaData>();
             Message = message;
         }
     }
