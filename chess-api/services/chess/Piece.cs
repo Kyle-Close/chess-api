@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 namespace Chess
 {
     public abstract class Piece
@@ -10,10 +8,10 @@ namespace Chess
         public Color Color { get; }
         public bool HasMoved { get; set; }
         public int Index { get; set; }
-        public List<ValidMove> ValidMoves { get; set; }
+        public List<MoveMetaData> ValidMoves { get; set; }
 
         // ----- Methods -----
-        public abstract List<ValidMove> GetStandardMoves(Game game);
+        public abstract List<MoveMetaData> GetStandardMoves(Game game);
         public abstract char GetPieceChar();
 
         // ----- Constructors -----
@@ -22,23 +20,23 @@ namespace Chess
             Index = 0;
             Color = Color.BLACK;
             HasMoved = false;
-            ValidMoves = new List<ValidMove>();
+            ValidMoves = new List<MoveMetaData>();
         }
         public Piece(int posIndex, Color color)
         {
             Index = posIndex;
             Color = color;
             HasMoved = false;
-            ValidMoves = new List<ValidMove>();
+            ValidMoves = new List<MoveMetaData>();
         }
         public Piece(int posIndex, Color color, bool hasMoved)
         {
             Index = posIndex;
             Color = color;
             HasMoved = hasMoved;
-            ValidMoves = new List<ValidMove>();
+            ValidMoves = new List<MoveMetaData>();
         }
-        public Piece(int posIndex, Color color, bool hasMoved, List<ValidMove> validMoves)
+        public Piece(int posIndex, Color color, bool hasMoved, List<MoveMetaData> validMoves)
         {
             Index = posIndex;
             Color = color;
@@ -158,7 +156,7 @@ namespace Chess
         public void UpdateValidMoves(Game game)
         {
             // 1. Get the unfiltered list of squares the piece can moved to based purely on how the piece can move/attack.
-            List<ValidMove> validMoves = GetStandardMoves(game);
+            List<MoveMetaData> validMoves = GetStandardMoves(game);
 
             // 2. Add en-passant captures (if applicable)
             if (this is Pawn pawn)
@@ -202,6 +200,11 @@ namespace Chess
             {
                 var newBoard = new Board(game.Board.BuildFen());
                 newBoard.MovePiece(move.StartIndex, move.EndIndex);
+
+                // If the new board state is missing a king, then this move is invalid.
+                bool hasKing = newBoard.GetPieces<King>(Color.WHITE).Count > 0 && newBoard.GetPieces<King>(Color.BLACK).Count > 0;
+                if (!hasKing) return false;
+
                 var isCheckResults = newBoard.IsCheck();
 
                 if (game.ActiveColor == Color.WHITE)
