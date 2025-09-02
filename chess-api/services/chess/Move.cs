@@ -10,10 +10,13 @@ namespace Chess
         public bool IsEnPassantCapture { get; set; }
         public bool IsCastle { get; set; }
         public bool IsPromotion { get; set; }
+        public bool CausesCheck { get; set; }
+        public bool CausesCheckmate { get; set; }
 
         public string Notation { get; set; }
 
-        public MoveMetaData(int start, int end, bool isCapture = false, bool isEnPassantCapture = false, bool isCastle = false, bool isPromotion = false)
+        public MoveMetaData(int start, int end, bool isCapture = false, bool isEnPassantCapture = false,
+                              bool isCastle = false, bool isPromotion = false, bool causesCheck = false, bool causesCheckmate = false)
         {
             StartIndex = start;
             EndIndex = end;
@@ -22,9 +25,70 @@ namespace Chess
             IsCapture = isCapture;
             IsCastle = isCastle;
             IsPromotion = isPromotion;
+            CausesCheck = causesCheck;
+            CausesCheckmate = causesCheckmate;
 
-            // TODO: Auto set the move notation Generate
+            // Set by using BuildMoveNotation a
             Notation = "";
+        }
+
+        public string BuildMoveNotation(Board board)
+        {
+            var piece = board.Squares[StartIndex].Piece;
+            if (piece == null)
+            {
+                throw new Exception("Attempted to build algebraic move notation on square without a piece (" + StartIndex.ToString() + ")");
+            }
+
+            // Cover special cases
+            if (IsCastle)
+            {
+                // Determine if king side or queen side
+                if (piece.Color == Color.WHITE)
+                {
+                    // King Side target square = 62
+                    if (EndIndex == 62)
+                    {
+                        return "O-O";
+                    }
+                    // Queen side target square = 58
+                    if (EndIndex == 58)
+                    {
+                        return "O-O-O";
+                    }
+                }
+                else
+                {
+                    // King Side target square = 6
+                    if (EndIndex == 6)
+                    {
+                        return "O-O";
+                    }
+                    // Queen side target square = 2
+                    if (EndIndex == 2)
+                    {
+                        return "O-O-O";
+                    }
+                }
+            }
+
+            switch (piece.PieceType)
+            {
+                case PieceType.PAWN:
+                    break;
+                case PieceType.KNIGHT:
+                    break;
+                case PieceType.BISHOP:
+                    break;
+                case PieceType.ROOK:
+                    break;
+                case PieceType.QUEEN:
+                    break;
+                case PieceType.KING:
+                    break;
+            }
+
+            return "";
         }
     }
 }

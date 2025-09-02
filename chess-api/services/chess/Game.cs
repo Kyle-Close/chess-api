@@ -11,6 +11,7 @@ namespace Chess
 
         public int? EnPassantIndex { get; set; }
         public bool IsCheck { get; set; }
+        public bool IsCheckmate { get; set; }
 
         public int HalfMoves { get; set; }
         public int FullMoves { get; set; }
@@ -30,6 +31,7 @@ namespace Chess
             FenHistory = new List<string>();
             Board = new Board();
             IsCheck = false;
+            IsCheckmate = false;
 
             UpdateValidMoves();
         }
@@ -98,6 +100,12 @@ namespace Chess
             foreach (var rook in rooks)
             {
                 rook.HasMoved = !rook.IsInStartPosition();
+            }
+
+            var isCheck = Board.IsCheck();
+            if(isCheck.WhiteInCheck || isCheck.BlackInCheck)
+            {
+                IsCheck = true;
             }
 
             UpdateValidMoves();
