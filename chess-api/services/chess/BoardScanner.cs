@@ -87,7 +87,7 @@ namespace Chess
                     var piece = scannedRank[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedFile[i].Index));
+                        result.Add(new MoveMetaData(index, scannedRank[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
@@ -110,7 +110,7 @@ namespace Chess
                     var piece = scannedRank[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedFile[i].Index));
+                        result.Add(new MoveMetaData(index, scannedRank[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
@@ -291,11 +291,11 @@ namespace Chess
                     var piece = scannedDiagBLtTR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagTLtBR[i].Index));
+                        result.Add(new MoveMetaData(index, scannedDiagBLtTR[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagTLtBR[i].Index, isCapture: true));
+                        result.Add(new MoveMetaData(index, scannedDiagBLtTR[i].Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
@@ -314,11 +314,11 @@ namespace Chess
                     var piece = scannedDiagBLtTR[i].Piece;
                     if (piece == null)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagTLtBR[i].Index));
+                        result.Add(new MoveMetaData(index, scannedDiagBLtTR[i].Index));
                     }
                     else if (piece.Color != activeColor)
                     {
-                        result.Add(new MoveMetaData(index, scannedDiagTLtBR[i].Index, isCapture: true));
+                        result.Add(new MoveMetaData(index, scannedDiagBLtTR[i].Index, isCapture: true));
                         break;
                     }
                     else if (piece.Color == activeColor)
