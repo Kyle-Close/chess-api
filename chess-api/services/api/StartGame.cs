@@ -5,7 +5,7 @@ namespace Chess
         public string? Fen { get; set; }
     }
 
-    public class StartNewGameApi
+    public class StartGame
     {
         public static void EnableEndpoint(WebApplication app, List<Game> activeGames)
         {

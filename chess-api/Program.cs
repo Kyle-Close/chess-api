@@ -61,16 +61,7 @@ app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
 .WithName("Execute Move")
 .WithOpenApi();
 
-StartNewGameApi.EnableEndpoint(app, activeGames);
+StartGame.EnableEndpoint(app, activeGames);
 GetValidMovesApi.EnableEndpoint(app, activeGames);
-
-app.MapPost("/chess-api/build-board", (BuildBoardApiPayload payload) =>
-{
-    Console.WriteLine(payload);
-    var board = new Board(payload.Fen);
-    return board;
-})
-.WithName("Board")
-.WithOpenApi();
 
 app.Run();
