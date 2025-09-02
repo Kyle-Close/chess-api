@@ -1,5 +1,4 @@
-using Chess;
-namespace chess_api.tests;
+namespace Chess;
 
 public class KnightTests
 {

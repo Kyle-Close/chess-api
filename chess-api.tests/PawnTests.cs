@@ -1,5 +1,4 @@
-using Chess;
-namespace chess_api.tests;
+namespace Chess;
 
 public class PawnTests
 {
@@ -282,5 +281,65 @@ public class PawnTests
         var res = pawn.IsAttackingEnPassantSquare(21, game.Board);
 
         Assert.True(res);
+    }
+
+    [Fact]
+    public void IsAttackingEnPassantSquare_AttackingEnPassantSquare_ExpectCorrectMoves()
+    {
+        var game = new Game("rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 1");
+        var pawn = Board.ValidatePieceOnSquare<Pawn>(game.Board, 28);
+
+        Assert.Contains(pawn.ValidMoves, move => move.EndIndex == 20 && move.IsCapture == false && move.IsEnPassantCapture == false && !move.IsPromotion);
+        Assert.Contains(pawn.ValidMoves, move => move.EndIndex == 21 && move.IsCapture == true && move.IsEnPassantCapture == true && !move.IsPromotion);
+    }
+
+    [Fact]
+    public void Promotion_White_ExpectCorrectMoveData()
+    {
+        var game = new Game("8/1P6/8/2K3k1/6p1/8/8/8 w - - 0 1");
+        var wPawn = game.Board.GetPieces<Pawn>(Color.WHITE).FirstOrDefault();
+
+        Assert.NotNull(wPawn);
+        Assert.True(wPawn.ValidMoves.Count == 1);
+
+        Assert.Contains(wPawn.ValidMoves, move => move.EndIndex == 1 && !move.IsCapture && !move.IsEnPassantCapture && !move.IsCastle && move.IsPromotion);
+    }
+
+    [Fact]
+    public void Promotion_White_Capture_ExpectCorrectMoveData()
+    {
+        var game = new Game("2n5/1P6/8/2K3k1/6p1/8/8/8 w - - 0 1");
+        var wPawn = game.Board.GetPieces<Pawn>(Color.WHITE).FirstOrDefault();
+
+        Assert.NotNull(wPawn);
+        Assert.True(wPawn.ValidMoves.Count == 2);
+
+        Assert.Contains(wPawn.ValidMoves, move => move.EndIndex == 1 && !move.IsCapture && !move.IsEnPassantCapture && !move.IsCastle && move.IsPromotion);
+        Assert.Contains(wPawn.ValidMoves, move => move.EndIndex == 2 && move.IsCapture && !move.IsEnPassantCapture && !move.IsCastle && move.IsPromotion);
+    }
+
+    [Fact]
+    public void Promotion_Black_ExpectCorrectMoveData()
+    {
+        var game = new Game("2n5/1P6/8/2K3k1/8/8/6p1/8 b - - 0 1");
+        var bPawn = game.Board.GetPieces<Pawn>(Color.BLACK).FirstOrDefault();
+
+        Assert.NotNull(bPawn);
+        Assert.True(bPawn.ValidMoves.Count == 1);
+
+        Assert.Contains(bPawn.ValidMoves, move => move.EndIndex == 62 && !move.IsCapture && !move.IsEnPassantCapture && !move.IsCastle && move.IsPromotion);
+    }
+
+    [Fact]
+    public void Promotion_Black_Capture_ExpectCorrectMoveData()
+    {
+        var game = new Game("2n5/1P6/8/2K3k1/8/8/6p1/7N b - - 0 1");
+        var bPawn = game.Board.GetPieces<Pawn>(Color.BLACK).FirstOrDefault();
+
+        Assert.NotNull(bPawn);
+        Assert.True(bPawn.ValidMoves.Count == 2);
+
+        Assert.Contains(bPawn.ValidMoves, move => move.EndIndex == 62 && !move.IsCapture && !move.IsEnPassantCapture && !move.IsCastle && move.IsPromotion);
+        Assert.Contains(bPawn.ValidMoves, move => move.EndIndex == 63 && move.IsCapture && !move.IsEnPassantCapture && !move.IsCastle && move.IsPromotion);
     }
 }

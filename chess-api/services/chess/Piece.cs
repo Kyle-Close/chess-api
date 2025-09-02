@@ -158,14 +158,27 @@ namespace Chess
             // 1. Get the unfiltered list of squares the piece can moved to based purely on how the piece can move/attack.
             List<MoveMetaData> validMoves = GetStandardMoves(game);
 
-            // 2. Add en-passant captures (if applicable)
+            // 2. Add en-passant captures (if applicable) & Pawn promotions
             if (this is Pawn pawn)
             {
+                // Handle en-passant
                 if (game.EnPassantIndex != null && pawn.IsAttackingEnPassantSquare(game.EnPassantIndex, game.Board))
                 {
                     int index = game.EnPassantIndex.Value;
                     validMoves.Add(new MoveMetaData(pawn.Index, index, isCapture: true, isEnPassantCapture: true));
                 }
+
+                // Handle pawn promotions
+                foreach (MoveMetaData move in validMoves)
+                {
+                    BoardRank endRank = Square.GetRank(move.EndIndex);
+
+                    if ((pawn.Color == Color.WHITE && endRank == BoardRank.EIGHT) || (pawn.Color == Color.BLACK && endRank == BoardRank.ONE))
+                    {
+                        move.IsPromotion = true;
+                    }
+                }
+                
             }
 
             // 3. Add castle moves (if applicable)
