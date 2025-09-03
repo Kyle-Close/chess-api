@@ -11,12 +11,11 @@ namespace Chess
         public bool IsCastle { get; set; }
         public bool IsPromotion { get; set; }
         public bool CausesCheck { get; set; }
-        public bool CausesCheckmate { get; set; }
 
         public string Notation { get; set; }
 
         public MoveMetaData(Board board, int start, int end, bool isCapture = false, bool isEnPassantCapture = false,
-                              bool isCastle = false, bool isPromotion = false, bool causesCheck = false, bool causesCheckmate = false)
+                              bool isCastle = false, bool isPromotion = false, bool causesCheck = false)
         {
             StartIndex = start;
             EndIndex = end;
@@ -26,7 +25,6 @@ namespace Chess
             IsCastle = isCastle;
             IsPromotion = isPromotion;
             CausesCheck = causesCheck;
-            CausesCheckmate = causesCheckmate;
 
             // Set by using BuildMoveNotation a
             Notation = UpdateMoveNotation(board);
@@ -122,12 +120,8 @@ namespace Chess
                 algebraicNotation.Write('?'); // At this point we don't know what the user will choose to promote to.
             }
 
-            // Append check or checkmate if applicable
-            if (CausesCheckmate)
-            {
-                algebraicNotation.Write('#');
-            }
-            else if (CausesCheck)
+            // Append check if applicable
+            if (CausesCheck)
             {
                 algebraicNotation.Write('+');
             }

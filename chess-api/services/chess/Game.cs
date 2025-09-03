@@ -103,7 +103,7 @@ namespace Chess
             }
 
             var isCheck = Board.IsCheck();
-            if(isCheck.WhiteInCheck || isCheck.BlackInCheck)
+            if (isCheck.WhiteInCheck || isCheck.BlackInCheck)
             {
                 IsCheck = true;
             }
@@ -273,5 +273,7 @@ namespace Chess
         }
 
         //TODO: lookup game in active games table
+        //
+        //TODO: ExecuteMove() - Performs the move validation & move execution. Also handles updating necessary game state
     }
 }
