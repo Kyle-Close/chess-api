@@ -112,7 +112,7 @@ namespace Chess
             }
 
             // Append destination square
-            algebraicNotation.Write(fileDestinationLetter);
+            algebraicNotation.Write(fileDestinationLetter.ToString().ToLower());
             algebraicNotation.Write(rankDestinationLetter);
 
             // Handle promotion case

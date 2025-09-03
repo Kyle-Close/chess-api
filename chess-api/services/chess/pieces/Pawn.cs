@@ -68,29 +68,37 @@ namespace Chess
                 {
                     if (piece.Color == Color.WHITE)
                     {
-                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index - 8));
-                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index - 16));
+                        AddMoveMetaData(game.Board, Index, Index - 8, moveIndexList);
+                        AddMoveMetaData(game.Board, Index, Index - 16, moveIndexList);
                     }
                     else
                     {
-                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index + 8));
-                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index + 16));
+                        AddMoveMetaData(game.Board, Index, Index + 8, moveIndexList);
+                        AddMoveMetaData(game.Board, Index, Index + 16, moveIndexList);
                     }
                 }
                 else
                 {
                     if (piece.Color == Color.WHITE)
-                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index - 8));
+                    {
+                        AddMoveMetaData(game.Board, Index, Index - 8, moveIndexList);
+                    }
                     else
-                        moveIndexList.Add(new MoveMetaData(game.Board, Index, Index + 8));
+                    {
+                        AddMoveMetaData(game.Board, Index, Index + 8, moveIndexList);
+                    }
                 }
             }
             else if (blockStatus == PawnBlockStatus.BLOCKED_TWO_RANKS_AHEAD)
             {
                 if (piece.Color == Color.WHITE)
-                    moveIndexList.Add(new MoveMetaData(game.Board, Index, Index - 8));
+                {
+                    AddMoveMetaData(game.Board, Index, Index - 8, moveIndexList);
+                }
                 else
-                    moveIndexList.Add(new MoveMetaData(game.Board, Index, Index + 8));
+                {
+                    AddMoveMetaData(game.Board, Index, Index + 8, moveIndexList);
+                }
             }
 
             // Get pawn capture info
@@ -101,12 +109,26 @@ namespace Chess
                 var isTargetIndex = game.IsEnemySquare(idx, enemyColor);
                 if (isTargetIndex)
                 {
-                    moveIndexList.Add(new MoveMetaData(game.Board, Index, idx, true));
+                    AddMoveMetaData(game.Board, Index, idx, moveIndexList, true);
                 }
-                ;
             }
 
             return moveIndexList;
+        }
+
+        private void AddMoveMetaData (Board board, int start, int end, List<MoveMetaData> list, bool isCapture = false)
+        {
+            BoardRank endRank = Square.GetRank(end);
+
+            if ((Color == Color.WHITE && endRank == BoardRank.EIGHT) || (Color == Color.BLACK && endRank == BoardRank.ONE))
+            {
+                list.Add(new MoveMetaData(board, start, end, isCapture, isPromotion: true));
+                return;
+            }
+            else
+            {
+                list.Add(new MoveMetaData(board, start, end, isCapture));
+            }
         }
 
         // Returns a list of indexes that the pawn is actively attacking.
