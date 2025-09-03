@@ -6,9 +6,6 @@ namespace Chess
 
         public Color ActiveColor { get; set; }
 
-        public CastleRights WhiteCastleRights { get; set; }
-        public CastleRights BlackCastleRights { get; set; }
-
         public int? EnPassantIndex { get; set; }
         public bool IsCheck { get; set; }
         public bool IsCheckmate { get; set; }
@@ -16,7 +13,11 @@ namespace Chess
         public int HalfMoves { get; set; }
         public int FullMoves { get; set; }
 
+        public CastleRights WhiteCastleRights { get; set; }
+        public CastleRights BlackCastleRights { get; set; }
+
         public List<string> FenHistory { get; set; }
+        public List<string> MoveHistory { get; set; }
         public Board Board { get; set; }
 
         public Game()
@@ -29,6 +30,7 @@ namespace Chess
             WhiteCastleRights = new CastleRights();
             BlackCastleRights = new CastleRights();
             FenHistory = new List<string>();
+            MoveHistory = new List<string>();
             Board = new Board();
             IsCheck = false;
             IsCheckmate = false;
@@ -46,6 +48,7 @@ namespace Chess
             FullMoves = int.Parse(fenHelper.FullMoveSegment);
             EnPassantIndex = fenHelper.EnPassantIndex;
             FenHistory = new List<string>();
+            MoveHistory = new List<string>();
             Board = new Board(fenHelper.BoardSegment);
 
             var crSeg = fenHelper.CastleRightsSegment;
@@ -115,6 +118,10 @@ namespace Chess
         public List<MoveMetaData> GetCurrentValidMoves()
         {
             var pieces = Board.GetPieces(ActiveColor);
+            foreach (var piece in pieces)
+            {
+                piece.UpdateValidMoves(this);
+            }
             return pieces.SelectMany(piece => piece.ValidMoves).ToList();
         }
 
@@ -273,7 +280,241 @@ namespace Chess
         }
 
         //TODO: lookup game in active games table
-        //
-        //TODO: ExecuteMove() - Performs the move validation & move execution. Also handles updating necessary game state
+
+
+        public void ExecuteMove(int start, int end, PieceType? promotionPieceType = null)
+        {
+            Piece? selectedPiece = Board.Squares[start].Piece;
+
+            if (selectedPiece == null)
+            {
+                throw new Exception("Attempted to execute a move but starting square '" + start.ToString() + "' has no piece.");
+            }
+
+            if (selectedPiece.Color != ActiveColor)
+            {
+                throw new Exception("Attempted to execute a move using inactive piece color.");
+            }
+
+            // Get most up to date list of valid moves on selected piece
+            selectedPiece.UpdateValidMoves(this);
+
+            // Check that the requested move is in the list of allowed moves
+            MoveMetaData? move = selectedPiece.ValidMoves.Find(move => move.EndIndex == end);
+            if (move == null)
+            {
+                throw new Exception("Attempted to execute an invalid move.");
+            }
+
+            Color opponentColor = ActiveColor == Color.WHITE ? Color.BLACK : Color.WHITE;
+
+            if (move.IsPromotion)
+            {
+                if (promotionPieceType == null)
+                {
+                    throw new Exception("Promotion move attempted without specifying promotion piece type.");
+                }
+
+                switch (promotionPieceType)
+                {
+                    case PieceType.QUEEN:
+                        Board.Squares[start].Piece = new Queen(start, ActiveColor);
+                        break;
+                    case PieceType.ROOK:
+                        Board.Squares[start].Piece = new Rook(start, ActiveColor);
+                        break;
+                    case PieceType.BISHOP:
+                        Board.Squares[start].Piece = new Bishop(start, ActiveColor);
+                        break;
+                    case PieceType.KNIGHT:
+                        Board.Squares[start].Piece = new Knight(start, ActiveColor);
+                        break;
+                    default:
+                        throw new Exception("Invalid promotion piece type specified.");
+                }
+            }
+
+            Piece? capturedPiece = Board.Squares[end].Piece;
+
+            // Move the piece
+            Board.MovePiece(start, end);
+
+            // If piece was a pawn that moved two squares, set en-passant index
+            Piece? piece = Board.Squares[end].Piece;
+            if (piece != null && piece.PieceType == PieceType.PAWN)
+            {
+                BoardRank startRank = Square.GetRank(start);
+                BoardRank endRank = Square.GetRank(end);
+
+                if (opponentColor == Color.BLACK) // White's turn
+                {
+                    if (startRank == BoardRank.TWO && endRank == BoardRank.FOUR)
+                    {
+                        EnPassantIndex = end + 8;
+                    }
+                    else
+                    {
+                        EnPassantIndex = null;
+                    }
+                }
+                else // Blacks's turn
+                {
+                    if (startRank == BoardRank.SEVEN && endRank == BoardRank.FIVE)
+                    {
+                        EnPassantIndex = end - 8;
+                    }
+                    else
+                    {
+                        EnPassantIndex = null;
+                    }
+                }
+            }
+            else // Moved piece other than pawn. Reset en-passant square
+            {
+                EnPassantIndex = null;
+            }
+
+            // If piece was the king, update castle rights
+            if (piece != null && piece.PieceType == PieceType.KING)
+            {
+                if (opponentColor == Color.BLACK) // White's turn
+                {
+                    WhiteCastleRights.KingSide = false;
+                    WhiteCastleRights.QueenSide = false;
+
+                    if (start == 60 && end == 62)
+                    {
+                        Board.MovePiece(63, 61); // Castle king side - Move the rook
+                    }
+                    else if (start == 60 && end == 58)
+                    {
+                        Board.MovePiece(56, 59); // Castle queen side - Move the rook
+                    }
+                }
+                else // Black's turn
+                {
+                    BlackCastleRights.KingSide = false;
+                    BlackCastleRights.QueenSide = false;
+
+                    if (start == 4 && end == 6)
+                    {
+                        Board.MovePiece(7, 5); // Castle king side - Move the rook
+                    }
+                    else if (start == 4 && end == 2)
+                    {
+                        Board.MovePiece(0, 3); // Castle queen side - Move the rook
+                    }
+                }
+            }
+
+            // If capturing a piece, check if capturing opponent rook. If so, update castle rights accordingly
+            if (move.IsCapture && capturedPiece != null && capturedPiece.PieceType == PieceType.ROOK)
+            {
+                if (opponentColor == Color.BLACK) // White's turn
+                {
+                    if (move.EndIndex == 0) // Capturing black's queen side rook on starting pos
+                    {
+                        BlackCastleRights.QueenSide = false;
+                    }
+                    else if (move.EndIndex == 7) // Capturing black's king side rook on starting pos
+                    {
+                        BlackCastleRights.KingSide = false;
+                    }
+                }
+                else // Blacks's turn
+                {
+                    if (move.EndIndex == 56) // Capturing white's queen side rook on starting pos
+                    {
+                        WhiteCastleRights.QueenSide = false;
+                    }
+                    else if (move.EndIndex == 63) // Capturing white's king side rook on starting pos
+                    {
+                        WhiteCastleRights.KingSide = false;
+                    }
+                }
+            }
+
+            // If the piece was a rook on it's starting square, update castle rights
+                if (piece != null && piece.PieceType == PieceType.ROOK)
+                {
+
+                    if (opponentColor == Color.BLACK) // White's turn
+                    {
+                        if (start == 63)
+                            WhiteCastleRights.KingSide = false;
+                        else if (start == 56)
+                            WhiteCastleRights.QueenSide = false;
+                    }
+                    else // White's turn
+                    {
+                        if (start == 7)
+                            BlackCastleRights.KingSide = false;
+                        if (start == 0)
+                            BlackCastleRights.QueenSide = false;
+                    }
+                }
+
+            // Check for checkmate before updating game state
+            if (move.CausesCheck)
+            {
+                UpdateValidMoves();
+                List<Piece> oPieces = Board.GetPieces(opponentColor);
+                if (oPieces.All(piece => piece.ValidMoves.Count == 0))
+                {
+                    IsCheckmate = true;
+                    FenHistory.Add(FenHelper.BuildFen(this, Board));
+                    HalfMoves++;
+                    return;
+                }
+            }
+
+            // Update game state
+            IsCheck = move.CausesCheck;
+
+            if (move.IsCastle)
+            {
+            }
+
+            if (opponentColor == Color.WHITE)
+            {
+                FullMoves++;
+            }
+
+            // Final check to see if the opponent is in check after all updates
+            var isCheck = Board.IsCheck();
+            if (isCheck.WhiteInCheck || isCheck.BlackInCheck)
+            {
+                IsCheck = true;
+            }
+            else
+            {
+                IsCheck = false;
+            }
+
+            // One last check for checkmate
+            if (IsCheck)
+            {
+                UpdateValidMoves();
+                List<Piece> pieces = Board.GetPieces(opponentColor);
+                if (pieces.All(piece => piece.ValidMoves.Count == 0))
+                {
+                    IsCheckmate = true;
+                    FenHistory.Add(FenHelper.BuildFen(this, Board));
+                    HalfMoves++;
+                    return;
+                }
+            }
+
+            HalfMoves++;
+            ActiveColor = opponentColor;
+            FenHistory.Add(FenHelper.BuildFen(this, Board));
+            MoveHistory.Add(move.Notation);
+
+            // If the move was a pawn move or a capture, reset the half-move clock
+            if (selectedPiece.PieceType == PieceType.PAWN || move.IsCapture)
+            {
+                HalfMoves = 0;
+            }
+        }
     }
 }

@@ -60,7 +60,10 @@ namespace Chess
             if (game.BlackCastleRights.QueenSide)
                 castleRightsSegment += "q";
 
-            var enPassantSegment = game.EnPassantIndex;
+            if(castleRightsSegment == "")
+                castleRightsSegment = "-";
+
+            var enPassantSegment = game.EnPassantIndex == null ? "-" : game.EnPassantIndex.ToString();
             string halfMovesSegment = game.HalfMoves.ToString();
             string fullMovesSegment = game.FullMoves.ToString();
 

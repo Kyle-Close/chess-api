@@ -35,33 +35,8 @@ app.UseHttpsRedirection();
 
 List<Game> activeGames = new List<Game>();
 
-app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
-{
-    var payload = await httpContext.Request.ReadFromJsonAsync<ExecuteMoveApiPayload>();
-    if (payload == null)
-    {
-        return Results.BadRequest("Invalid request payload.");
-    }
-
-    var game = Game.FindActiveGame(activeGames, payload.GameId);
-    if (game == null)
-    {
-        return Results.NotFound("Game is not currently active.");
-    }
-
-    bool doesMatch = game.DoesMatchLatestFen(payload.Fen);
-    if (!doesMatch)
-    {
-        return Results.BadRequest("Fen string does not match the last game move.");
-    }
-
-    // Check if the move is valid. If it is then update the board and return.
-    return Results.Ok(doesMatch);
-})
-.WithName("Execute Move")
-.WithOpenApi();
-
 StartGame.EnableEndpoint(app, activeGames);
 GetValidMovesApi.EnableEndpoint(app, activeGames);
+ExecuteMoveApi.EnableEndpoint(app, activeGames);
 
 app.Run();
