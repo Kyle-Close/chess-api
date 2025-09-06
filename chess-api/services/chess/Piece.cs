@@ -172,24 +172,24 @@ namespace Chess
             // 3. Add castle moves (if applicable)
             if (this is King king)
             {
-                if (Color == Color.BLACK)
+                if (Color == Color.BLACK && !king.IsInCheck(game.Board))
                 {
-                    if (game.BlackCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_QUEEN_SIDE))
+                    if (game.BlackCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_QUEEN_SIDE) && !CastleRights.IsCastlePathAttacked(game, CastlePaths.BLACK_QUEEN_SIDE))
                     {
                         validMoves.Add(new MoveMetaData(game.Board, king.Index, 2, isCastle: true));
                     }
-                    if (game.BlackCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_KING_SIDE))
+                    if (game.BlackCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.BLACK_KING_SIDE) && !CastleRights.IsCastlePathAttacked(game, CastlePaths.BLACK_KING_SIDE))
                     {
                         validMoves.Add(new MoveMetaData(game.Board, king.Index, 6, isCastle: true));
                     }
                 }
-                else
+                else if( Color == Color.WHITE && !king.IsInCheck(game.Board))
                 {
-                    if (game.WhiteCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_QUEEN_SIDE))
+                    if (game.WhiteCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_QUEEN_SIDE) && !CastleRights.IsCastlePathAttacked(game, CastlePaths.WHITE_QUEEN_SIDE))
                     {
                         validMoves.Add(new MoveMetaData(game.Board, king.Index, 58, isCastle: true));
                     }
-                    if (game.WhiteCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_KING_SIDE))
+                    if (game.WhiteCastleRights.KingSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_KING_SIDE) && !CastleRights.IsCastlePathAttacked(game, CastlePaths.WHITE_KING_SIDE))
                     {
                         validMoves.Add(new MoveMetaData(game.Board, king.Index, 62, isCastle: true));
                     }
@@ -208,10 +208,16 @@ namespace Chess
 
                 var isCheckResults = newBoard.IsCheck();
 
-                if (game.ActiveColor == Color.WHITE)
-                    return !isCheckResults.WhiteInCheck;
+                if(game.ActiveColor == Color.WHITE && isCheckResults.WhiteInCheck)
+                {
+                    return false;
+                }
+                else if (game.ActiveColor == Color.BLACK && isCheckResults.BlackInCheck)
+                {
+                    return false;
+                }
 
-                return !isCheckResults.BlackInCheck;
+                return true;
             }).ToList();
 
             // 5. Update ValidMoves -> CausesCheck

@@ -45,5 +45,22 @@ namespace Chess
                     throw new Exception("Passed invalid castle path.");
             }
         }
+
+        public static bool IsCastlePathAttacked(Game game, CastlePaths castlePath)
+        {
+            switch (castlePath)
+            {
+                case CastlePaths.BLACK_QUEEN_SIDE:
+                    return game.Board.AreSquaresAttackedByColor([2, 3], Color.WHITE);
+                case CastlePaths.BLACK_KING_SIDE:
+                    return game.Board.AreSquaresAttackedByColor([5, 6], Color.WHITE);
+                case CastlePaths.WHITE_QUEEN_SIDE:
+                    return game.Board.AreSquaresAttackedByColor([58, 59], Color.BLACK);
+                case CastlePaths.WHITE_KING_SIDE:
+                    return game.Board.AreSquaresAttackedByColor([61, 62], Color.BLACK);
+                default:
+                    throw new Exception("Passed invalid castle path.");
+            }
+        }
     }
 }

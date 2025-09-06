@@ -343,6 +343,21 @@ namespace Chess
             Piece? piece = Board.Squares[end].Piece;
             if (piece != null && piece.PieceType == PieceType.PAWN)
             {
+                // If this was an en-passant capture, we need to capture the correct pawn
+                if (move.IsEnPassantCapture && EnPassantIndex != null)
+                {
+                    if (opponentColor == Color.BLACK) // White's turn
+                    {
+                        int capturedPieceIndex = end + 8;
+                        Board.Squares[capturedPieceIndex].Piece = null;
+                    }
+                    else
+                    {
+                        int capturedPieceIndex = end - 8;
+                        Board.Squares[capturedPieceIndex].Piece = null;
+                    }
+                }
+
                 BoardRank startRank = Square.GetRank(start);
                 BoardRank endRank = Square.GetRank(end);
 
@@ -368,6 +383,8 @@ namespace Chess
                         EnPassantIndex = null;
                     }
                 }
+
+
             }
             else // Moved piece other than pawn. Reset en-passant square
             {
@@ -435,24 +452,24 @@ namespace Chess
             }
 
             // If the piece was a rook on it's starting square, update castle rights
-                if (piece != null && piece.PieceType == PieceType.ROOK)
-                {
+            if (piece != null && piece.PieceType == PieceType.ROOK)
+            {
 
-                    if (opponentColor == Color.BLACK) // White's turn
-                    {
-                        if (start == 63)
-                            WhiteCastleRights.KingSide = false;
-                        else if (start == 56)
-                            WhiteCastleRights.QueenSide = false;
-                    }
-                    else // White's turn
-                    {
-                        if (start == 7)
-                            BlackCastleRights.KingSide = false;
-                        if (start == 0)
-                            BlackCastleRights.QueenSide = false;
-                    }
+                if (opponentColor == Color.BLACK) // White's turn
+                {
+                    if (start == 63)
+                        WhiteCastleRights.KingSide = false;
+                    else if (start == 56)
+                        WhiteCastleRights.QueenSide = false;
                 }
+                else // White's turn
+                {
+                    if (start == 7)
+                        BlackCastleRights.KingSide = false;
+                    if (start == 0)
+                        BlackCastleRights.QueenSide = false;
+                }
+            }
 
             // Check for checkmate before updating game state
             if (move.CausesCheck)
@@ -470,10 +487,6 @@ namespace Chess
 
             // Update game state
             IsCheck = move.CausesCheck;
-
-            if (move.IsCastle)
-            {
-            }
 
             if (opponentColor == Color.WHITE)
             {
@@ -505,6 +518,9 @@ namespace Chess
                 }
             }
 
+            // Update the valid moves for all pieces
+            UpdateValidMoves();
+
             HalfMoves++;
             ActiveColor = opponentColor;
             FenHistory.Add(FenHelper.BuildFen(this, Board));
@@ -515,6 +531,8 @@ namespace Chess
             {
                 HalfMoves = 0;
             }
+
+
         }
     }
 }

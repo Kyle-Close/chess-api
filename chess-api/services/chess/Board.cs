@@ -40,6 +40,23 @@ namespace Chess
             Squares = BuildStartingBoard();
         }
 
+        public bool AreSquaresAttackedByColor(int[] indexes, Color color)
+        {
+            foreach (int index in indexes)
+            {
+                var opponentPieces = GetPieces(color);
+                foreach (var piece in opponentPieces)
+                {
+                    var validMoves = piece.ValidMoves;
+                    if (validMoves.Any(m => m.EndIndex == index))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public void MovePiece(int start, int end)
         {
             if (!Board.IsValidSquareIndex(start) || !Board.IsValidSquareIndex(end))
@@ -153,7 +170,6 @@ namespace Chess
 
             return typedPiece;
         }
-
 
         public string BuildFen()
         {
