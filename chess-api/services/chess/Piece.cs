@@ -153,7 +153,7 @@ namespace Chess
         }
 
         // ----- Methods -----
-        public void UpdateValidMoves(Game game)
+        public void UpdateValidMoves(Game game, Color activeColor)
         {
             // 1. Get the unfiltered list of squares the piece can moved to based purely on how the piece can move/attack.
             List<MoveMetaData> validMoves = GetStandardMoves(game);
@@ -208,11 +208,11 @@ namespace Chess
 
                 var isCheckResults = newBoard.IsCheck();
 
-                if(game.ActiveColor == Color.WHITE && isCheckResults.WhiteInCheck)
+                if(activeColor == Color.WHITE && isCheckResults.WhiteInCheck)
                 {
                     return false;
                 }
-                else if (game.ActiveColor == Color.BLACK && isCheckResults.BlackInCheck)
+                else if (activeColor == Color.BLACK && isCheckResults.BlackInCheck)
                 {
                     return false;
                 }
@@ -228,7 +228,7 @@ namespace Chess
 
                 var isCheckResults = newBoard.IsCheck();
 
-                if (game.ActiveColor == Color.WHITE)
+                if (activeColor == Color.WHITE)
                 {
                     move.CausesCheck = isCheckResults.BlackInCheck;
                 }

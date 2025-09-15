@@ -35,7 +35,7 @@ namespace Chess
             IsCheck = false;
             IsCheckmate = false;
 
-            UpdateValidMoves();
+            UpdateValidMoves(Color.WHITE);
         }
 
         public Game(string fen)
@@ -111,7 +111,7 @@ namespace Chess
                 IsCheck = true;
             }
 
-            UpdateValidMoves();
+            UpdateValidMoves(ActiveColor);
         }
 
         // Returns a list of valid moves that the active player can make.
@@ -120,24 +120,18 @@ namespace Chess
             var pieces = Board.GetPieces(ActiveColor);
             foreach (var piece in pieces)
             {
-                piece.UpdateValidMoves(this);
+                piece.UpdateValidMoves(this, ActiveColor);
             }
             return pieces.SelectMany(piece => piece.ValidMoves).ToList();
         }
 
-        public void UpdateValidMoves()
+        public void UpdateValidMoves(Color color)
         {
-            var wPieces = Board.GetPieces(Color.WHITE);
-            var bPieces = Board.GetPieces(Color.BLACK);
+            var pieces = Board.GetPieces(color);
 
-            foreach (var piece in wPieces)
+            foreach (var piece in pieces)
             {
-                piece.UpdateValidMoves(this);
-            }
-
-            foreach (var piece in bPieces)
-            {
-                piece.UpdateValidMoves(this);
+                piece.UpdateValidMoves(this, color);
             }
         }
 
@@ -297,7 +291,7 @@ namespace Chess
             }
 
             // Get most up to date list of valid moves on selected piece
-            selectedPiece.UpdateValidMoves(this);
+            selectedPiece.UpdateValidMoves(this, ActiveColor);
 
             // Check that the requested move is in the list of allowed moves
             MoveMetaData? move = selectedPiece.ValidMoves.Find(move => move.EndIndex == end);
@@ -474,7 +468,7 @@ namespace Chess
             // Check for checkmate before updating game state
             if (move.CausesCheck)
             {
-                UpdateValidMoves();
+                UpdateValidMoves(opponentColor);
                 List<Piece> oPieces = Board.GetPieces(opponentColor);
                 if (oPieces.All(piece => piece.ValidMoves.Count == 0))
                 {
@@ -507,7 +501,7 @@ namespace Chess
             // One last check for checkmate
             if (IsCheck)
             {
-                UpdateValidMoves();
+                UpdateValidMoves(opponentColor);
                 List<Piece> pieces = Board.GetPieces(opponentColor);
                 if (pieces.All(piece => piece.ValidMoves.Count == 0))
                 {
@@ -517,9 +511,6 @@ namespace Chess
                     return;
                 }
             }
-
-            // Update the valid moves for all pieces
-            UpdateValidMoves();
 
             HalfMoves++;
             ActiveColor = opponentColor;
@@ -532,7 +523,8 @@ namespace Chess
                 HalfMoves = 0;
             }
 
-
+            // Update all valid moves for the next player
+            UpdateValidMoves(opponentColor);
         }
     }
 }
