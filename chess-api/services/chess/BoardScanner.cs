@@ -579,15 +579,16 @@ namespace Chess
                     }
                 }
             }
+
             // 3.2 - Handle bottom left to top right
             if (bltrDiag.Count > 1)
             {
-                int targetIndex = tlbrDiag.FindIndex(0, tlbrDiag.Count, (square) => square.Index == index);
+                int targetIndex = bltrDiag.FindIndex(0, bltrDiag.Count, (square) => square.Index == index);
 
                 // Count back to start of the array
                 for (int i = targetIndex - 1; i >= 0; i--)
                 {
-                    Square square = tlbrDiag[i];
+                    Square square = bltrDiag[i];
                     if (square.Piece != null && square.Piece.Color == attackingColor && (square.Piece.PieceType == PieceType.BISHOP || square.Piece.PieceType == PieceType.QUEEN))
                     {
                         isAttacked = true;
@@ -598,9 +599,9 @@ namespace Chess
                     }
                 }
                 // Count up to end of the array
-                for (int i = targetIndex + 1; i < tlbrDiag.Count - 1; i++)
+                for (int i = targetIndex + 1; i < bltrDiag.Count - 1; i++)
                 {
-                    Square square = tlbrDiag[i];
+                    Square square = bltrDiag[i];
                     if (square.Piece != null && square.Piece.Color == attackingColor && (square.Piece.PieceType == PieceType.BISHOP || square.Piece.PieceType == PieceType.QUEEN))
                     {
                         isAttacked = true;
@@ -611,8 +612,6 @@ namespace Chess
                     }
                 }
             }
-
-
 
             return isAttacked;
         }
