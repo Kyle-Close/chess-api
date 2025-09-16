@@ -120,7 +120,7 @@ public class PieceTests
 
         var piece = game.Board.Squares[60].Piece;
         if (piece == null) throw new Exception("No piece");
-        piece.UpdateValidMoves(game);
+        piece.UpdateValidMoves(game, Color.WHITE);
 
         Assert.False(piece.ValidMoves.Any(piece => piece.EndIndex == 59));
         Assert.False(piece.ValidMoves.Any(piece => piece.EndIndex == 51));

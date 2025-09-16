@@ -1,3 +1,4 @@
+using Xunit;
 namespace Chess;
 
 public class CastlingTests

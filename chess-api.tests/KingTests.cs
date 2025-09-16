@@ -16,7 +16,7 @@ namespace Chess
         [Fact]
         public void RandomPosition_1_ExpectCorrectMoves()
         {
-            var game = new Game("rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 1");
+            var game = new Game("rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR b KQkq f6 0 1");
             var bKing = game.Board.GetPieces<King>(Color.BLACK).FirstOrDefault();
 
             Assert.NotNull(bKing);
@@ -72,7 +72,7 @@ namespace Chess
         [Fact]
         public void RandomPosition_5_ExpectCorrectMoves()
         {
-            var game = new Game("r1bqk2r/pppp1ppp/2n2n2/2b1p3/4P3/2NP1N2/PPP2PPP/R1BQKB1R w KQkq - 0 1");
+            var game = new Game("r1bqk2r/pppp1ppp/2n2n2/2b1p3/4P3/2NP1N2/PPP2PPP/R1BQKB1R b KQkq - 0 1");
             var bKing = game.Board.GetPieces<King>(Color.BLACK).FirstOrDefault();
 
             Assert.NotNull(bKing);

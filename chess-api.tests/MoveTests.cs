@@ -63,7 +63,7 @@ public class MoveTests
     [Fact]
     public void BuildMoveNotation_King_BasicMoves()
     {
-        var game = new Game("r3k2r/pppn2p1/3q1n1p/1Bb1NbB1/1P6/P1N5/2P2PPP/R2QR1K1 w kq - 0 1");
+        var game = new Game("r3k2r/pppn2p1/3q1n1p/1Bb1NbB1/1P6/P1N5/2P2PPP/R2QR1K1 b kq - 0 1");
         var moves = game.Board.Squares[4].Piece?.ValidMoves; // Black queen on e4
 
         var m1 = moves.Where(m => m.EndIndex == 3).FirstOrDefault(); // K -> d8
