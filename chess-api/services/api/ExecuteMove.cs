@@ -35,7 +35,7 @@ namespace Chess
 
                 try
                 {
-                    game.ExecuteMove(payload.Start, payload.End, payload.PromotionPiece);
+                    Move.ExecuteMove(game, payload.Start, payload.End, payload.PromotionPiece);
                     return Results.Ok(game);
                 }
                 catch (Exception e)
