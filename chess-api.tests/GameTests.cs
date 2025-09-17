@@ -255,12 +255,21 @@ public class GameTests
         Move.ExecuteMove(game, 45, 53); // Qf3 to f2
         Assert.True(game.IsStalemate);
     }
-        [Fact]
+    [Fact]
     public void ExecuteMove_ExpectStalemate2()
     {
         var game = new Game("k7/7R/8/7p/5p1P/b4N2/8/R1Q4K w - - 0 1");
         Move.ExecuteMove(game, 58, 57); // Qc1 to b1
         Assert.True(game.IsStalemate);
+    }
+
+    [Fact]
+    public void ExecuteMove_CorrectMaterialValue()
+    {
+        var game = new Game("k7/7R/8/7p/5p1P/b4N2/8/R1Q4K w - - 0 1");
+        Move.ExecuteMove(game, 58, 57); // Qc1 to b1
+        Assert.True(game.WhiteMaterialValue == 23);
+        Assert.True(game.BlackMaterialValue == 5);
     }
     #endregion
 }

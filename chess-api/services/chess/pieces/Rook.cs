@@ -3,10 +3,12 @@ namespace Chess
     public class Rook : Piece
     {
         public override PieceType PieceType { get; }
+        public override int Value { get; }
 
         public Rook(int squareIndex, Color color) : base(squareIndex, color)
         {
             PieceType = PieceType.ROOK;
+            Value = 5;
         }
 
         public override char GetPieceChar()

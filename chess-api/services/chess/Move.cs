@@ -294,7 +294,6 @@ public static class Move
         if (IsCheckmate(game, move, opponentColor))
         {
             game.IsCheckmate = true;
-            return;
         }
 
         if (opponentColor == Color.WHITE)
@@ -314,5 +313,9 @@ public static class Move
         {
             game.IsStalemate = true;
         }
+
+        // Update material values
+        game.WhiteMaterialValue = game.Board.TotalPieceValue(Color.WHITE);
+        game.BlackMaterialValue = game.Board.TotalPieceValue(Color.BLACK);
     }
 }

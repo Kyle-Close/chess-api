@@ -12,11 +12,13 @@ namespace Chess
     {
         // ----- Properties -----
         public override PieceType PieceType { get; }
+        public override int Value { get; }
 
         // ----- Constructor -----
         public Pawn(int squareIndex, Color color) : base(squareIndex, color)
         {
             PieceType = PieceType.PAWN;
+            Value = 1;
         }
 
         // ----- Methods -----
@@ -116,7 +118,7 @@ namespace Chess
             return moveIndexList;
         }
 
-        private void AddMoveMetaData (Board board, int start, int end, List<MoveMetaData> list, bool isCapture = false)
+        private void AddMoveMetaData(Board board, int start, int end, List<MoveMetaData> list, bool isCapture = false)
         {
             BoardRank endRank = Square.GetRank(end);
 

@@ -3,10 +3,12 @@ namespace Chess
     public class Bishop : Piece
     {
         public override PieceType PieceType { get; }
+        public override int Value { get; }
 
         public Bishop(int squareIndex, Color color) : base(squareIndex, color)
         {
             PieceType = PieceType.BISHOP;
+            Value = 3;
         }
 
         public override char GetPieceChar()

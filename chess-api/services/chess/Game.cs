@@ -17,6 +17,9 @@ namespace Chess
         public CastleRights WhiteCastleRights { get; set; }
         public CastleRights BlackCastleRights { get; set; }
 
+        public int WhiteMaterialValue { get; set; }
+        public int BlackMaterialValue { get; set; }
+
         public List<string> FenHistory { get; set; }
         public List<string> MoveHistory { get; set; }
         public Board Board { get; set; }
@@ -36,6 +39,8 @@ namespace Chess
             IsCheck = false;
             IsCheckmate = false;
             IsStalemate = false;
+            WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
+            BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
 
             UpdateValidMoves(Color.WHITE);
         }
@@ -52,6 +57,8 @@ namespace Chess
             FenHistory = new List<string>();
             MoveHistory = new List<string>();
             Board = new Board(fenHelper.BoardSegment);
+            WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
+            BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
 
             var crSeg = fenHelper.CastleRightsSegment;
             if (crSeg == "-")

@@ -240,5 +240,12 @@ namespace Chess
             Square[] squares = new Square[64];
             return BuildBoardFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
         }
+
+        public int TotalPieceValue(Color color)
+        {
+            // Get all the pieces of target color
+            var pieces = GetPieces(color);
+            return pieces.Sum(piece => piece.Value);
+        }
     }
 }

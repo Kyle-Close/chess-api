@@ -3,10 +3,12 @@ namespace Chess
     public class Queen : Piece
     {
         public override PieceType PieceType { get; }
+        public override int Value { get; }
 
         public Queen(int squareIndex, Color color) : base(squareIndex, color)
         {
             PieceType = PieceType.QUEEN;
+            Value = 9;
         }
 
         public override char GetPieceChar()

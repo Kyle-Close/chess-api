@@ -4,6 +4,7 @@ namespace Chess
     {
         // ----- Properties -----
         public abstract PieceType PieceType { get; }
+        public abstract int Value { get; }
 
         public Color Color { get; }
         public bool HasMoved { get; set; }
@@ -183,7 +184,7 @@ namespace Chess
                         validMoves.Add(new MoveMetaData(game.Board, king.Index, 6, isCastle: true));
                     }
                 }
-                else if( Color == Color.WHITE && !king.IsInCheck(game.Board))
+                else if (Color == Color.WHITE && !king.IsInCheck(game.Board))
                 {
                     if (game.WhiteCastleRights.QueenSide && CastleRights.IsCastlePathClear(game.Board, CastlePaths.WHITE_QUEEN_SIDE) && !CastleRights.IsCastlePathAttacked(game, CastlePaths.WHITE_QUEEN_SIDE))
                     {
@@ -208,7 +209,7 @@ namespace Chess
 
                 var isCheckResults = newBoard.IsCheck();
 
-                if(activeColor == Color.WHITE && isCheckResults.WhiteInCheck)
+                if (activeColor == Color.WHITE && isCheckResults.WhiteInCheck)
                 {
                     return false;
                 }
@@ -236,7 +237,7 @@ namespace Chess
                 {
                     move.CausesCheck = isCheckResults.WhiteInCheck;
                 }
-                    
+
                 if (move.CausesCheck)
                 {
                     move.Notation += "+";
