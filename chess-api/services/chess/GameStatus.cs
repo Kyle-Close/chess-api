@@ -1,0 +1,13 @@
+namespace Chess;
+
+public enum GameStatus
+{
+    ONGOING,
+    IN_CHECK,
+    CHECKMATE,
+    DRAW_STALEMATE,
+    DRAW_THREE_FOLD_REPETITION,
+    DRAW_FIFTY_MOVE_RULE,
+    DRAW_INSUFFICIENT_MATERIAL,
+    DRAW_BY_AGREEMENT
+}

@@ -253,14 +253,14 @@ public class GameTests
     {
         var game = new Game("K7/8/8/8/8/5Q2/8/7k w - - 0 1");
         Move.ExecuteMove(game, 45, 53); // Qf3 to f2
-        Assert.True(game.IsStalemate);
+        Assert.True(game.Status == GameStatus.DRAW_STALEMATE);
     }
     [Fact]
     public void ExecuteMove_ExpectStalemate2()
     {
         var game = new Game("k7/7R/8/7p/5p1P/b4N2/8/R1Q4K w - - 0 1");
         Move.ExecuteMove(game, 58, 57); // Qc1 to b1
-        Assert.True(game.IsStalemate);
+        Assert.True(game.Status == GameStatus.DRAW_STALEMATE);
     }
 
     [Fact]

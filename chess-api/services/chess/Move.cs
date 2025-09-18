@@ -226,7 +226,7 @@ public static class Move
 
     private static bool IsStalemate(Game game, Color opponentColor)
     {
-        if (game.IsCheckmate) return false;
+        if (game.Status == GameStatus.CHECKMATE) return false;
 
         // Assuming moves have already been updated
         var oPieces = game.Board.GetPieces(opponentColor);
@@ -285,15 +285,23 @@ public static class Move
             HandleRookMove(game, start, end, opponentColor);
         }
 
+        game.Status = GameStatus.ONGOING;
+
         // Update game states
-        game.IsCheck = move.CausesCheck;
+        if (move.CausesCheck)
+        {
+            game.Status = GameStatus.IN_CHECK;
+        }
+
         game.HalfMoves++;
         game.FenHistory.Add(FenHelper.BuildFen(game, game.Board));
         game.MoveHistory.Add(move.Notation);
 
         if (IsCheckmate(game, move, opponentColor))
         {
-            game.IsCheckmate = true;
+            game.Status = GameStatus.CHECKMATE;
+            game.Winner = game.ActiveColor;
+            game.EndTime = DateTime.Now;
         }
 
         if (opponentColor == Color.WHITE)
@@ -311,7 +319,8 @@ public static class Move
 
         if (IsStalemate(game, opponentColor))
         {
-            game.IsStalemate = true;
+            game.Status = GameStatus.DRAW_STALEMATE;
+            game.EndTime = DateTime.Now;
         }
 
         // Update material values

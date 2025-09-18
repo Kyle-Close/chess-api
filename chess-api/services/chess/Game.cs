@@ -3,14 +3,13 @@ namespace Chess
     public class Game
     {
         public string Id { get; set; }
+        public GameType Type { get; set; }
+        public GameStatus Status { get; set; }
+        public Color? Winner { get; set; }
 
         public Color ActiveColor { get; set; }
 
         public int? EnPassantIndex { get; set; }
-        public bool IsCheck { get; set; }
-        public bool IsCheckmate { get; set; }
-        public bool IsStalemate { get; set; }
-
         public int HalfMoves { get; set; }
         public int FullMoves { get; set; }
 
@@ -24,9 +23,15 @@ namespace Chess
         public List<string> MoveHistory { get; set; }
         public Board Board { get; set; }
 
+        public DateTime StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+
         public Game()
         {
             Id = Guid.NewGuid().ToString();
+            Type = GameType.LOCAL;
+            Status = GameStatus.ONGOING;
+            Winner = null;
             ActiveColor = Color.WHITE;
             HalfMoves = 0;
             FullMoves = 1;
@@ -36,11 +41,10 @@ namespace Chess
             FenHistory = new List<string>();
             MoveHistory = new List<string>();
             Board = new Board();
-            IsCheck = false;
-            IsCheckmate = false;
-            IsStalemate = false;
             WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
+            StartTime = DateTime.Now;
+            EndTime = null;
 
             UpdateValidMoves(Color.WHITE);
         }
@@ -50,6 +54,9 @@ namespace Chess
             var fenHelper = new FenHelper(fen);
 
             Id = Guid.NewGuid().ToString();
+            Type = GameType.LOCAL;
+            Status = GameStatus.ONGOING;
+            Winner = null;
             ActiveColor = fenHelper.ActiveColorSegment.ToUpper() == "W" ? Color.WHITE : Color.BLACK;
             HalfMoves = int.Parse(fenHelper.HalfMoveSegment);
             FullMoves = int.Parse(fenHelper.FullMoveSegment);
@@ -59,6 +66,8 @@ namespace Chess
             Board = new Board(fenHelper.BoardSegment);
             WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
+            StartTime = DateTime.Now;
+            EndTime = null;
 
             var crSeg = fenHelper.CastleRightsSegment;
             if (crSeg == "-")
@@ -117,7 +126,7 @@ namespace Chess
             var isCheck = Board.IsCheck();
             if (isCheck.WhiteInCheck || isCheck.BlackInCheck)
             {
-                IsCheck = true;
+                Status = GameStatus.IN_CHECK;
             }
 
             UpdateValidMoves(ActiveColor);
