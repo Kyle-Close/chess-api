@@ -5,6 +5,7 @@ namespace Chess
         public string Id { get; set; }
         public GameType Type { get; set; }
         public GameStatus Status { get; set; }
+        public TimeControl TimeControlType { get; set; }
         public Color? Winner { get; set; }
 
         public Color ActiveColor { get; set; }
@@ -26,11 +27,16 @@ namespace Chess
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
 
-        public Game()
+        public DateTime LastMoveTimeStamp { get; set; }
+        public int WhiteRemainingTime { get; set; }
+        public int BlackRemainingTime { get; set; }
+
+        public Game(TimeControl timeControl)
         {
             Id = Guid.NewGuid().ToString();
             Type = GameType.LOCAL;
             Status = GameStatus.ONGOING;
+            TimeControlType = timeControl;
             Winner = null;
             ActiveColor = Color.WHITE;
             HalfMoves = 0;
@@ -43,19 +49,38 @@ namespace Chess
             Board = new Board();
             WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
-            StartTime = DateTime.Now;
+            StartTime = LastMoveTimeStamp = DateTime.Now;
             EndTime = null;
+
+            switch (timeControl)
+            {
+                case TimeControl.CLASSICAL:
+                    WhiteRemainingTime = BlackRemainingTime = 3600;
+                    break;
+                case TimeControl.RAPID:
+                    WhiteRemainingTime = BlackRemainingTime = 600;
+                    break;
+                case TimeControl.BLITZ:
+                    WhiteRemainingTime = BlackRemainingTime = 180;
+                    break;
+                case TimeControl.BULLET:
+                    WhiteRemainingTime = BlackRemainingTime = 60;
+                    break;
+                default:
+                    throw new Exception("Attempted to start game with invalid time control");
+            }
 
             UpdateValidMoves(Color.WHITE);
         }
 
-        public Game(string fen)
+        public Game(string fen, TimeControl timeControl)
         {
             var fenHelper = new FenHelper(fen);
 
             Id = Guid.NewGuid().ToString();
             Type = GameType.LOCAL;
             Status = GameStatus.ONGOING;
+            TimeControlType = timeControl;
             Winner = null;
             ActiveColor = fenHelper.ActiveColorSegment.ToUpper() == "W" ? Color.WHITE : Color.BLACK;
             HalfMoves = int.Parse(fenHelper.HalfMoveSegment);
@@ -66,7 +91,7 @@ namespace Chess
             Board = new Board(fenHelper.BoardSegment);
             WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
-            StartTime = DateTime.Now;
+            StartTime = LastMoveTimeStamp = DateTime.Now;
             EndTime = null;
 
             var crSeg = fenHelper.CastleRightsSegment;
@@ -127,6 +152,24 @@ namespace Chess
             if (isCheck.WhiteInCheck || isCheck.BlackInCheck)
             {
                 Status = GameStatus.IN_CHECK;
+            }
+
+            switch (timeControl)
+            {
+                case TimeControl.CLASSICAL:
+                    WhiteRemainingTime = BlackRemainingTime = 3600;
+                    break;
+                case TimeControl.RAPID:
+                    WhiteRemainingTime = BlackRemainingTime = 600;
+                    break;
+                case TimeControl.BLITZ:
+                    WhiteRemainingTime = BlackRemainingTime = 180;
+                    break;
+                case TimeControl.BULLET:
+                    WhiteRemainingTime = BlackRemainingTime = 60;
+                    break;
+                default:
+                    throw new Exception("Attempted to start game with invalid time control");
             }
 
             UpdateValidMoves(ActiveColor);
@@ -225,6 +268,13 @@ namespace Chess
                     throw new Exception("Not a valid board file.");
             }
 
+        }
+
+        public void EndGame(GameStatus status, Color? winner)
+        {
+            Status = status;
+            Winner = winner;
+            EndTime = DateTime.Now;
         }
 
         // Returns an list of squares of whatever rank you provide.

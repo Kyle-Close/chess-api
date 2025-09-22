@@ -238,6 +238,67 @@ public static class Move
         return true;
     }
 
+    private static bool IsInsufficientMaterial(Game game)
+    {
+        var wPieces = game.Board.GetPieces(Color.WHITE);
+        var bPieces = game.Board.GetPieces(Color.BLACK);
+
+        // King vs King
+        if (wPieces.Count == 1 && bPieces.Count == 1)
+        {
+            return true;
+        }
+
+        // King vs Bishop
+        if (wPieces.Any(piece => piece.PieceType == PieceType.BISHOP) && wPieces.Count == 2 && bPieces.Count == 1)
+        {
+            return true;
+        }
+        if (bPieces.Any(piece => piece.PieceType == PieceType.BISHOP) && bPieces.Count == 2 && wPieces.Count == 1)
+        {
+            return true;
+        }
+
+        // King vs Knight
+        if (wPieces.Any(piece => piece.PieceType == PieceType.KNIGHT) && wPieces.Count == 2 && bPieces.Count == 1)
+        {
+            return true;
+        }
+        if (bPieces.Any(piece => piece.PieceType == PieceType.KNIGHT) && bPieces.Count == 2 && wPieces.Count == 1)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static int GetRemainingTime(Game game, Color opponentColor)
+    {
+        var currentTime = DateTime.Now;
+        var delta = currentTime - game.LastMoveTimeStamp;
+
+        if (opponentColor == Color.BLACK)
+        {
+            return game.WhiteRemainingTime - (int)delta.TotalSeconds;
+        }
+        else
+        {
+            return game.BlackRemainingTime - (int)delta.TotalSeconds;
+        }
+    }
+
+    private static void UpdateRemainingTime(Game game, Color opponentColor)
+    {
+        if (opponentColor == Color.BLACK)
+        {
+            game.WhiteRemainingTime = GetRemainingTime(game, opponentColor);
+        }
+        else
+        {
+            game.BlackRemainingTime = GetRemainingTime(game, opponentColor);
+        }
+    }
+
     public static void ExecuteMove(Game game, int start, int end, PieceType? promotionPieceType = null)
     {
         MoveMetaData move = ValidateMove(game, start, end);
@@ -256,8 +317,22 @@ public static class Move
             HandlePawnPromotion(game, start, promotionPieceType);
         }
 
+        // This likely needs to change. Only detecting when the player makes a move. Server needs to proactively send this if no time
+        UpdateRemainingTime(game, opponentColor);
+        if (game.WhiteRemainingTime <= 0)
+        {
+            game.EndGame(GameStatus.TIMEOUT, Color.BLACK);
+            return;
+        }
+        if (game.BlackRemainingTime <= 0)
+        {
+            game.EndGame(GameStatus.TIMEOUT, Color.WHITE);
+            return;
+        }
+
         // Move is valid, update the board to move the piece to it's target square
         game.Board.MovePiece(start, end);
+
 
         if (piece.PieceType == PieceType.PAWN)
         {
@@ -297,11 +372,9 @@ public static class Move
         game.FenHistory.Add(FenHelper.BuildFen(game, game.Board));
         game.MoveHistory.Add(move.Notation);
 
-        if (IsCheckmate(game, move, opponentColor))
+        if (piece.PieceType == PieceType.PAWN || move.IsCapture)
         {
-            game.Status = GameStatus.CHECKMATE;
-            game.Winner = game.ActiveColor;
-            game.EndTime = DateTime.Now;
+            game.HalfMoves = 0;
         }
 
         if (opponentColor == Color.WHITE)
@@ -309,9 +382,14 @@ public static class Move
             game.FullMoves++;
         }
 
-        if (piece.PieceType == PieceType.PAWN || move.IsCapture)
+        if (IsCheckmate(game, move, opponentColor))
         {
-            game.HalfMoves = 0;
+            game.EndGame(GameStatus.CHECKMATE, game.ActiveColor);
+        }
+
+        if (game.HalfMoves == 100)
+        {
+            game.EndGame(GameStatus.DRAW_FIFTY_MOVE_RULE, null);
         }
 
         game.ActiveColor = opponentColor;
@@ -319,12 +397,19 @@ public static class Move
 
         if (IsStalemate(game, opponentColor))
         {
-            game.Status = GameStatus.DRAW_STALEMATE;
-            game.EndTime = DateTime.Now;
+            game.EndGame(GameStatus.DRAW_STALEMATE, null);
+        }
+
+        if (IsInsufficientMaterial(game))
+        {
+            game.EndGame(GameStatus.DRAW_INSUFFICIENT_MATERIAL, null);
         }
 
         // Update material values
         game.WhiteMaterialValue = game.Board.TotalPieceValue(Color.WHITE);
         game.BlackMaterialValue = game.Board.TotalPieceValue(Color.BLACK);
+
+        // Update last move timestamp
+        game.LastMoveTimeStamp = DateTime.Now;
     }
 }

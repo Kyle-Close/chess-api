@@ -3,6 +3,7 @@ namespace Chess
     public class NewGamePayload
     {
         public string? Fen { get; set; }
+        public TimeControl TimeControlType { get; set; }
     }
 
     public class StartGame
@@ -11,14 +12,15 @@ namespace Chess
         {
             app.MapPost("/chess-api/start-game", async (HttpContext context) =>
             {
-                Game game = new Game();
+                var payload = await context.Request.ReadFromJsonAsync<NewGamePayload>();
+
+                Game game = new Game(payload.TimeControlType);
 
                 try
                 {
-                    var payload = await context.Request.ReadFromJsonAsync<NewGamePayload>();
                     if (payload != null && !string.IsNullOrWhiteSpace(payload.Fen))
                     {
-                        game = new Game(payload.Fen);
+                        game = new Game(payload.Fen, payload.TimeControlType);
                     }
                 }
                 catch (Exception ex)
