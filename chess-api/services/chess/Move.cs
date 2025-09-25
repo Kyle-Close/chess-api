@@ -339,6 +339,14 @@ public static class Move
             if (move.IsEnPassantCapture && game.EnPassantIndex != null)
             {
                 HandleEnPassantCapture(game, opponentColor, end);
+                if (opponentColor == Color.BLACK)
+                {
+                    game.WhiteCapturedPieces.Add(PieceType.PAWN);
+                }
+                else
+                {
+                    game.BlackCapturedPieces.Add(PieceType.PAWN);
+                }
             }
         }
 
@@ -353,6 +361,14 @@ public static class Move
         if (move.IsCapture && capturedPiece != null)
         {
             HandleCapture(game, move, capturedPiece, opponentColor);
+            if (opponentColor == Color.BLACK)
+            {
+                game.WhiteCapturedPieces.Add(capturedPiece.PieceType);
+            }
+            else
+            {
+                game.BlackCapturedPieces.Add(capturedPiece.PieceType);
+            }
         }
 
         if (piece.PieceType == PieceType.ROOK)

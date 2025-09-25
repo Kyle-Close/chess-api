@@ -31,6 +31,9 @@ namespace Chess
         public int WhiteRemainingTime { get; set; }
         public int BlackRemainingTime { get; set; }
 
+        public List<PieceType> WhiteCapturedPieces { get; set; } // The pieces white has captured from black
+        public List<PieceType> BlackCapturedPieces { get; set; } // The pieces black has captured from white
+
         public Game(TimeControl timeControl)
         {
             Id = Guid.NewGuid().ToString();
@@ -51,6 +54,8 @@ namespace Chess
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
             StartTime = LastMoveTimeStamp = DateTime.Now;
             EndTime = null;
+            WhiteCapturedPieces = new List<PieceType>();
+            BlackCapturedPieces = new List<PieceType>();
 
             switch (timeControl)
             {
@@ -69,6 +74,8 @@ namespace Chess
                 default:
                     throw new Exception("Attempted to start game with invalid time control");
             }
+
+            Console.WriteLine("Set time to " + WhiteRemainingTime.ToString() + " seconds");
 
             UpdateValidMoves(Color.WHITE);
         }
@@ -93,6 +100,8 @@ namespace Chess
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
             StartTime = LastMoveTimeStamp = DateTime.Now;
             EndTime = null;
+            WhiteCapturedPieces = new List<PieceType>();
+            BlackCapturedPieces = new List<PieceType>();
 
             var crSeg = fenHelper.CastleRightsSegment;
             if (crSeg == "-")

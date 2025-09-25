@@ -32,7 +32,6 @@ namespace Chess
                 game.FenHistory.Add(fen);
                 activeGames.Add(game);
 
-
                 return game;
             })
             .WithName("Start New Game")
