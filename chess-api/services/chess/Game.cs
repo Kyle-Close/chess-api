@@ -350,6 +350,12 @@ namespace Chess
             return game;
         }
 
+        public void Resign(Color color)
+        {
+            var opponentColor = color == Color.WHITE ? Color.BLACK : Color.WHITE;
+            EndGame(GameStatus.RESIGNATION, opponentColor);
+        }
+
         //TODO: lookup game in active games table
     }
 }

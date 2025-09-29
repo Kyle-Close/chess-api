@@ -39,5 +39,7 @@ StartGame.EnableEndpoint(app, activeGames);
 GetGame.EnableEndpoint(app, activeGames);
 GetValidMovesApi.EnableEndpoint(app, activeGames);
 ExecuteMoveApi.EnableEndpoint(app, activeGames);
+ResignGame.EnableEndpoint(app, activeGames);
+DrawByAgreement.EnableEndpoint(app, activeGames);
 
 app.Run();
