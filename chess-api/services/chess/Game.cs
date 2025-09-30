@@ -28,6 +28,7 @@ namespace Chess
         public DateTime? EndTime { get; set; }
 
         public DateTime LastMoveTimeStamp { get; set; }
+        public DateTime LastSyncedClockTimeStamp { get; set; }
         public int WhiteRemainingTime { get; set; }
         public int BlackRemainingTime { get; set; }
 
@@ -467,6 +468,35 @@ namespace Chess
         {
             var opponentColor = color == Color.WHITE ? Color.BLACK : Color.WHITE;
             EndGame(GameStatus.RESIGNATION, opponentColor);
+        }
+
+        public void UpdateRemainingTime(Color colorToUpdate)
+        {
+            var currentTime = DateTime.Now;
+            var lastSynced = LastSyncedClockTimeStamp;
+            var lastMove = LastMoveTimeStamp;
+            TimeSpan delta;
+
+            if (lastSynced > lastMove)
+            {
+                delta = currentTime - LastSyncedClockTimeStamp;
+            }
+            else
+            {
+                delta = currentTime - LastMoveTimeStamp;
+            }
+
+            LastSyncedClockTimeStamp = currentTime;
+
+            if (colorToUpdate == Color.WHITE)
+            {
+
+                WhiteRemainingTime = WhiteRemainingTime - (int)delta.TotalSeconds;
+            }
+            else
+            {
+                BlackRemainingTime = BlackRemainingTime - (int)delta.TotalSeconds;
+            }
         }
 
         //TODO: lookup game in active games table

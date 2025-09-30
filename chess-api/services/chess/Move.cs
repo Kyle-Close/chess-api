@@ -272,32 +272,7 @@ public static class Move
         return false;
     }
 
-    private static int GetRemainingTime(Game game, Color opponentColor)
-    {
-        var currentTime = DateTime.Now;
-        var delta = currentTime - game.LastMoveTimeStamp;
 
-        if (opponentColor == Color.BLACK)
-        {
-            return game.WhiteRemainingTime - (int)delta.TotalSeconds;
-        }
-        else
-        {
-            return game.BlackRemainingTime - (int)delta.TotalSeconds;
-        }
-    }
-
-    private static void UpdateRemainingTime(Game game, Color opponentColor)
-    {
-        if (opponentColor == Color.BLACK)
-        {
-            game.WhiteRemainingTime = GetRemainingTime(game, opponentColor);
-        }
-        else
-        {
-            game.BlackRemainingTime = GetRemainingTime(game, opponentColor);
-        }
-    }
 
     public static void ExecuteMove(Game game, int start, int end, PieceType? promotionPieceType = null)
     {
@@ -323,8 +298,8 @@ public static class Move
             move.Notation = move.Notation.Replace('?', piece.GetPieceChar());
         }
 
-        // This likely needs to change. Only detecting when the player makes a move. Server needs to proactively send this if no time
-        UpdateRemainingTime(game, opponentColor);
+        game.UpdateRemainingTime(game.ActiveColor);
+
         if (game.WhiteRemainingTime <= 0)
         {
             game.EndGame(GameStatus.TIMEOUT, Color.BLACK);
@@ -343,7 +318,7 @@ public static class Move
         if (move.IsPromotion)
         {
             var opponentKing = game.Board.GetPieces<King>(opponentColor).FirstOrDefault();
-            if(opponentKing != null && opponentKing.IsInCheck(game.Board))
+            if (opponentKing != null && opponentKing.IsInCheck(game.Board))
             {
                 move.CausesCheck = true;
             }
@@ -354,20 +329,20 @@ public static class Move
         }
 
         if (piece.PieceType == PieceType.PAWN)
+        {
+            if (move.IsEnPassantCapture && game.EnPassantIndex != null)
             {
-                if (move.IsEnPassantCapture && game.EnPassantIndex != null)
+                HandleEnPassantCapture(game, opponentColor, end);
+                if (opponentColor == Color.BLACK)
                 {
-                    HandleEnPassantCapture(game, opponentColor, end);
-                    if (opponentColor == Color.BLACK)
-                    {
-                        game.WhiteCapturedPieces.Add(PieceType.PAWN);
-                    }
-                    else
-                    {
-                        game.BlackCapturedPieces.Add(PieceType.PAWN);
-                    }
+                    game.WhiteCapturedPieces.Add(PieceType.PAWN);
+                }
+                else
+                {
+                    game.BlackCapturedPieces.Add(PieceType.PAWN);
                 }
             }
+        }
 
         SetEnPassantIndex(game, piece, start, end, opponentColor);
 

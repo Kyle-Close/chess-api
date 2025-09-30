@@ -41,5 +41,6 @@ GetValidMovesApi.EnableEndpoint(app, activeGames);
 ExecuteMoveApi.EnableEndpoint(app, activeGames);
 ResignGame.EnableEndpoint(app, activeGames);
 DrawByAgreement.EnableEndpoint(app, activeGames);
+UpdateClock.EnableEndpoint(app, activeGames);
 
 app.Run();
