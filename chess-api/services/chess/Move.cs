@@ -315,6 +315,12 @@ public static class Move
         if (move.IsPromotion)
         {
             HandlePawnPromotion(game, start, promotionPieceType);
+
+            // Update piece reference to newly promoted piece
+            piece = game.Board.Squares[start].Piece;
+
+            // Need to update move notation to include promotion piece
+            move.Notation = move.Notation.Replace('?', piece.GetPieceChar());
         }
 
         // This likely needs to change. Only detecting when the player makes a move. Server needs to proactively send this if no time
@@ -333,22 +339,35 @@ public static class Move
         // Move is valid, update the board to move the piece to it's target square
         game.Board.MovePiece(start, end);
 
-
-        if (piece.PieceType == PieceType.PAWN)
+        // If this was a promotion, the previously calculated valid moves won't know if it causes check since we don't know what piece it will be promoted to
+        if (move.IsPromotion)
         {
-            if (move.IsEnPassantCapture && game.EnPassantIndex != null)
+            var opponentKing = game.Board.GetPieces<King>(opponentColor).FirstOrDefault();
+            if(opponentKing != null && opponentKing.IsInCheck(game.Board))
             {
-                HandleEnPassantCapture(game, opponentColor, end);
-                if (opponentColor == Color.BLACK)
-                {
-                    game.WhiteCapturedPieces.Add(PieceType.PAWN);
-                }
-                else
-                {
-                    game.BlackCapturedPieces.Add(PieceType.PAWN);
-                }
+                move.CausesCheck = true;
+            }
+            else
+            {
+                move.CausesCheck = false;
             }
         }
+
+        if (piece.PieceType == PieceType.PAWN)
+            {
+                if (move.IsEnPassantCapture && game.EnPassantIndex != null)
+                {
+                    HandleEnPassantCapture(game, opponentColor, end);
+                    if (opponentColor == Color.BLACK)
+                    {
+                        game.WhiteCapturedPieces.Add(PieceType.PAWN);
+                    }
+                    else
+                    {
+                        game.BlackCapturedPieces.Add(PieceType.PAWN);
+                    }
+                }
+            }
 
         SetEnPassantIndex(game, piece, start, end, opponentColor);
 

@@ -271,5 +271,64 @@ public class GameTests
         Assert.True(game.WhiteMaterialValue == 23);
         Assert.True(game.BlackMaterialValue == 5);
     }
+
+    [Fact]
+    public void ExecuteMove_Expect50MoveRule()
+    {
+        var game = new Game("8/8/2k1n3/8/8/8/4BK2/4B2R w - - 99 76");
+        Move.ExecuteMove(game, 60, 51); // bishoop e1 to d2
+        Assert.True(game.Status == GameStatus.DRAW_FIFTY_MOVE_RULE);
+    }
+
+    [Fact]
+    public void ExecuteMove_ExpectInsufficientMaterial()
+    {
+        var game = new Game("8/8/2k5/5p2/5K2/8/8/8 w - - 0 1");
+        Move.ExecuteMove(game, 37, 29); // king captures pawn - king v king
+        Assert.True(game.Status == GameStatus.DRAW_INSUFFICIENT_MATERIAL);
+    }
+
+    [Fact]
+    public void ExecuteMove_ExpectInsufficientMaterial2()
+    {
+        var game = new Game("8/3p2k1/8/5B2/8/5K2/8/8 w - - 0 1");
+        Move.ExecuteMove(game, 29, 11); // bishop captures pawn - king v king and bishop
+        Assert.True(game.Status == GameStatus.DRAW_INSUFFICIENT_MATERIAL);
+    }
+
+    [Fact]
+    public void ExecuteMove_ExpectInsufficientMaterial3()
+    {
+        var game = new Game("8/6k1/8/5n2/3P4/8/5K2/8 b - - 0 1");
+        Move.ExecuteMove(game, 29, 35); // knight captures pawn - king v king and knight
+        Assert.True(game.Status == GameStatus.DRAW_INSUFFICIENT_MATERIAL);
+    }
+
+    [Fact]
+    public void ExecuteMove_BlackPawnPromotionToCheck()
+    {
+        var game = new Game("4k3/8/8/8/8/8/1p6/4K3 b - - 0 1");
+        Move.ExecuteMove(game, 49, 57, PieceType.QUEEN); // Black pawn promotes to queen on b1
+
+        // Piece on b1 should be a black queen
+        var promotedSquare = game.Board.Squares[57];
+        Assert.NotNull(promotedSquare.Piece);
+        Assert.Equal(PieceType.QUEEN, promotedSquare.Piece.PieceType);
+        Assert.Equal(Color.BLACK, promotedSquare.Piece.Color);
+
+        // Game status should be check
+        Assert.Equal(GameStatus.IN_CHECK, game.Status);
+    }
+
+        [Fact]
+    public void ExecuteMove_BlackPawnPromotionToCheckmate()
+    {
+        var game = new Game("4k3/8/8/8/8/8/p6r/4K3 b - - 0 1");
+        Move.ExecuteMove(game, 48, 56, PieceType.QUEEN); // Black pawn promotes to queen on a1 with checkmate
+
+        // Game status should be checkmate with correct winner
+        Assert.Equal(GameStatus.CHECKMATE, game.Status);
+        Assert.Equal(Color.BLACK, game.Winner);
+    }
     #endregion
 }

@@ -34,6 +34,121 @@ namespace Chess
         public List<PieceType> WhiteCapturedPieces { get; set; } // The pieces white has captured from black
         public List<PieceType> BlackCapturedPieces { get; set; } // The pieces black has captured from white
 
+        public Game()
+        {
+            Id = Guid.NewGuid().ToString();
+            Type = GameType.LOCAL;
+            Status = GameStatus.ONGOING;
+            TimeControlType = TimeControl.CLASSICAL;
+            Winner = null;
+            ActiveColor = Color.WHITE;
+            HalfMoves = 0;
+            FullMoves = 1;
+            EnPassantIndex = null;
+            WhiteCastleRights = new CastleRights();
+            BlackCastleRights = new CastleRights();
+            FenHistory = new List<string>();
+            MoveHistory = new List<string>();
+            Board = new Board();
+            WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
+            BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
+            StartTime = LastMoveTimeStamp = DateTime.Now;
+            EndTime = null;
+            WhiteCapturedPieces = new List<PieceType>();
+            BlackCapturedPieces = new List<PieceType>();
+            WhiteRemainingTime = BlackRemainingTime = 3600;
+
+            UpdateValidMoves(Color.WHITE);
+        }
+
+        public Game(string fen)
+        {
+            var fenHelper = new FenHelper(fen);
+
+            Id = Guid.NewGuid().ToString();
+            Type = GameType.LOCAL;
+            Status = GameStatus.ONGOING;
+            TimeControlType = TimeControl.CLASSICAL;
+            Winner = null;
+            ActiveColor = fenHelper.ActiveColorSegment.ToUpper() == "W" ? Color.WHITE : Color.BLACK;
+            HalfMoves = int.Parse(fenHelper.HalfMoveSegment);
+            FullMoves = int.Parse(fenHelper.FullMoveSegment);
+            EnPassantIndex = fenHelper.EnPassantIndex;
+            FenHistory = new List<string>();
+            MoveHistory = new List<string>();
+            Board = new Board(fenHelper.BoardSegment);
+            WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
+            BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
+            StartTime = LastMoveTimeStamp = DateTime.Now;
+            EndTime = null;
+            WhiteCapturedPieces = new List<PieceType>();
+            BlackCapturedPieces = new List<PieceType>();
+
+            var crSeg = fenHelper.CastleRightsSegment;
+            if (crSeg == "-")
+            {
+                WhiteCastleRights = new CastleRights(false, false);
+                BlackCastleRights = new CastleRights(false, false);
+            }
+            else
+            {
+                bool whiteKing = false;
+                bool whiteQueen = false;
+                bool blackKing = false;
+                bool blackQueen = false;
+
+                if (crSeg.Contains("K"))
+                {
+                    whiteKing = true;
+                }
+                if (crSeg.Contains("k"))
+                {
+                    blackKing = true;
+                }
+                if (crSeg.Contains("Q"))
+                {
+                    whiteQueen = true;
+                }
+                if (crSeg.Contains("q"))
+                {
+                    blackQueen = true;
+                }
+
+                WhiteCastleRights = new CastleRights(whiteKing, whiteQueen);
+                BlackCastleRights = new CastleRights(blackKing, blackQueen);
+            }
+
+            // Update the hasMoved property based on the state of the board.
+            // Only care about pawns for double moves & king, rook for castle rights
+            var pawns = Board.GetPieces<Pawn>();
+            foreach (var pawn in pawns)
+            {
+                pawn.HasMoved = !pawn.IsInStartPosition();
+            }
+
+            var kings = Board.GetPieces<King>();
+            foreach (var king in kings)
+            {
+                king.HasMoved = !king.IsInStartPosition();
+            }
+
+            var rooks = Board.GetPieces<Rook>();
+            foreach (var rook in rooks)
+            {
+                rook.HasMoved = !rook.IsInStartPosition();
+            }
+
+            var isCheck = Board.IsCheck();
+            if (isCheck.WhiteInCheck || isCheck.BlackInCheck)
+            {
+                Status = GameStatus.IN_CHECK;
+            }
+
+            WhiteRemainingTime = BlackRemainingTime = 3600;
+
+            UpdateValidMoves(ActiveColor);
+        }
+
         public Game(TimeControl timeControl)
         {
             Id = Guid.NewGuid().ToString();
@@ -74,8 +189,6 @@ namespace Chess
                 default:
                     throw new Exception("Attempted to start game with invalid time control");
             }
-
-            Console.WriteLine("Set time to " + WhiteRemainingTime.ToString() + " seconds");
 
             UpdateValidMoves(Color.WHITE);
         }
