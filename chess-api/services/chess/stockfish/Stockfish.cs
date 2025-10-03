@@ -7,8 +7,12 @@ public enum StockfishDifficulty
     ELO
 }
 
+
 public class Stockfish : IDisposable
 {
+    const string UBUNTU_PATH = "/home/kyle/Downloads/stockfish-ubuntu-x86-64-avx2/stockfish/stockfish-ubuntu-x86-64-avx2";
+    const string MAC_PATH = "/Users/kyleclose/Downloads/stockfish 2/stockfish-macos-m1-apple-silicon";
+
     public Process MyProcess { get; private set; } = null!;
 
     public Stockfish()
@@ -19,7 +23,7 @@ public class Stockfish : IDisposable
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "/Users/kyleclose/Downloads/stockfish 2/stockfish-macos-m1-apple-silicon",
+                    FileName = UBUNTU_PATH,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

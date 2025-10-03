@@ -35,7 +35,9 @@ namespace Chess
         public List<PieceType> WhiteCapturedPieces { get; set; } // The pieces white has captured from black
         public List<PieceType> BlackCapturedPieces { get; set; } // The pieces black has captured from white
 
-        public Game()
+        public StockfishGameInstanceConf? StockfishInfo { get; set; }
+
+        public Game(int stockfishStrength, Color stockfishColor)
         {
             Id = Guid.NewGuid().ToString();
             Type = GameType.LOCAL;
@@ -59,10 +61,17 @@ namespace Chess
             BlackCapturedPieces = new List<PieceType>();
             WhiteRemainingTime = BlackRemainingTime = 3600;
 
+            if (stockfishStrength != -1) // Stockfish game (AI)
+            {
+                StockfishInfo = new StockfishGameInstanceConf(stockfishStrength, stockfishColor);
+                TimeControlType = TimeControl.NONE;
+                WhiteRemainingTime = BlackRemainingTime = int.MaxValue;
+            }
+
             UpdateValidMoves(Color.WHITE);
         }
 
-        public Game(string fen)
+        public Game(string fen, int stockfishStrength, Color stockfishColor)
         {
             var fenHelper = new FenHelper(fen);
 
@@ -84,6 +93,14 @@ namespace Chess
             EndTime = null;
             WhiteCapturedPieces = new List<PieceType>();
             BlackCapturedPieces = new List<PieceType>();
+            WhiteRemainingTime = BlackRemainingTime = 3600;
+
+            if (stockfishStrength != -1) // Stockfish game (AI)
+            {
+                StockfishInfo = new StockfishGameInstanceConf(stockfishStrength, stockfishColor);
+                TimeControlType = TimeControl.NONE;
+                WhiteRemainingTime = BlackRemainingTime = int.MaxValue;
+            }
 
             var crSeg = fenHelper.CastleRightsSegment;
             if (crSeg == "-")
@@ -145,12 +162,12 @@ namespace Chess
                 Status = GameStatus.IN_CHECK;
             }
 
-            WhiteRemainingTime = BlackRemainingTime = 3600;
+
 
             UpdateValidMoves(ActiveColor);
         }
 
-        public Game(TimeControl timeControl)
+        public Game(TimeControl timeControl, int stockfishStrength, Color stockfishColor)
         {
             Id = Guid.NewGuid().ToString();
             Type = GameType.LOCAL;
@@ -173,6 +190,12 @@ namespace Chess
             WhiteCapturedPieces = new List<PieceType>();
             BlackCapturedPieces = new List<PieceType>();
 
+            if (stockfishStrength != -1) // Stockfish game (AI)
+            {
+                StockfishInfo = new StockfishGameInstanceConf(stockfishStrength, stockfishColor);
+                TimeControlType = TimeControl.NONE;
+            }
+
             switch (timeControl)
             {
                 case TimeControl.CLASSICAL:
@@ -186,6 +209,9 @@ namespace Chess
                     break;
                 case TimeControl.BULLET:
                     WhiteRemainingTime = BlackRemainingTime = 60;
+                    break;
+                case TimeControl.NONE:
+                    WhiteRemainingTime = BlackRemainingTime = int.MaxValue;
                     break;
                 default:
                     throw new Exception("Attempted to start game with invalid time control");
@@ -194,7 +220,7 @@ namespace Chess
             UpdateValidMoves(Color.WHITE);
         }
 
-        public Game(string fen, TimeControl timeControl)
+        public Game(string fen, TimeControl timeControl, int stockfishStrength, Color stockfishColor)
         {
             var fenHelper = new FenHelper(fen);
 
@@ -216,6 +242,12 @@ namespace Chess
             EndTime = null;
             WhiteCapturedPieces = new List<PieceType>();
             BlackCapturedPieces = new List<PieceType>();
+
+            if (stockfishStrength != -1) // Stockfish game (AI)
+            {
+                StockfishInfo = new StockfishGameInstanceConf(stockfishStrength, stockfishColor);
+                TimeControlType = TimeControl.NONE;
+            }
 
             var crSeg = fenHelper.CastleRightsSegment;
             if (crSeg == "-")
@@ -290,6 +322,9 @@ namespace Chess
                     break;
                 case TimeControl.BULLET:
                     WhiteRemainingTime = BlackRemainingTime = 60;
+                    break;
+                case TimeControl.NONE:
+                    WhiteRemainingTime = BlackRemainingTime = int.MaxValue;
                     break;
                 default:
                     throw new Exception("Attempted to start game with invalid time control");
