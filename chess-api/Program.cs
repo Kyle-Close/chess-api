@@ -42,5 +42,6 @@ ExecuteMoveApi.EnableEndpoint(app, activeGames);
 ResignGame.EnableEndpoint(app, activeGames);
 DrawByAgreement.EnableEndpoint(app, activeGames);
 UpdateClock.EnableEndpoint(app, activeGames);
+StockfishMove.EnableEndpoint(app, activeGames);
 
 app.Run();

@@ -6,7 +6,7 @@ namespace Chess
         public string ActiveColorSegment { get; set; }
         public string CastleRightsSegment { get; set; }
         public string EnPassantSegment { get; set; }
-        public int? EnPassantIndex {get; set;}
+        public int? EnPassantIndex { get; set; }
         public string HalfMoveSegment { get; set; }
         public string FullMoveSegment { get; set; }
 
@@ -32,16 +32,16 @@ namespace Chess
 
         public static int? ConvertEnPassantSegmentToIndex(string segment)
         {
-            if(string.IsNullOrWhiteSpace(segment))
+            if (string.IsNullOrWhiteSpace(segment))
             {
                 throw new Exception("Empty en-passant segment provided.");
             }
 
-            if(segment == "-")
+            if (segment == "-")
             {
                 return null;
             }
-        
+
             return Square.GetSquareIndex(segment[0], segment[1]);
         }
 
@@ -60,7 +60,7 @@ namespace Chess
             if (game.BlackCastleRights.QueenSide)
                 castleRightsSegment += "q";
 
-            if(castleRightsSegment == "")
+            if (castleRightsSegment == "")
                 castleRightsSegment = "-";
 
             var enPassantSegment = game.EnPassantIndex == null ? "-" : game.EnPassantIndex.ToString();
@@ -68,6 +68,11 @@ namespace Chess
             string fullMovesSegment = game.FullMoves.ToString();
 
             return $"{boardSegment} {turnSegment} {castleRightsSegment} {enPassantSegment} {halfMovesSegment} {fullMovesSegment}";
+        }
+
+        public static string GetStartFen()
+        {
+            return "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         }
     }
 }

@@ -177,6 +177,40 @@ namespace Chess
             }
         }
 
+        public static BoardFile GetBoardFileFromChar(char file)
+        {
+            switch (file)
+            {
+                case 'a':
+                case 'A':
+                    return BoardFile.A;
+                case 'b':
+                case 'B':
+                    return BoardFile.B;
+                case 'c':
+                case 'C':
+                    return BoardFile.C;
+                case 'd':
+                case 'D':
+                    return BoardFile.D;
+                case 'e':
+                case 'E':
+                    return BoardFile.E;
+                case 'f':
+                case 'F':
+                    return BoardFile.F;
+                case 'g':
+                case 'G':
+                    return BoardFile.G;
+                case 'h':
+                case 'H':
+                    return BoardFile.H;
+                default:
+                    throw new ArgumentException($"Invalid file character: {file}");
+            }
+        }
+
+
         public static char GetRankLetter(BoardRank rank)
         {
             switch (rank)
@@ -201,5 +235,23 @@ namespace Chess
                     throw new Exception("Attempted to convert BoardRank to Char and failed due to invalid BoardRank being passed in.");
             }
         }
+
+        public static BoardRank GetBoardRankFromChar(char rank)
+        {
+            switch (rank)
+            {
+                case '1': return BoardRank.ONE;
+                case '2': return BoardRank.TWO;
+                case '3': return BoardRank.THREE;
+                case '4': return BoardRank.FOUR;
+                case '5': return BoardRank.FIVE;
+                case '6': return BoardRank.SIX;
+                case '7': return BoardRank.SEVEN;
+                case '8': return BoardRank.EIGHT;
+                default:
+                    throw new ArgumentException($"Invalid rank character: {rank}");
+            }
+        }
+
     }
 }
