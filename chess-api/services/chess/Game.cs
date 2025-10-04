@@ -66,6 +66,7 @@ namespace Chess
                 StockfishInfo = new StockfishGameInstanceConf(stockfishStrength, stockfishColor);
                 TimeControlType = TimeControl.NONE;
                 WhiteRemainingTime = BlackRemainingTime = int.MaxValue;
+                Type = GameType.STOCKFISH;
             }
 
             UpdateValidMoves(Color.WHITE);
@@ -100,6 +101,7 @@ namespace Chess
                 StockfishInfo = new StockfishGameInstanceConf(stockfishStrength, stockfishColor);
                 TimeControlType = TimeControl.NONE;
                 WhiteRemainingTime = BlackRemainingTime = int.MaxValue;
+                Type = GameType.STOCKFISH;
             }
 
             var crSeg = fenHelper.CastleRightsSegment;
@@ -194,6 +196,7 @@ namespace Chess
             {
                 StockfishInfo = new StockfishGameInstanceConf(stockfishStrength, stockfishColor);
                 TimeControlType = TimeControl.NONE;
+                Type = GameType.STOCKFISH;
             }
 
             switch (timeControl)
@@ -247,6 +250,7 @@ namespace Chess
             {
                 StockfishInfo = new StockfishGameInstanceConf(stockfishStrength, stockfishColor);
                 TimeControlType = TimeControl.NONE;
+                Type = GameType.STOCKFISH;
             }
 
             var crSeg = fenHelper.CastleRightsSegment;

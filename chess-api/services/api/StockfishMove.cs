@@ -34,6 +34,13 @@ public class StockfishMove
                 return Results.BadRequest("Invalid strength provided.\r\nValid strengths: 0-20, 1320-4000");
             }
 
+            bool isTurn = game.StockfishInfo != null && game.ActiveColor == game.StockfishInfo.PlayingAs;
+
+            if (!isTurn)
+            {
+                return Results.BadRequest("Not stockfish turn.");
+            }
+
             string fen = FenHelper.BuildFen(game, game.Board);
 
             var stockfishProcess = new Stockfish();
