@@ -10,43 +10,43 @@ public enum StockfishDifficulty
 
 public class Stockfish : IDisposable
 {
-    const string UBUNTU_PATH = "/home/kyle/Downloads/stockfish-ubuntu-x86-64-avx2/stockfish/stockfish-ubuntu-x86-64-avx2";
-    const string MAC_PATH = "/Users/kyleclose/Downloads/stockfish 2/stockfish-macos-m1-apple-silicon";
+    private static string ResolveEnginePath()
+    {
+        var env = Environment.GetEnvironmentVariable("STOCKFISH_PATH");
+        if (!string.IsNullOrWhiteSpace(env) && File.Exists(env)) return env;
 
-    public Process MyProcess { get; private set; } = null!;
+        var candidates = new[]
+        {
+            "/usr/bin/stockfish",
+            "/usr/games/stockfish",
+            "/usr/local/bin/stockfish",
+            "/chess/app/stockfish/stockfish-ubuntu-x86-64-avx2"
+        };
+        foreach (var c in candidates) if (File.Exists(c)) return c;
+
+        throw new FileNotFoundException("Stockfish binary not found. Set STOCKFISH_PATH.");
+    }
+
+    private readonly Process _proc;
 
     public Stockfish()
     {
-        try
+        var exe = ResolveEnginePath();
+        var psi = new ProcessStartInfo
         {
-            MyProcess = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = UBUNTU_PATH,
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-            };
-
-            MyProcess.Start();
-            MyProcess.StandardInput.AutoFlush = true;
-
-            MyProcess.OutputDataReceived += (sender, e) =>
-            {
-                if (!string.IsNullOrEmpty(e.Data))
-                    Console.WriteLine($"Engine: {e.Data}");
-            };
-
-            MyProcess.BeginOutputReadLine();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
+            FileName = exe,
+            UseShellExecute = false,
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            CreateNoWindow = true,
+            WorkingDirectory = Path.GetDirectoryName(exe) ?? "/"
+        };
+        _proc = new Process { StartInfo = psi };
+        _proc.Start();
+        _proc.StandardInput.AutoFlush = true;
+        _proc.BeginOutputReadLine();
+        _proc.OutputDataReceived += (_, e) => { if (!string.IsNullOrEmpty(e.Data)) Console.WriteLine("Engine: " + e.Data); };
     }
 
     public Task<string> ExecuteMoveAsync(int strength, string fen)
@@ -69,19 +69,19 @@ public class Stockfish : IDisposable
                     tcs.TrySetResult(move);
 
                     // unsubscribe after result
-                    MyProcess.OutputDataReceived -= handler;
+                    _proc.OutputDataReceived -= handler;
                 }
             }
         };
 
-        MyProcess.OutputDataReceived += handler;
+        _proc.OutputDataReceived += handler;
 
-        MyProcess.StandardInput.WriteLine("uci");
+        _proc.StandardInput.WriteLine("uci");
         SetDifficulty(strength);
-        MyProcess.StandardInput.WriteLine("ucinewgame");
-        MyProcess.StandardInput.WriteLine("isready");
-        MyProcess.StandardInput.WriteLine($"position fen {fen}");
-        MyProcess.StandardInput.WriteLine("go movetime 500");
+        _proc.StandardInput.WriteLine("ucinewgame");
+        _proc.StandardInput.WriteLine("isready");
+        _proc.StandardInput.WriteLine($"position fen {fen}");
+        _proc.StandardInput.WriteLine("go movetime 500");
 
         return tcs.Task;
     }
@@ -93,12 +93,12 @@ public class Stockfish : IDisposable
 
         if (difficulty == StockfishDifficulty.SKILL_LEVEL)
         {
-            MyProcess.StandardInput.WriteLine($"setoption name Skill Level value {strength}");
+            _proc.StandardInput.WriteLine($"setoption name Skill Level value {strength}");
         }
         else if (difficulty == StockfishDifficulty.ELO)
         {
-            MyProcess.StandardInput.WriteLine("setoption name UCI_LimitStrength value true");
-            MyProcess.StandardInput.WriteLine($"setoption name UCI_Elo value {strength}");
+            _proc.StandardInput.WriteLine("setoption name UCI_LimitStrength value true");
+            _proc.StandardInput.WriteLine($"setoption name UCI_Elo value {strength}");
         }
     }
 
@@ -111,11 +111,11 @@ public class Stockfish : IDisposable
 
     public void Dispose()
     {
-        if (!MyProcess.HasExited)
+        if (!_proc.HasExited)
         {
-            MyProcess.Kill();
+            _proc.Kill();
         }
-        MyProcess.Dispose();
+        _proc.Dispose();
     }
 }
 
