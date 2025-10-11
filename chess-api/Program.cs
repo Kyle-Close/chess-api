@@ -37,6 +37,7 @@ app.UseHttpsRedirection();
 
 List<Game> activeGames = new List<Game>();
 
+Ping.EnableEndpoint(app);
 StartGame.EnableEndpoint(app, activeGames);
 GetGame.EnableEndpoint(app, activeGames);
 GetValidMovesApi.EnableEndpoint(app, activeGames);
