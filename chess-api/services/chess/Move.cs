@@ -40,16 +40,16 @@ public static class Move
         switch (promotionPieceType)
         {
             case PieceType.QUEEN:
-                game.Board.Squares[start].Piece = new Queen(start, game.ActiveColor);
+                game.Board.Squares[start].Piece = new Queen(PieceType.QUEEN, start, game.ActiveColor);
                 break;
             case PieceType.ROOK:
-                game.Board.Squares[start].Piece = new Rook(start, game.ActiveColor);
+                game.Board.Squares[start].Piece = new Rook(PieceType.ROOK, start, game.ActiveColor);
                 break;
             case PieceType.BISHOP:
-                game.Board.Squares[start].Piece = new Bishop(start, game.ActiveColor);
+                game.Board.Squares[start].Piece = new Bishop(PieceType.BISHOP, start, game.ActiveColor);
                 break;
             case PieceType.KNIGHT:
-                game.Board.Squares[start].Piece = new Knight(start, game.ActiveColor);
+                game.Board.Squares[start].Piece = new Knight(PieceType.KNIGHT, start, game.ActiveColor);
                 break;
             default:
                 throw new Exception("Invalid promotion piece type specified.");

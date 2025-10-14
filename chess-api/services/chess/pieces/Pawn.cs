@@ -10,15 +10,9 @@ namespace Chess
 
     public class Pawn : Piece
     {
-        // ----- Properties -----
-        public override PieceType PieceType { get; }
-        public override int Value { get; }
-
         // ----- Constructor -----
-        public Pawn(int squareIndex, Color color) : base(squareIndex, color)
+        public Pawn(PieceType pieceType, int squareIndex, Color color) : base(pieceType, squareIndex, color)
         {
-            PieceType = PieceType.PAWN;
-            Value = 1;
         }
 
         // ----- Methods -----

@@ -35,13 +35,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+Mongo.Ping();
+
 List<Game> activeGames = new List<Game>();
 
 Ping.EnableEndpoint(app);
-StartGame.EnableEndpoint(app, activeGames);
-GetGame.EnableEndpoint(app, activeGames);
-GetValidMovesApi.EnableEndpoint(app, activeGames);
-ExecuteMoveApi.EnableEndpoint(app, activeGames);
+StartGame.EnableEndpoint(app);
+GetGame.EnableEndpoint(app);
+ExecuteMoveApi.EnableEndpoint(app);
 ResignGame.EnableEndpoint(app, activeGames);
 DrawByAgreement.EnableEndpoint(app, activeGames);
 UpdateClock.EnableEndpoint(app, activeGames);

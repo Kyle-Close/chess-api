@@ -2,13 +2,8 @@ namespace Chess
 {
     public class King : Piece
     {
-        public override PieceType PieceType { get; }
-        public override int Value { get; }
-
-        public King(int squareIndex, Color color) : base(squareIndex, color)
+        public King(PieceType pieceType, int squareIndex, Color color) : base(pieceType, squareIndex, color)
         {
-            PieceType = PieceType.KING;
-            Value = 0;
         }
 
         public override char GetPieceChar()

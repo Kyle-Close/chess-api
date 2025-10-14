@@ -2,21 +2,19 @@ namespace Chess
 {
     public class GetGame
     {
-        public static void EnableEndpoint(WebApplication app, List<Game> activeGames)
+        public static void EnableEndpoint(WebApplication app)
         {
-            app.MapGet("/chess-api/game", (HttpContext context) =>
+            app.MapGet("/chess-api/game", async (HttpContext context) =>
             {
-                string gameId = context.Request.Query["gameId"].ToString();
-                Console.WriteLine(gameId);
-
-                var game = activeGames.Find(game => game.Id == gameId);
+                string id = context.Request.Query["gameId"].ToString();
+                var game = await Mongo.GetActiveGame(id);
 
                 if (game == null)
                 {
                     throw new Exception("Could not find game in active games");
                 }
 
-                return game;
+                return Results.Ok(game);
             })
             .WithName("Get active game")
             .WithOpenApi();

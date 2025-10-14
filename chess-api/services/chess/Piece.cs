@@ -1,48 +1,65 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace Chess
 {
     public abstract class Piece
     {
         // ----- Properties -----
-        public abstract PieceType PieceType { get; }
-        public abstract int Value { get; }
+        public PieceType PieceType { get; set; }
 
-        public Color Color { get; }
+        public Color Color { get; set; }
         public bool HasMoved { get; set; }
         public int Index { get; set; }
         public List<MoveMetaData> ValidMoves { get; set; }
+
+        [BsonIgnore]
+        public int Value => PieceType switch
+        {
+            PieceType.PAWN => 1,
+            PieceType.KNIGHT => 3,
+            PieceType.BISHOP => 3,
+            PieceType.ROOK => 5,
+            PieceType.QUEEN => 9,
+            PieceType.KING => 0,
+            _ => 0
+        };
 
         // ----- Methods -----
         public abstract List<MoveMetaData> GetStandardMoves(Game game);
         public abstract char GetPieceChar();
 
         // ----- Constructors -----
-        public Piece()
+        public Piece(PieceType pieceType)
         {
             Index = 0;
             Color = Color.BLACK;
             HasMoved = false;
             ValidMoves = new List<MoveMetaData>();
+            PieceType = pieceType;
         }
-        public Piece(int posIndex, Color color)
+        public Piece(PieceType pieceType, int posIndex, Color color)
         {
             Index = posIndex;
             Color = color;
             HasMoved = false;
             ValidMoves = new List<MoveMetaData>();
+            PieceType = pieceType;
         }
-        public Piece(int posIndex, Color color, bool hasMoved)
+        public Piece(PieceType pieceType, int posIndex, Color color, bool hasMoved)
         {
             Index = posIndex;
             Color = color;
             HasMoved = hasMoved;
             ValidMoves = new List<MoveMetaData>();
+            PieceType = pieceType;
         }
-        public Piece(int posIndex, Color color, bool hasMoved, List<MoveMetaData> validMoves)
+        public Piece(PieceType pieceType, int posIndex, Color color, bool hasMoved, List<MoveMetaData> validMoves)
         {
             Index = posIndex;
             Color = color;
             HasMoved = hasMoved;
             ValidMoves = validMoves;
+            PieceType = pieceType;
         }
 
         // Returns whether the passed in piece is being attacked by opponent.
@@ -252,29 +269,29 @@ namespace Chess
             switch (letter)
             {
                 case 'P':
-                    return new Pawn(index, Color.WHITE);
+                    return new Pawn(PieceType.PAWN, index, Color.WHITE);
                 case 'p':
-                    return new Pawn(index, Color.BLACK);
+                    return new Pawn(PieceType.PAWN, index, Color.BLACK);
                 case 'R':
-                    return new Rook(index, Color.WHITE);
+                    return new Rook(PieceType.ROOK, index, Color.WHITE);
                 case 'r':
-                    return new Rook(index, Color.BLACK);
+                    return new Rook(PieceType.ROOK, index, Color.BLACK);
                 case 'B':
-                    return new Bishop(index, Color.WHITE);
+                    return new Bishop(PieceType.BISHOP, index, Color.WHITE);
                 case 'b':
-                    return new Bishop(index, Color.BLACK);
+                    return new Bishop(PieceType.BISHOP, index, Color.BLACK);
                 case 'N':
-                    return new Knight(index, Color.WHITE);
+                    return new Knight(PieceType.KNIGHT, index, Color.WHITE);
                 case 'n':
-                    return new Knight(index, Color.BLACK);
+                    return new Knight(PieceType.KNIGHT, index, Color.BLACK);
                 case 'Q':
-                    return new Queen(index, Color.WHITE);
+                    return new Queen(PieceType.QUEEN, index, Color.WHITE);
                 case 'q':
-                    return new Queen(index, Color.BLACK);
+                    return new Queen(PieceType.QUEEN, index, Color.BLACK);
                 case 'K':
-                    return new King(index, Color.WHITE);
+                    return new King(PieceType.KING, index, Color.WHITE);
                 case 'k':
-                    return new King(index, Color.BLACK);
+                    return new King(PieceType.KING, index, Color.BLACK);
                 default:
                     throw new Exception($"Character {letter} is not a valid piece.");
             }
