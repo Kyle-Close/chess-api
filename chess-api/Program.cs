@@ -35,17 +35,22 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-Mongo.Ping();
+string? connectionURI = builder.Configuration["Database:Connection"];
+if (connectionURI == null)
+{
+    throw new Exception("Could not load db connection URI. Check that the secret was configured.");
+}
+
+Mongo mongo = new Mongo(connectionURI);
 
 List<Game> activeGames = new List<Game>();
 
-Ping.EnableEndpoint(app);
-StartGame.EnableEndpoint(app);
-GetGame.EnableEndpoint(app);
-ExecuteMoveApi.EnableEndpoint(app);
-ResignGame.EnableEndpoint(app);
-DrawByAgreement.EnableEndpoint(app);
-UpdateClock.EnableEndpoint(app);
-StockfishMove.EnableEndpoint(app);
+StartGame.EnableEndpoint(app, mongo);
+GetGame.EnableEndpoint(app, mongo);
+ExecuteMoveApi.EnableEndpoint(app, mongo);
+ResignGame.EnableEndpoint(app, mongo);
+DrawByAgreement.EnableEndpoint(app, mongo);
+UpdateClock.EnableEndpoint(app, mongo);
+StockfishMove.EnableEndpoint(app, mongo);
 
 app.Run();

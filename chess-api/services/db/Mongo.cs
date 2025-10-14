@@ -5,25 +5,13 @@ using MongoDB.Bson.Serialization;
 
 public class Mongo
 {
-    const string connectionUri = "mongodb+srv://kjamesclose_db_user:sQsPzEZWaMdirZtv@cluster0.dn62sl5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+    public string ConnectionURI { get; set; }
 
-    private static IMongoDatabase GetDB(string name)
+    public Mongo(string connectionURI)
     {
-        try
-        {
-            var client = new MongoClient(connectionUri);
+        ConnectionURI = connectionURI;
 
-            return client.GetDatabase(name);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error getting DB: " + ex.Data);
-        }
-    }
-
-    public static void Ping()
-    {
-        var settings = MongoClientSettings.FromConnectionString(connectionUri);
+        var settings = MongoClientSettings.FromConnectionString(ConnectionURI);
         settings.ServerApi = new ServerApi(ServerApiVersion.V1);
 
         if (!BsonClassMap.IsClassMapRegistered(typeof(Piece)))
@@ -32,8 +20,9 @@ public class Mongo
             {
                 cm.AutoMap();
                 cm.SetIsRootClass(true);
-                cm.SetDiscriminator(nameof(Piece)); // optional
+                cm.SetDiscriminator(nameof(Piece));
             });
+
             BsonClassMap.RegisterClassMap<Pawn>(cm => cm.AutoMap());
             BsonClassMap.RegisterClassMap<Rook>(cm => cm.AutoMap());
             BsonClassMap.RegisterClassMap<Bishop>(cm => cm.AutoMap());
@@ -57,7 +46,21 @@ public class Mongo
         }
     }
 
-    public static async void CreateActiveGame(Game activeGame)
+    private IMongoDatabase GetDB(string name)
+    {
+        try
+        {
+            var client = new MongoClient(ConnectionURI);
+
+            return client.GetDatabase(name);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error getting DB: " + ex.Data);
+        }
+    }
+
+    public async void CreateActiveGame(Game activeGame)
     {
         try
         {
@@ -72,7 +75,7 @@ public class Mongo
         }
     }
 
-    public static async Task<Game> GetActiveGame(string id)
+    public async Task<Game> GetActiveGame(string id)
     {
         try
         {
@@ -95,7 +98,7 @@ public class Mongo
         }
     }
 
-    public static async Task<ReplaceOneResult> UpdateActiveGame(Game activeGame)
+    public async Task<ReplaceOneResult> UpdateActiveGame(Game activeGame)
     {
         try
         {

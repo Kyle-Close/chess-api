@@ -8,7 +8,7 @@ class ResignGamePayload
 
 public class ResignGame
 {
-    public static void EnableEndpoint(WebApplication app)
+    public static void EnableEndpoint(WebApplication app, Mongo mongo)
     {
         app.MapPost("/chess-api/resign", async (HttpContext context) =>
         {
@@ -18,7 +18,7 @@ public class ResignGame
                 return Results.BadRequest("Missing payload");
             }
 
-            var game = await Mongo.GetActiveGame(payload.GameId);
+            var game = await mongo.GetActiveGame(payload.GameId);
 
             if (game == null)
             {
@@ -26,7 +26,7 @@ public class ResignGame
             }
 
             game.Resign(payload.ResigningColor);
-            await Mongo.UpdateActiveGame(game);
+            await mongo.UpdateActiveGame(game);
 
             return Results.Ok(game);
         })

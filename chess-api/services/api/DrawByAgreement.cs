@@ -7,7 +7,7 @@ class DrawByAgreementPayload
 
 public class DrawByAgreement
 {
-    public static void EnableEndpoint(WebApplication app)
+    public static void EnableEndpoint(WebApplication app, Mongo mongo)
     {
         app.MapPost("/chess-api/draw-by-agreement", async (HttpContext context) =>
         {
@@ -17,14 +17,14 @@ public class DrawByAgreement
                 return Results.BadRequest("Invalid payload recieved");
             }
 
-            var game = await Mongo.GetActiveGame(payload.GameId);
+            var game = await mongo.GetActiveGame(payload.GameId);
             if (game == null)
             {
                 throw new Exception("Could not find game in active games");
             }
 
             game.EndGame(GameStatus.DRAW_BY_AGREEMENT, null);
-            await Mongo.UpdateActiveGame(game);
+            await mongo.UpdateActiveGame(game);
 
             return Results.Ok(game);
         })

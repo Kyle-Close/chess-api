@@ -10,7 +10,7 @@ namespace Chess
 
     public class StartGame
     {
-        public static void EnableEndpoint(WebApplication app)
+        public static void EnableEndpoint(WebApplication app, Mongo mongo)
         {
             app.MapPost("/chess-api/start-game", async (HttpContext context) =>
             {
@@ -40,7 +40,7 @@ namespace Chess
                 string fen = FenHelper.BuildFen(game, game.Board);
                 game.FenHistory.Add(fen);
 
-                Mongo.CreateActiveGame(game);
+                mongo.CreateActiveGame(game);
 
                 return Results.Ok(game);
             })

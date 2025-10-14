@@ -9,7 +9,7 @@ public class UpdateClock
         GameId = gameId;
     }
 
-    public static void EnableEndpoint(WebApplication app)
+    public static void EnableEndpoint(WebApplication app, Mongo mongo)
     {
         app.MapPost("/chess-api/update-clock", async (HttpContext context) =>
         {
@@ -19,7 +19,7 @@ public class UpdateClock
                 return Results.BadRequest("Invalid request payload.");
             }
 
-            var game = await Mongo.GetActiveGame(payload.GameId);
+            var game = await mongo.GetActiveGame(payload.GameId);
 
             if (game == null)
             {
@@ -45,7 +45,7 @@ public class UpdateClock
                 game.EndGame(GameStatus.TIMEOUT, Color.WHITE);
             }
 
-            await Mongo.UpdateActiveGame(game);
+            await mongo.UpdateActiveGame(game);
             return Results.Ok(game); // Return the game with the updated timer and winner if necessary
 
         })

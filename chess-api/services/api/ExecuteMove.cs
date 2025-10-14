@@ -15,7 +15,7 @@ namespace Chess
             PromotionPiece = promotionPiece;
         }
 
-        public static void EnableEndpoint(WebApplication app)
+        public static void EnableEndpoint(WebApplication app, Mongo mongo)
         {
             app.MapPost("/chess-api/execute-move", async (HttpContext httpContext) =>
             {
@@ -26,7 +26,7 @@ namespace Chess
                     return Results.BadRequest("Invalid request payload.");
                 }
 
-                var game = await Mongo.GetActiveGame(payload.GameId);
+                var game = await mongo.GetActiveGame(payload.GameId);
 
                 if (game == null)
                 {
@@ -36,7 +36,7 @@ namespace Chess
                 try
                 {
                     Move.ExecuteMove(game, payload.Start, payload.End, payload.PromotionPiece);
-                    await Mongo.UpdateActiveGame(game);
+                    await mongo.UpdateActiveGame(game);
 
                     return Results.Ok(game);
                 }

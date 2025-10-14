@@ -11,7 +11,7 @@ public class StockfishMove
         Strength = strength;
     }
 
-    public static void EnableEndpoint(WebApplication app)
+    public static void EnableEndpoint(WebApplication app, Mongo mongo)
     {
         app.MapPost("/chess-api/stockfish-move", async (HttpContext httpContext) =>
         {
@@ -22,7 +22,7 @@ public class StockfishMove
                 return Results.BadRequest("Invalid request payload.");
             }
 
-            var game = await Mongo.GetActiveGame(payload.GameId);
+            var game = await mongo.GetActiveGame(payload.GameId);
 
             if (game == null)
             {
@@ -56,7 +56,7 @@ public class StockfishMove
             }
 
             Move.ExecuteMove(game, move.StartIndex, move.EndIndex);
-            await Mongo.UpdateActiveGame(game);
+            await mongo.UpdateActiveGame(game);
 
             return Results.Ok(game);
         }).WithName("Stockfish execute move")

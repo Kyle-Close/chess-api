@@ -2,12 +2,12 @@ namespace Chess
 {
     public class GetGame
     {
-        public static void EnableEndpoint(WebApplication app)
+        public static void EnableEndpoint(WebApplication app, Mongo mongo)
         {
             app.MapGet("/chess-api/game", async (HttpContext context) =>
             {
                 string id = context.Request.Query["gameId"].ToString();
-                var game = await Mongo.GetActiveGame(id);
+                var game = await mongo.GetActiveGame(id);
 
                 if (game == null)
                 {
