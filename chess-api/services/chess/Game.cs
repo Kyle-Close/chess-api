@@ -55,7 +55,7 @@ namespace Chess
             Board = new Board();
             WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
-            StartTime = LastMoveTimeStamp = DateTime.Now;
+            StartTime = LastMoveTimeStamp = DateTime.UtcNow;
             EndTime = null;
             WhiteCapturedPieces = new List<PieceType>();
             BlackCapturedPieces = new List<PieceType>();
@@ -90,7 +90,7 @@ namespace Chess
             Board = new Board(fenHelper.BoardSegment);
             WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
-            StartTime = LastMoveTimeStamp = DateTime.Now;
+            StartTime = LastMoveTimeStamp = DateTime.UtcNow;
             EndTime = null;
             WhiteCapturedPieces = new List<PieceType>();
             BlackCapturedPieces = new List<PieceType>();
@@ -187,7 +187,7 @@ namespace Chess
             Board = new Board();
             WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
-            StartTime = LastMoveTimeStamp = DateTime.Now;
+            StartTime = LastMoveTimeStamp = DateTime.UtcNow;
             EndTime = null;
             WhiteCapturedPieces = new List<PieceType>();
             BlackCapturedPieces = new List<PieceType>();
@@ -241,7 +241,7 @@ namespace Chess
             Board = new Board(fenHelper.BoardSegment);
             WhiteMaterialValue = Board.TotalPieceValue(Color.WHITE);
             BlackMaterialValue = Board.TotalPieceValue(Color.BLACK);
-            StartTime = LastMoveTimeStamp = DateTime.Now;
+            StartTime = LastMoveTimeStamp = DateTime.UtcNow;
             EndTime = null;
             WhiteCapturedPieces = new List<PieceType>();
             BlackCapturedPieces = new List<PieceType>();
@@ -436,7 +436,7 @@ namespace Chess
         {
             Status = status;
             Winner = winner;
-            EndTime = DateTime.Now;
+            EndTime = DateTime.UtcNow;
         }
 
         // Returns an list of squares of whatever rank you provide.
@@ -511,9 +511,10 @@ namespace Chess
 
         public void UpdateRemainingTime(Color colorToUpdate)
         {
-            var currentTime = DateTime.Now;
+            var currentTime = DateTime.UtcNow;
             var lastSynced = LastSyncedClockTimeStamp;
             var lastMove = LastMoveTimeStamp;
+
             TimeSpan delta;
 
             if (lastSynced > lastMove)

@@ -36,6 +36,8 @@ namespace Chess
                 try
                 {
                     Move.ExecuteMove(game, payload.Start, payload.End, payload.PromotionPiece);
+                    await Mongo.UpdateActiveGame(game);
+
                     return Results.Ok(game);
                 }
                 catch (Exception e)

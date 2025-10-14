@@ -12,6 +12,7 @@ public class Mongo
         try
         {
             var client = new MongoClient(connectionUri);
+
             return client.GetDatabase(name);
         }
         catch (Exception ex)
@@ -24,6 +25,22 @@ public class Mongo
     {
         var settings = MongoClientSettings.FromConnectionString(connectionUri);
         settings.ServerApi = new ServerApi(ServerApiVersion.V1);
+
+        if (!BsonClassMap.IsClassMapRegistered(typeof(Piece)))
+        {
+            BsonClassMap.RegisterClassMap<Piece>(cm =>
+            {
+                cm.AutoMap();
+                cm.SetIsRootClass(true);
+                cm.SetDiscriminator(nameof(Piece)); // optional
+            });
+            BsonClassMap.RegisterClassMap<Pawn>(cm => cm.AutoMap());
+            BsonClassMap.RegisterClassMap<Rook>(cm => cm.AutoMap());
+            BsonClassMap.RegisterClassMap<Bishop>(cm => cm.AutoMap());
+            BsonClassMap.RegisterClassMap<Knight>(cm => cm.AutoMap());
+            BsonClassMap.RegisterClassMap<Queen>(cm => cm.AutoMap());
+            BsonClassMap.RegisterClassMap<King>(cm => cm.AutoMap());
+        }
 
         // Create a new client and connect to the server
         var client = new MongoClient(settings);
@@ -75,6 +92,23 @@ public class Mongo
         catch
         {
             throw;
+        }
+    }
+
+    public static async Task<ReplaceOneResult> UpdateActiveGame(Game activeGame)
+    {
+        try
+        {
+            var db = GetDB("Chess");
+
+            var activeGamesCollection = db.GetCollection<Game>("Active Games");
+            var filter = Builders<Game>.Filter.Eq(g => g.Id, activeGame.Id);
+
+            return await activeGamesCollection.ReplaceOneAsync(filter, activeGame);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
         }
     }
 }

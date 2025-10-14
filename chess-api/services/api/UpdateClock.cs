@@ -2,25 +2,24 @@ namespace Chess;
 
 public class UpdateClock
 {
-    public string GameId { get; set; }
+    public string? GameId { get; set; }
 
     public UpdateClock(string gameId)
     {
         GameId = gameId;
     }
 
-    public static void EnableEndpoint(WebApplication app, List<Game> activeGames)
+    public static void EnableEndpoint(WebApplication app)
     {
         app.MapPost("/chess-api/update-clock", async (HttpContext context) =>
         {
             var payload = await context.Request.ReadFromJsonAsync<ExecuteMoveApi>();
-
             if (payload == null)
             {
                 return Results.BadRequest("Invalid request payload.");
             }
 
-            var game = Game.FindActiveGame(activeGames, payload.GameId);
+            var game = await Mongo.GetActiveGame(payload.GameId);
 
             if (game == null)
             {
@@ -46,6 +45,7 @@ public class UpdateClock
                 game.EndGame(GameStatus.TIMEOUT, Color.WHITE);
             }
 
+            await Mongo.UpdateActiveGame(game);
             return Results.Ok(game); // Return the game with the updated timer and winner if necessary
 
         })

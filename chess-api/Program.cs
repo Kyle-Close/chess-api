@@ -43,9 +43,9 @@ Ping.EnableEndpoint(app);
 StartGame.EnableEndpoint(app);
 GetGame.EnableEndpoint(app);
 ExecuteMoveApi.EnableEndpoint(app);
-ResignGame.EnableEndpoint(app, activeGames);
-DrawByAgreement.EnableEndpoint(app, activeGames);
-UpdateClock.EnableEndpoint(app, activeGames);
-StockfishMove.EnableEndpoint(app, activeGames);
+ResignGame.EnableEndpoint(app);
+DrawByAgreement.EnableEndpoint(app);
+UpdateClock.EnableEndpoint(app);
+StockfishMove.EnableEndpoint(app);
 
 app.Run();

@@ -420,6 +420,6 @@ public static class Move
         game.BlackMaterialValue = game.Board.TotalPieceValue(Color.BLACK);
 
         // Update last move timestamp
-        game.LastMoveTimeStamp = DateTime.Now;
+        game.LastMoveTimeStamp = DateTime.UtcNow;
     }
 }

@@ -2,19 +2,23 @@ namespace Chess;
 
 class ResignGamePayload
 {
-    public string GameId { get; set; }
+    public string? GameId { get; set; }
     public Color ResigningColor { get; set; }
 }
 
 public class ResignGame
 {
-    public static void EnableEndpoint(WebApplication app, List<Game> activeGames)
+    public static void EnableEndpoint(WebApplication app)
     {
         app.MapPost("/chess-api/resign", async (HttpContext context) =>
         {
             var payload = await context.Request.ReadFromJsonAsync<ResignGamePayload>();
+            if (payload == null || payload.GameId == null)
+            {
+                return Results.BadRequest("Missing payload");
+            }
 
-            var game = activeGames.Find(game => game.Id == payload.GameId);
+            var game = await Mongo.GetActiveGame(payload.GameId);
 
             if (game == null)
             {
@@ -22,7 +26,9 @@ public class ResignGame
             }
 
             game.Resign(payload.ResigningColor);
-            return game;
+            await Mongo.UpdateActiveGame(game);
+
+            return Results.Ok(game);
         })
         .WithName("Resign in an active game")
         .WithOpenApi();
