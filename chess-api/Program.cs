@@ -35,7 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-string? connectionURI = builder.Configuration["Database:Connection"];
+string? connectionURI = builder.Configuration["dbConnectionUri"];
 if (connectionURI == null)
 {
     throw new Exception("Could not load db connection URI. Check that the secret was configured.");
