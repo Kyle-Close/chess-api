@@ -8,12 +8,12 @@ builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("https://kyle-close.github.io", "http://localhost:5173")
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                      });
+        policy =>
+        {
+            policy.WithOrigins("https://kyle-close.github.io", "http://localhost:5173")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+        });
 });
 
 // Add services to the container.
@@ -35,6 +35,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Start single stockfish process to handle all stockfish requests
+var stockfishProcess = new Stockfish();
+if (stockfishProcess == null)
+{
+    throw new Exception("Error starting stockfish process. Exiting...");
+}
+
 string? connectionURI = builder.Configuration["dbConnectionUri"];
 if (connectionURI == null)
 {
@@ -51,6 +58,6 @@ ExecuteMoveApi.EnableEndpoint(app, mongo);
 ResignGame.EnableEndpoint(app, mongo);
 DrawByAgreement.EnableEndpoint(app, mongo);
 UpdateClock.EnableEndpoint(app, mongo);
-StockfishMove.EnableEndpoint(app, mongo);
+StockfishMove.EnableEndpoint(app, mongo, stockfishProcess);
 
 app.Run();

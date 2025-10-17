@@ -11,7 +11,7 @@ public class StockfishMove
         Strength = strength;
     }
 
-    public static void EnableEndpoint(WebApplication app, Mongo mongo)
+    public static void EnableEndpoint(WebApplication app, Mongo mongo, Stockfish stockfishProcess)
     {
         app.MapPost("/chess-api/stockfish-move", async (HttpContext httpContext) =>
         {
@@ -42,10 +42,7 @@ public class StockfishMove
             }
 
             string fen = FenHelper.BuildFen(game, game.Board);
-
-            var stockfishProcess = new Stockfish();
             string bestMove = await stockfishProcess.ExecuteMoveAsync(payload.Strength, fen);
-            stockfishProcess.Dispose();
 
             // Take the move notation and convert to a move. Run game.ExecuteMove
             var move = MoveNotationHelper.FindMove(bestMove, game);
