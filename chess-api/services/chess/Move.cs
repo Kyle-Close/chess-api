@@ -314,6 +314,9 @@ public static class Move
         // Move is valid, update the board to move the piece to it's target square
         game.Board.MovePiece(start, end);
 
+        // Set the last move
+        game.LastMoveMetaData = move;
+
         // If this was a promotion, the previously calculated valid moves won't know if it causes check since we don't know what piece it will be promoted to
         if (move.IsPromotion)
         {

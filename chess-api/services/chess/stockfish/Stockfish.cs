@@ -95,6 +95,8 @@ public class Stockfish : IDisposable
         {
             _proc.StandardInput.WriteLine($"setoption name Skill Level value {strength}");
         }
+
+
         else if (difficulty == StockfishDifficulty.ELO)
         {
             _proc.StandardInput.WriteLine("setoption name UCI_LimitStrength value true");

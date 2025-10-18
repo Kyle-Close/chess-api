@@ -29,6 +29,7 @@ namespace Chess
 
         public DateTime LastMoveTimeStamp { get; set; }
         public DateTime LastSyncedClockTimeStamp { get; set; }
+        public MoveMetaData? LastMoveMetaData { get; set; }
         public int WhiteRemainingTime { get; set; }
         public int BlackRemainingTime { get; set; }
 
