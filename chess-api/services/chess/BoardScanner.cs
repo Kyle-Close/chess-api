@@ -517,103 +517,62 @@ namespace Chess
             return result;
         }
 
+        // Returns true if any piece of attackingColor attacks the given square.
+        // The square itself may be empty (e.g. squares the king passes through when castling).
         public bool IsSquareAttacked(int index, Color attackingColor)
         {
-            bool isAttacked = false;
+            int row = index / 8;
+            int col = index % 8;
 
-            // 1. Knight attacks
-            List<Knight> oKnights = Board.GetPieces<Knight>(attackingColor);
-            foreach (Knight knight in oKnights)
+            Piece? PieceAt(int r, int c) =>
+                r >= 0 && r < 8 && c >= 0 && c < 8 ? Board.Squares[r * 8 + c].Piece : null;
+
+            bool IsAttacker(Piece? piece, params PieceType[] types) =>
+                piece != null && piece.Color == attackingColor && types.Contains(piece.PieceType);
+
+            // 1. Pawns. Index 0 is a8, so white pawns attack towards lower rows.
+            int pawnRow = attackingColor == Color.WHITE ? row + 1 : row - 1;
+            if (IsAttacker(PieceAt(pawnRow, col - 1), PieceType.PAWN) || IsAttacker(PieceAt(pawnRow, col + 1), PieceType.PAWN))
+                return true;
+
+            // 2. Knights
+            int[,] knightOffsets = { { -2, -1 }, { -2, 1 }, { -1, -2 }, { -1, 2 }, { 1, -2 }, { 1, 2 }, { 2, -1 }, { 2, 1 } };
+            for (int i = 0; i < 8; i++)
             {
-                List<int> indexes = knight.GetUnfilteredMoveIndexes(knight.Index);
-                if (indexes.Contains(index))
+                if (IsAttacker(PieceAt(row + knightOffsets[i, 0], col + knightOffsets[i, 1]), PieceType.KNIGHT))
+                    return true;
+            }
+
+            // 3. King (adjacent squares)
+            for (int dr = -1; dr <= 1; dr++)
+            {
+                for (int dc = -1; dc <= 1; dc++)
                 {
-                    isAttacked = true;
+                    if ((dr != 0 || dc != 0) && IsAttacker(PieceAt(row + dr, col + dc), PieceType.KING))
+                        return true;
                 }
             }
 
-            // 2. Pawn attacks
-            List<Pawn> oPawns = Board.GetPieces<Pawn>(attackingColor);
-            foreach (Pawn pawn in oPawns)
+            // 4. Sliding pieces. Walk each ray until the first piece; only that piece can attack.
+            int[,] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
+            for (int d = 0; d < 8; d++)
             {
-                List<int> attackingIndexes = pawn.GetAttackIndexes(Board);
-                if (attackingIndexes.Contains(index))
+                int dr = directions[d, 0];
+                int dc = directions[d, 1];
+                bool isDiagonal = dr != 0 && dc != 0;
+
+                for (int r = row + dr, c = col + dc; r >= 0 && r < 8 && c >= 0 && c < 8; r += dr, c += dc)
                 {
-                    isAttacked = true;
+                    Piece? piece = Board.Squares[r * 8 + c].Piece;
+                    if (piece == null) continue;
+
+                    if (isDiagonal ? IsAttacker(piece, PieceType.BISHOP, PieceType.QUEEN) : IsAttacker(piece, PieceType.ROOK, PieceType.QUEEN))
+                        return true;
+                    break;
                 }
             }
 
-            // 3. Diagonal Attacks
-            List<Square> tlbrDiag = GetDiagonal(index, Diagonal.TOP_LEFT_TO_BOTTOM_RIGHT);
-            List<Square> bltrDiag = GetDiagonal(index, Diagonal.BOTTOM_LEFT_TO_TOP_RIGHT);
-
-            // 3.1 - Handle top left to bottom right
-            if (tlbrDiag.Count > 1)
-            {
-                int targetIndex = tlbrDiag.FindIndex(0, tlbrDiag.Count, (square) => square.Index == index);
-
-                // Count back to start of the array
-                for (int i = targetIndex - 1; i >= 0; i--)
-                {
-                    Square square = tlbrDiag[i];
-                    if (square.Piece != null && square.Piece.Color == attackingColor && (square.Piece.PieceType == PieceType.BISHOP || square.Piece.PieceType == PieceType.QUEEN))
-                    {
-                        isAttacked = true;
-                    }
-                    else if (square.Piece != null && square.Piece.Color != attackingColor && !isAttacked)
-                    {
-                        break; // If we haven't found enemy at this point then we know our piece blocks any diagonal attack in this direction
-                    }
-                }
-                // Count up to end of the array
-                for (int i = targetIndex + 1; i < tlbrDiag.Count - 1; i++)
-                {
-                    Square square = tlbrDiag[i];
-                    if (square.Piece != null && square.Piece.Color == attackingColor && (square.Piece.PieceType == PieceType.BISHOP || square.Piece.PieceType == PieceType.QUEEN))
-                    {
-                        isAttacked = true;
-                    }
-                    else if (square.Piece != null && square.Piece.Color != attackingColor && !isAttacked)
-                    {
-                        break; // If we haven't found enemy at this point then we know our piece blocks any diagonal attack in this direction
-                    }
-                }
-            }
-
-            // 3.2 - Handle bottom left to top right
-            if (bltrDiag.Count > 1)
-            {
-                int targetIndex = bltrDiag.FindIndex(0, bltrDiag.Count, (square) => square.Index == index);
-
-                // Count back to start of the array
-                for (int i = targetIndex - 1; i >= 0; i--)
-                {
-                    Square square = bltrDiag[i];
-                    if (square.Piece != null && square.Piece.Color == attackingColor && (square.Piece.PieceType == PieceType.BISHOP || square.Piece.PieceType == PieceType.QUEEN))
-                    {
-                        isAttacked = true;
-                    }
-                    else if (square.Piece != null && square.Piece.Color != attackingColor && !isAttacked)
-                    {
-                        break; // If we haven't found enemy at this point then we know our piece blocks any diagonal attack in this direction
-                    }
-                }
-                // Count up to end of the array
-                for (int i = targetIndex + 1; i < bltrDiag.Count - 1; i++)
-                {
-                    Square square = bltrDiag[i];
-                    if (square.Piece != null && square.Piece.Color == attackingColor && (square.Piece.PieceType == PieceType.BISHOP || square.Piece.PieceType == PieceType.QUEEN))
-                    {
-                        isAttacked = true;
-                    }
-                    else if (square.Piece != null && square.Piece.Color != attackingColor && !isAttacked)
-                    {
-                        break; // If we haven't found enemy at this point then we know our piece blocks any diagonal attack in this direction
-                    }
-                }
-            }
-
-            return isAttacked;
+            return false;
         }
     }
 }
